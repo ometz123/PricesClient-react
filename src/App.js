@@ -1,13 +1,13 @@
 import React from 'react';
 import './App.css';
-import Prices from './Functions/Prices';
+import FCPrices from './Functions/FCPrices';
 
 
 function App() {
   return (
     <div className="App">
       <header className="App-header">
-        <Prices/>
+        <FCPrices/>
       </header>
     </div>
   );
