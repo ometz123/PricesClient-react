@@ -7,7 +7,6 @@ import CardMedia from '@material-ui/core/CardMedia';
 import CardContent from '@material-ui/core/CardContent';
 import CardActions from '@material-ui/core/CardActions';
 import Collapse from '@material-ui/core/Collapse';
-import Avatar from '@material-ui/core/Avatar';
 import IconButton from '@material-ui/core/IconButton';
 import Typography from '@material-ui/core/Typography';
 import { red } from '@material-ui/core/colors';
@@ -96,7 +95,7 @@ export default function RecipeReviewCard(props) {
       </CardActions>
       <Collapse in={expanded} timeout="auto" unmountOnExit>
         <CardContent>
-          <Typography paragraph>More info</Typography>
+          { <Typography paragraph>{/* if (info)=> More info:*/}</Typography> }
           <Typography paragraph>
           {props.details.description.middle}
           </Typography>
@@ -104,10 +103,10 @@ export default function RecipeReviewCard(props) {
           {props.details.description.bottom}
           </Typography>
           <Typography paragraph>
-            ""
+        {/*text*/}
           </Typography>
           <Typography>
-            ""
+            {/* {text} */}
           </Typography>
         </CardContent>
       </Collapse>
