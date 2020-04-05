@@ -1,6 +1,6 @@
 import React from 'react';
  import { /*Switch, Route, Link,*/ withRouter } from 'react-router-dom';
-import LabelBottomNavigation from './LabelBottomNavigation';
+import LabelBottomNavigation from './Bars/LabelBottomNavigation';
  
 function Prices(props) {
 

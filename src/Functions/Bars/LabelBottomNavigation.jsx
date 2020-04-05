@@ -4,14 +4,25 @@ import BottomNavigation from '@material-ui/core/BottomNavigation';
 import BottomNavigationAction from '@material-ui/core/BottomNavigationAction';
 import ExploreIcon from '@material-ui/icons/Explore';
 import SearchIcon from '@material-ui/icons/Search';
-import FCSearch from './FCSearch';
+import FCSearch from '../Pages/FCSearch';
 import { Switch, Route, withRouter } from 'react-router-dom';
-import FCExplore from './FCExplore';
-import Bamba from '../Images/Bamba.png';
-import Doritos from '../Images/Doritos.png';
-import OreoIceCream from '../Images/OreoIceCream.png';
-import Receipt from '../Images/Receipt.png';
+import FCExplore from '../Pages/FCExplore';
+
+//
+// import Bamba from './Images/Bamba.png';
+// import Doritos from './Images/Doritos.png';
+// import OreoIceCream from './Images/OreoIceCream.png';
+// import Receipt from './Images/Receipt.png';
+import Bamba from '../../Images/Bamba.png';
+import Doritos from '../../Images/Doritos.png';
+import OreoIceCream from '../../Images/OreoIceCream.png';
+import Receipt from '../../Images/Receipt.png';
+//
+
 import PrimarySearchAppBar from './FCPrimarySearchAppBar';
+import AddIcon from '@material-ui/icons/Add';
+import FCAdd from '../Pages/FCAdd';
+
 
 const useStyles = makeStyles({
   root: {
@@ -70,6 +81,9 @@ function LabelBottomNavigation(props) {
     <div>
       <PrimarySearchAppBar title ={value} />
       <Switch>
+      <Route path="/add" >
+          <FCAdd />
+        </Route>
         <Route path="/search" >
           <FCSearch />
         </Route>
@@ -80,8 +94,12 @@ function LabelBottomNavigation(props) {
 
       <BottomNavigation value={value} onChange={handleChange} className={classes.root}>
 
+      <BottomNavigationAction label="Add" value="Add" icon={<AddIcon />}
+          onClick={() => props.history.push({ pathname: "/add" })}/>
+
         <BottomNavigationAction label="Search" value="Search" icon={<SearchIcon />}
           onClick={() => props.history.push({ pathname: "/search" })}/>
+
         <BottomNavigationAction label="Explore" value="Explore" icon={<ExploreIcon />}
           onClick={() => props.history.push({ pathname: "/" })}/>
 
