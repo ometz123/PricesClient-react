@@ -12,7 +12,8 @@ import TextField from '@material-ui/core/TextField';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import AnnouncementOutlinedIcon from '@material-ui/icons/AnnouncementOutlined';
 import BasicTextFields from '../Pages/Add_Form/FCBasicTextFields';
-
+import FCTags from '../Pages/Add_Form/FCTags';
+import MultilineTextFields from '../Pages/Add_Form/FCMultilineTextFields';
 
 export default function ResponsiveDialog(props) {
     const [open, setOpen] = React.useState(false);
@@ -31,7 +32,7 @@ export default function ResponsiveDialog(props) {
         <div>
             <Button variant="outlined" color="primary" onClick={handleClickOpen}>
                 <AddCircleOutlineRounded htmlColor="green" /> Add Product
-      </Button>
+            </Button>
             <Dialog
                 fullScreen={fullScreen}
                 open={open}
@@ -39,48 +40,55 @@ export default function ResponsiveDialog(props) {
                 aria-labelledby="responsive-dialog-title"
             >
                 <DialogTitle id="responsive-dialog-title">{"Add product"}</DialogTitle>
-                <DialogContent>
-                    <DialogContentText>
-                        Product Details
+                <form>
+                    <DialogContent>
+                        <DialogContentText>
+                            Product Details
                     </DialogContentText>
-                    <div style={{ float: "left", maxWidth: 300 }}>
-                        <Autocomplete
-                            id="combo-box-category"
-                            options={top100Films}
-                            getOptionLabel={(option) => option.title}
-                            renderInput={(params) => <TextField {...params} label="Category" variant="outlined" />}
-                        />
-                        <TextField label={"New Category"} style={{ maxWidth: 300, float: "left" }} />
-                    </div>
-                    <div style={{ float: "left", maxWidth: 300 }}>
-                        <Autocomplete
-                            id="combo-box-sub-category"
-                            options={top100Films}
-                            getOptionLabel={(option) => option.title}
-                            renderInput={(list) => <TextField {...list} label="Sub Category" variant="outlined" />}
-                        />
-                        <TextField label="New Sub Category" style={{ maxWidth: 300, float: "left" }} />
-                    </div>
-                    <br style={{ clear: "both" }} /><br style={{ clear: "both" }} />
-                    <div style={{ maxWidth: 600 }}>
-                        <TextField label="Product Name" variant="outlined" />
-                    </div>
-                    <br style={{ clear: "both" }} /><br style={{ clear: "both" }} />
-                    <div>
-                    <TextField label="BarCode" type="number" variant="outlined" />
-                    </div>
-                    <div>
-                        <BasicTextFields/>
-                    </div>
-                </DialogContent>
-                <DialogActions>
-                    <Button autoFocus onClick={handleClose} color="primary">
+                        <div style={{ float: "left", maxWidth: 300 }}>
+                            <Autocomplete
+                                id="combo-box-category"
+                                options={top100Films}
+                                getOptionLabel={(option) => option.title}
+                                renderInput={(params) => <TextField {...params} label="Category" variant="outlined" />}
+                            />
+                            <TextField label={"New Category"} style={{ maxWidth: 300, float: "left" }} />
+                        </div>
+                        <div style={{ float: "left", maxWidth: 300 }}>
+                            <Autocomplete
+                                id="combo-box-sub-category"
+                                options={top100Films}
+                                getOptionLabel={(option) => option.title}
+                                renderInput={(list) => <TextField {...list} label="Sub Category" variant="outlined" />}
+                            />
+                            <TextField label="New Sub Category" style={{ maxWidth: 300, float: "left" }} />
+                        </div>
+                        <br style={{ clear: "both" }} /><br style={{ clear: "both" }} />
+                        <div style={{ float: "left" }}>
+                            <TextField label="Product Name" variant="outlined"
+                                InputProps={{ style: { width: "400px" } }} />
+                        </div>
+                        <br style={{ clear: "both" }} /><br style={{ clear: "both" }} />
+                        <div style={{ float: "left" }} >
+                            <TextField label="BarCode" type="number" variant="outlined" />
+                        </div>
+                        <div style={{ float: "left" }}>
+                            <BasicTextFields />
+                        </div>
+                        <div>
+                            <FCTags />
+                            <MultilineTextFields />
+                        </div>
+                    </DialogContent>
+                    <DialogActions>
+                        {/* <Button autoFocus onClick={handleClose} color="primary">
                         Disagree
-          </Button>
-                    <Button onClick={handleClose} color="primary" autoFocus>
-                        Agree
-          </Button>
-                </DialogActions>
+                         </Button> */}
+                        <Button onClick={handleClose} color="primary" autoFocus>
+                            Agree
+                        </Button>
+                    </DialogActions>
+                </form>
             </Dialog>
         </div>
     );

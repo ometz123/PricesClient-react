@@ -68,7 +68,6 @@ const theme = createMuiTheme({
     }
 });
 
-
 function BasicDatePicker(props) {
     const [selectedDate, handleDateChange] = useState(new Date());
     //const [selectedDate, handleDateChange] = useState(null);
@@ -81,11 +80,12 @@ function BasicDatePicker(props) {
                     label="Receipt Date"
                     //clearable
                     disableFuture
+                    //variant="outlined"
                     value={selectedDate}
                     onChange={handleDateChange}
                     margin="normal"
                     InputLabelProps={{
-                        style: { color: '#fff' }
+                        style: { color: '#fff' },
                     }}
                     InputProps={{
                         style: {

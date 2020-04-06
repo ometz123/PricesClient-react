@@ -11,7 +11,7 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-export default function MultilineTextFields() {
+export default function MultilineTextFields(props) {
     const classes = useStyles();
     const [value, setValue] = React.useState();
 
@@ -31,12 +31,12 @@ export default function MultilineTextFields() {
                 variant="outlined"
                 //color="white"
                 inputProps={{
-                    style: { color: "white" }
+                    style: { color: props.color?props.color:null }
                 }
 
                 }
                 InputLabelProps={{
-                    style: { color: "white" }
+                    style: { color: props.color?props.color:null }
                 }}
             />
         </div>

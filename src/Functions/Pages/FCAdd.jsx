@@ -37,9 +37,10 @@ function FCAdd(props) {
                     <div
                         style={{ height: "100px", width: "250px", float: 'left' }}>
                         <ResponsiveDialogStore />
+                        
                     </div>
                     <div style={{ float: 'right', width: "250px", }} >
-                        <FCBasicTextFields />
+                        <FCBasicTextFields color={"white"} />
                     </div>
                 </div>
                 <br style={{ clear: "both" }} />
@@ -52,7 +53,7 @@ function FCAdd(props) {
                     </div>
                 </div>
                 <div>
-                    <FCMultilineTextFields />
+                    <FCMultilineTextFields color={"white"} />
                 </div>
 
                 <div >

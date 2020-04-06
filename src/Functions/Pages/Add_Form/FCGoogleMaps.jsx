@@ -7,6 +7,7 @@ import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import parse from 'autosuggest-highlight/parse';
 import throttle from 'lodash/throttle';
+import FCGoogleMapView from './FCGoogleMapView';
 
 function loadScript(src, position, id) {
   if (!position) {
@@ -38,12 +39,13 @@ export default function GoogleMaps() {
   if (typeof window !== 'undefined' && !loaded.current) {
     if (!document.querySelector('#google-maps')) {
       loadScript(
-        'https://maps.googleapis.com/maps/api/js?key=AIzaSyBwRp1e12ec1vOTtGiA4fcCt2sCUS78UYc&libraries=places',
+        `https://maps.googleapis.com/maps/api/js?key=
+        AIzaSyC47_J_bDoU4euesrr-ChlFjRpas0HzLQM
+        &libraries=places`,
         document.querySelector('head'),
         'google-maps',
       );
     }
-
     loaded.current = true;
   }
 
@@ -86,6 +88,7 @@ export default function GoogleMaps() {
   }, [inputValue, fetch]);
 
   return (
+    <div>
     <Autocomplete
       id="google-map-demo"
       style={{ width: 300 }}
@@ -97,7 +100,7 @@ export default function GoogleMaps() {
       renderInput={(params) => (
         <TextField
           {...params}
-          label="Add a location"
+          label="Search a store/address.."
           variant="outlined"
           fullWidth
           onChange={handleChange}
@@ -130,5 +133,7 @@ export default function GoogleMaps() {
         );
       }}
     />
+    <FCGoogleMapView/>
+    </div>
   );
 }

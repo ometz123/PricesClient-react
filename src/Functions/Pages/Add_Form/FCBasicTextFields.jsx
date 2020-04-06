@@ -11,7 +11,7 @@ const useStyles = makeStyles(theme => ({
     },
 }));
 
-export default function BasicTextFields() {
+export default function BasicTextFields(props) {
     const classes = useStyles();
 
     return (
@@ -19,21 +19,21 @@ export default function BasicTextFields() {
             <TextField
                 id="standard-basic-Dollar"
                 label="$ Discount"
-                color="primary"
+                //color="primary"
                 variant="outlined"
                 InputLabelProps={{
-                    style: { color: 'white' },
+                    style: { color: props.color ? props.color : null },
                 }}
                 InputProps={{
                     style: {
-                        color: '#fff',
+                        color: props.color ? props.color : null
                     },
                     //disableUnderline: "true",
-                    minimum: "0",max:"10", step:"1"
+                    minimum: "0", max: "10", step: "1"
 
                 }}
                 type="number"
-                
+
             />
             <br />
             <TextField
@@ -42,13 +42,11 @@ export default function BasicTextFields() {
                 variant="outlined"
                 color="primary"
                 InputLabelProps={{
-                    style: { color: '#fff' },
+                    style: { color: props.color ? props.color : null }
                 }}
                 InputProps={{
                     style: {
-                        color: '#fff',
-                    },
-                    //disableUnderline: "true"
+                        color: props.color ? props.color : null},
                 }}
                 type="number"
             />
