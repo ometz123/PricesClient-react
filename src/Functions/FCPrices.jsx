@@ -1,15 +1,22 @@
-import React from 'react';
- import { /*Switch, Route, Link,*/ withRouter } from 'react-router-dom';
-import LabelBottomNavigation from './Bars/LabelBottomNavigation';
- 
-function Prices(props) {
+import React, { useState } from 'react';
+import { /*Switch, Route, Link,*/ withRouter } from 'react-router-dom';
+import FCBottomNavigation from './Bars/FCBottomNavigation';
+import FCLogIn from './Pages/FCLogIn';
 
-
-    return (
-        <div>
-            <LabelBottomNavigation/>
-        </div>
-    );
+function FCPrices(props) {
+    const [loggedIn/*, setLoggedIn*/] = useState(true)
+    if (loggedIn) {
+        return (
+            <div>
+                <FCBottomNavigation />
+            </div>
+        );
+    } else
+        return (
+            <div>
+                <FCLogIn />
+            </div>
+        );
 }
 
-export default withRouter(Prices);
+export default withRouter(FCPrices);

@@ -1,16 +1,16 @@
 import React from 'react';
 import FCImage from './Add_Form/FCImage';
 import { Button, /*FormControl*/ } from '@material-ui/core';
-import FCBasicDatePicker from './Add_Form/FCBasicDatePicker';
-import DateFnsUtils from '@date-io/date-fns';
-import { MuiPickersUtilsProvider } from '@material-ui/pickers';
+import FCDatePicker from './Add_Form/FCDatePicker';
+// import DateFnsUtils from '@date-io/date-fns';
+// import { MuiPickersUtilsProvider } from '@material-ui/pickers';
 import AnnouncementOutlinedIcon from '@material-ui/icons/AnnouncementOutlined';
-import StorefrontOutlinedIcon from '@material-ui/icons/StorefrontOutlined';
-import FCBasicTextFields from './Add_Form/FCBasicTextFields';
-import FCMultilineTextFields from './Add_Form/FCMultilineTextFields';
+//import StorefrontOutlinedIcon from '@material-ui/icons/StorefrontOutlined';
+import FCDiscount from './Add_Form/FCDiscount';
+import FCDescriptions from './Add_Form/FCDescriptions';
 import CheckCircleOutlineIcon from '@material-ui/icons/CheckCircleOutline';
-import ResponsiveDialogStore from '../eXtra/FCResponsiveDialogStore';
-import FCResponsiveDialogProduct from '../eXtra/FCResponsiveDialogProduct';
+import FCStoreDetails from './Add_Form/FCStoreDetails';
+import FCAddItem from '../eXtra/FCAddItem';
 
 function FCAdd(props) {
 
@@ -29,31 +29,31 @@ function FCAdd(props) {
                         <FCImage />
                     </div>
                     <div style={{ float: 'right', width: "250px", }} >
-                        <FCBasicDatePicker /><AnnouncementOutlinedIcon htmlColor="red" />
+                        <FCDatePicker /><AnnouncementOutlinedIcon htmlColor="red" />
                     </div>
                 </div>
                 <br style={{ clear: "both" }} />
                 <div >
                     <div
                         style={{ height: "100px", width: "250px", float: 'left' }}>
-                        <ResponsiveDialogStore />
+                        <FCStoreDetails />
                         
                     </div>
                     <div style={{ float: 'right', width: "250px", }} >
-                        <FCBasicTextFields color={"white"} />
+                        <FCDiscount color={"white"} />
                     </div>
                 </div>
                 <br style={{ clear: "both" }} />
                 <div>
                     <div style={{ float: 'left', width: "250px", }}>
-                        <FCResponsiveDialogProduct />
+                        <FCAddItem />
                     </div>
                     <div>
                         List Item 1
                     </div>
                 </div>
                 <div>
-                    <FCMultilineTextFields color={"white"} />
+                    <FCDescriptions color={"white"} />
                 </div>
 
                 <div >

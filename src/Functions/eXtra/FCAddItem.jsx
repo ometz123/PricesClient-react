@@ -10,12 +10,12 @@ import { useTheme } from '@material-ui/core/styles';
 import AddCircleOutlineRounded from '@material-ui/icons/AddCircleOutlineRounded';
 import TextField from '@material-ui/core/TextField';
 import Autocomplete from '@material-ui/lab/Autocomplete';
-import AnnouncementOutlinedIcon from '@material-ui/icons/AnnouncementOutlined';
-import BasicTextFields from '../Pages/Add_Form/FCBasicTextFields';
+//import AnnouncementOutlinedIcon from '@material-ui/icons/AnnouncementOutlined';
+import FCDiscount from '../Pages/Add_Form/FCDiscount';
 import FCTags from '../Pages/Add_Form/FCTags';
-import MultilineTextFields from '../Pages/Add_Form/FCMultilineTextFields';
+import FCDescriptions from '../Pages/Add_Form/FCDescriptions';
 
-export default function ResponsiveDialog(props) {
+export default function FCAddItem(props) {
     const [open, setOpen] = React.useState(false);
     const theme = useTheme();
     const fullScreen = useMediaQuery(theme.breakpoints.down('sm'));
@@ -73,11 +73,11 @@ export default function ResponsiveDialog(props) {
                             <TextField label="BarCode" type="number" variant="outlined" />
                         </div>
                         <div style={{ float: "left" }}>
-                            <BasicTextFields />
+                            <FCDiscount />
                         </div>
                         <div>
                             <FCTags />
-                            <MultilineTextFields />
+                            <FCDescriptions />
                         </div>
                     </DialogContent>
                     <DialogActions>

@@ -11,7 +11,7 @@ export default function FCTags() {
       id="fixed-tags-demo"
       options={top100Films}
       getOptionLabel={(option) => option.title}
-      defaultValue={[top100Films[6], top100Films[13]]}
+      //defaultValue={[top100Films[6], top100Films[13]]}
       renderTags={(value, getTagProps) =>
         value.map((option, index) => (
           <Chip label={option.title} {...getTagProps({ index })} disabled={index === 0} />
@@ -19,7 +19,7 @@ export default function FCTags() {
       }
       style={{ maxWidth: 400 }}
       renderInput={(params) => (
-        <TextField {...params} label="Tags" variant="outlined" placeholder="Favorites" />
+        <TextField {...params} label="Tags" variant="outlined" placeholder="Tags" />
       )}
     />
   );

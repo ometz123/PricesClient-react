@@ -1,4 +1,4 @@
-import React, { Children } from 'react';
+import React/*, { Children }*/ from 'react';
 import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
@@ -9,9 +9,10 @@ import useMediaQuery from '@material-ui/core/useMediaQuery';
 import { useTheme } from '@material-ui/core/styles';
 import StorefrontOutlinedIcon from '@material-ui/icons/StorefrontOutlined';
 import AnnouncementOutlinedIcon from '@material-ui/icons/AnnouncementOutlined';
-import FCGoogleMaps from '../Pages/Add_Form/FCGoogleMaps';
+import FCGooglePlacesSearch from './FCGooglePlacesSearch';
+import FCGoogleMap from './FCGoogleMap';
 
-export default function ResponsiveDialogStore() {
+export default function FCStoreDetails() {
     const [open, setOpen] = React.useState(false);
     const theme = useTheme();
     const fullScreen = useMediaQuery(theme.breakpoints.down('sm'));
@@ -27,7 +28,7 @@ export default function ResponsiveDialogStore() {
     return (
         <div>
             <Button variant="outlined" color="primary" onClick={handleClickOpen}>
-                <StorefrontOutlinedIcon htmlColor="yellow" />Store <AnnouncementOutlinedIcon htmlColor="red" style={{float:"none"}}/>
+                <StorefrontOutlinedIcon htmlColor="yellow" />Store <AnnouncementOutlinedIcon htmlColor="red" style={{ float: "none" }} />
             </Button>
             <Dialog
                 fullScreen={fullScreen}
@@ -38,19 +39,18 @@ export default function ResponsiveDialogStore() {
                 <DialogTitle id="responsive-dialog-title">{"Use Google's location service?"}</DialogTitle>
                 <DialogContent>
                     <DialogContentText>
-                        Let Google help apps determine location. This means sending anonymous location data to
-                        Google, even when no apps are running.
-
+                        Store Details
                     </DialogContentText>
-                    <FCGoogleMaps />
+                    <FCGooglePlacesSearch />
+                    <FCGoogleMap />
                 </DialogContent>
                 <DialogActions>
                     <Button autoFocus onClick={handleClose} color="primary">
                         Disagree
-          </Button>
+                    </Button>
                     <Button onClick={handleClose} color="primary" autoFocus>
                         Agree
-          </Button>
+                    </Button>
                 </DialogActions>
             </Dialog>
         </div>

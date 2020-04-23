@@ -11,7 +11,7 @@ const useStyles = makeStyles(theme => ({
     },
 }));
 
-export default function BasicTextFields(props) {
+export default function FCDiscount(props) {
     const classes = useStyles();
 
     return (

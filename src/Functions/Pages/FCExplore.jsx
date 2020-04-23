@@ -1,9 +1,12 @@
 import React from 'react';
 import FCCard from '../eXtra/FCCard';
-function Explore(props) {
+
+export default function FCExplore(props) {
+
     let list= props.filteredList.map(el=>{
         return <FCCard details={el} key={el.id}/>
     })
+    
     return (
         <div>
             {list}
@@ -11,4 +14,3 @@ function Explore(props) {
     );
 }
 
-export default Explore;

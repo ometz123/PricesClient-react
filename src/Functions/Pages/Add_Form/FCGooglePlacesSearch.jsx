@@ -7,7 +7,6 @@ import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import parse from 'autosuggest-highlight/parse';
 import throttle from 'lodash/throttle';
-import FCGoogleMapView from './FCGoogleMapView';
 
 function loadScript(src, position, id) {
   if (!position) {
@@ -30,7 +29,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function GoogleMaps() {
+export default function FCGooglePlacesSearch(props) {
   const classes = useStyles();
   const [inputValue, setInputValue] = React.useState('');
   const [options, setOptions] = React.useState([]);
@@ -89,51 +88,64 @@ export default function GoogleMaps() {
 
   return (
     <div>
-    <Autocomplete
-      id="google-map-demo"
-      style={{ width: 300 }}
-      getOptionLabel={(option) => (typeof option === 'string' ? option : option.description)}
-      filterOptions={(x) => x}
-      options={options}
-      autoComplete
-      includeInputInList
-      renderInput={(params) => (
-        <TextField
-          {...params}
-          label="Search a store/address.."
-          variant="outlined"
-          fullWidth
-          onChange={handleChange}
-        />
-      )}
-      renderOption={(option) => {
-        const matches = option.structured_formatting.main_text_matched_substrings;
-        const parts = parse(
-          option.structured_formatting.main_text,
-          matches.map((match) => [match.offset, match.offset + match.length]),
-        );
+      <Autocomplete
+        id="google-map-demo"
+        style={{
+          width: 300,
+          color: "white"
+        }}
+        getOptionLabel={(option) => (typeof option === 'string' ? option : option.description)}
+        filterOptions={(x) => x}
+        options={options}
+        autoComplete
+        includeInputInList
+        renderInput={(params) => (
+          <TextField
+            {...params}
+            label="Search a store/address.."
+            variant="outlined"
+            InputLabelProps={{
+              style: { color: props.color ? props.color : null },
+            }}
+            InputProps={{
+              style: {
+                color: props.color ? props.color : null
+              },
+              //disableUnderline: "true",
+              minimum: "0", max: "10", step: "1"
 
-        return (
-          <Grid container alignItems="center">
-            <Grid item>
-              <LocationOnIcon className={classes.icon} />
-            </Grid>
-            <Grid item xs>
-              {parts.map((part, index) => (
-                <span key={index} style={{ fontWeight: part.highlight ? 700 : 400 }}>
-                  {part.text}
-                </span>
-              ))}
+            }}
+            fullWidth
+            onChange={handleChange}
+          />
+        )}
+        renderOption={(option) => {
+          const matches = option.structured_formatting.main_text_matched_substrings;
+          const parts = parse(
+            option.structured_formatting.main_text,
+            matches.map((match) => [match.offset, match.offset + match.length]),
+          );
 
-              <Typography variant="body2" color="textSecondary">
-                {option.structured_formatting.secondary_text}
-              </Typography>
+          return (
+            <Grid container alignItems="center">
+              <Grid item>
+                <LocationOnIcon className={classes.icon} />
+              </Grid>
+              <Grid item xs>
+                {parts.map((part, index) => (
+                  <span key={index} style={{ fontWeight: part.highlight ? 700 : 400 }}>
+                    {part.text}
+                  </span>
+                ))}
+
+                <Typography variant="body2" color="textSecondary">
+                  {option.structured_formatting.secondary_text}
+                </Typography>
+              </Grid>
             </Grid>
-          </Grid>
-        );
-      }}
-    />
-    <FCGoogleMapView/>
+          );
+        }}
+      />
     </div>
   );
 }

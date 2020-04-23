@@ -68,7 +68,7 @@ const theme = createMuiTheme({
     }
 });
 
-function BasicDatePicker(props) {
+export default function FCDatePicker(props) {
     const [selectedDate, handleDateChange] = useState(new Date());
     //const [selectedDate, handleDateChange] = useState(null);
     return (
@@ -98,5 +98,3 @@ function BasicDatePicker(props) {
         </MuiPickersUtilsProvider>
     );
 }
-
-export default BasicDatePicker;

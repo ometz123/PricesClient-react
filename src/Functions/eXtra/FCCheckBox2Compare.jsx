@@ -19,7 +19,7 @@ const GreenCheckbox = withStyles({
   checked: {},
 })(props => <Checkbox color="default" {...props} />);
 
-export default function CheckboxLabels() {
+export default function FCCheckBox2Compare() {
   const [state, setState] = React.useState({
     checkedA: true,
     checkedB: true,

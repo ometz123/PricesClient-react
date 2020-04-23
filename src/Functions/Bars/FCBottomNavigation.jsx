@@ -19,7 +19,7 @@ import OreoIceCream from '../../Images/OreoIceCream.png';
 import Receipt from '../../Images/Receipt.png';
 //
 
-import PrimarySearchAppBar from './FCPrimarySearchAppBar';
+import FCTopBar from './FCTopBar';
 import AddIcon from '@material-ui/icons/Add';
 import FCAdd from '../Pages/FCAdd';
 
@@ -30,7 +30,7 @@ const useStyles = makeStyles({
   },
 });
 
-function LabelBottomNavigation(props) {
+function FCBottomNavigation(props) {
   let filteredList = [
     {
       id: 1, title: "Bamba", price: 100, discount: 0, image: Bamba, store: "Moshe's Pitzutzia", receipt: Receipt,
@@ -79,7 +79,7 @@ function LabelBottomNavigation(props) {
 
   return (
     <div>
-      <PrimarySearchAppBar title ={value} />
+      <FCTopBar title ={value} />
       <Switch>
       <Route path="/add" >
           <FCAdd />
@@ -109,4 +109,4 @@ function LabelBottomNavigation(props) {
     </div >
   );
 }
-export default withRouter(LabelBottomNavigation);
+export default withRouter(FCBottomNavigation);

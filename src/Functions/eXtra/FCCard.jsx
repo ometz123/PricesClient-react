@@ -14,7 +14,7 @@ import FavoriteIcon from '@material-ui/icons/Favorite';
 import ShareIcon from '@material-ui/icons/Share';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
-import CheckboxLabels from './CheckboxLabels'
+import FCCheckBox2Compare from './FCCheckBox2Compare'
 
 
 const useStyles = makeStyles(theme => ({
@@ -41,7 +41,7 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-export default function RecipeReviewCard(props) {
+export default function FCCard(props) {
   const classes = useStyles();
   const [expanded, setExpanded] = React.useState(false);
 
@@ -53,7 +53,7 @@ export default function RecipeReviewCard(props) {
     <Card className={classes.card}>
       <CardHeader
         avatar={
-            <CheckboxLabels></CheckboxLabels>
+            <FCCheckBox2Compare></FCCheckBox2Compare>
         }
         action={
           <IconButton aria-label="settings">
