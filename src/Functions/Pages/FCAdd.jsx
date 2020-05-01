@@ -1,7 +1,9 @@
 import React from 'react';
+import { makeStyles } from '@material-ui/core/styles';
 import FCImage from './Add_Form/FCImage';
 import { Button, /*FormControl*/ } from '@material-ui/core';
 import FCDatePicker from './Add_Form/FCDatePicker';
+import '../../Styles/mysass.scss';
 // import DateFnsUtils from '@date-io/date-fns';
 // import { MuiPickersUtilsProvider } from '@material-ui/pickers';
 import AnnouncementOutlinedIcon from '@material-ui/icons/AnnouncementOutlined';
@@ -11,8 +13,26 @@ import FCDescriptions from './Add_Form/FCDescriptions';
 import CheckCircleOutlineIcon from '@material-ui/icons/CheckCircleOutline';
 import FCStoreDetails from './Add_Form/FCStoreDetails';
 import FCAddItem from '../eXtra/FCAddItem';
+import FCList from '../eXtra/FCList';
+
+const useStyles = makeStyles((theme) => ({
+    table: {
+        maxHeight: `300px`,
+    },
+    demo: {
+      color: "white",
+      maxHeight: `300px`,
+      maxWidth:`300px`,
+      overflow: "overlay",
+    },
+    title: {
+      margin: theme.spacing(4, 0, 2),
+    },
+  }));
+
 
 function FCAdd(props) {
+    const classes = useStyles();
 
     const handleSubmit = (event) => {
 
@@ -23,7 +43,7 @@ function FCAdd(props) {
 
     return (
         <div>
-            <form onSubmit={handleSubmit} name="receipt" >
+            <form onSubmit={handleSubmit} name="receipt" className={classes.table} >
                 <div >
                     <div style={{ float: 'left', width: "250px", }}>
                         <FCImage />
@@ -37,7 +57,6 @@ function FCAdd(props) {
                     <div
                         style={{ height: "100px", width: "250px", float: 'left' }}>
                         <FCStoreDetails />
-                        
                     </div>
                     <div style={{ float: 'right', width: "250px", }} >
                         <FCDiscount color={"white"} />
@@ -48,8 +67,8 @@ function FCAdd(props) {
                     <div style={{ float: 'left', width: "250px", }}>
                         <FCAddItem />
                     </div>
-                    <div>
-                        List Item 1
+                    <div style={{ float: 'right'}}>
+                        <FCList/>
                     </div>
                 </div>
                 <div>

@@ -6,22 +6,24 @@ import Autocomplete from '@material-ui/lab/Autocomplete';
 
 export default function FCTags() {
   return (
-    <Autocomplete
-      multiple
-      id="fixed-tags-demo"
-      options={top100Films}
-      getOptionLabel={(option) => option.title}
-      //defaultValue={[top100Films[6], top100Films[13]]}
-      renderTags={(value, getTagProps) =>
-        value.map((option, index) => (
-          <Chip label={option.title} {...getTagProps({ index })} disabled={index === 0} />
-        ))
-      }
-      style={{ maxWidth: 400 }}
-      renderInput={(params) => (
-        <TextField {...params} label="Tags" variant="outlined" placeholder="Tags" />
-      )}
-    />
+    <div>
+      <Autocomplete
+        multiple
+        id="fixed-tags-demo"
+        options={top100Films}
+        getOptionLabel={(option) => option.title}
+        //defaultValue={[top100Films[6], top100Films[13]]}
+        renderTags={(value, getTagProps) =>
+          value.map((option, index) => (
+            <Chip label={option.title} {...getTagProps({ index })} disabled={index === 0} />
+          ))
+        }
+        style={{ maxWidth: 400 }}
+        renderInput={(params) => (
+          <TextField {...params} label="Tags" variant="outlined" placeholder="Tags" />
+        )}
+      />
+    </div>
   );
 }
 

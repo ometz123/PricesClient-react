@@ -1,17 +1,21 @@
 import React from 'react';
 import { Map, GoogleApiWrapper, Marker } from 'google-maps-react';
 
+const googleApiKey=`AIzaSyC47_J_bDoU4euesrr-ChlFjRpas0HzLQM`;
 function FCGoogleMap(props) {
+    const [location,setLocation]= React.useState({ lat: 32.658456, lng: 35.580300 })
     return (
         <div>
             <Map
                 google={props.google}
-                zoom={8}
-                //style={mapStyles}
+                zoom={12}
+                style={mapStyles}
                 containerStyle={containerStyle}
-                initialCenter={{ lat: 47.444, lng: -122.176 }}
+                initialCenter={{ lat: 32.658456, lng: 35.580300 }}
+                onClick={()=>setLocation({ lat: 32.658470, lng: 35.580390 })}
+
             >
-                <Marker position={{ lat: 48.00, lng: -122.00 }} />
+                <Marker position={location} />
             </Map>
         </div>
     );
@@ -19,7 +23,7 @@ function FCGoogleMap(props) {
 const mapStyles = {
     maxWidth: '300px',
     maxHeight: '300px',
-    position: 'relative',
+    //position: 'relative',
     //width: '100%',
     //height: '100%'
 };
@@ -31,5 +35,6 @@ const containerStyle = {
 
 //export default FCGoogleMapView;
 export default GoogleApiWrapper({
-    apiKey: 'AIzaSyC47_J_bDoU4euesrr-ChlFjRpas0HzLQM'
+    apiKey: googleApiKey,
+    language:"he"
 })(FCGoogleMap);

@@ -81,9 +81,9 @@ export default function FCAddItem(props) {
                         </div>
                     </DialogContent>
                     <DialogActions>
-                        {/* <Button autoFocus onClick={handleClose} color="primary">
-                        Disagree
-                         </Button> */}
+                        <Button autoFocus onClick={handleClose} color="primary">
+                            Disagree
+                         </Button>
                         <Button onClick={handleClose} color="primary" autoFocus>
                             Agree
                         </Button>

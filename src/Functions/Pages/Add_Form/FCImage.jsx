@@ -45,8 +45,7 @@ export default function FCImage(props) {
         type="file"
         name='receipt'
         id="upload-button"
-        //style={{ display: 'none' }} 
-        style={{ width:1 }} 
+        style={{ display: 'none', border:"5px solid red" }} 
         onChange={handleChange}
         required
       />

@@ -7,18 +7,11 @@ import SearchIcon from '@material-ui/icons/Search';
 import FCSearch from '../Pages/FCSearch';
 import { Switch, Route, withRouter } from 'react-router-dom';
 import FCExplore from '../Pages/FCExplore';
-
-//
-// import Bamba from './Images/Bamba.png';
-// import Doritos from './Images/Doritos.png';
-// import OreoIceCream from './Images/OreoIceCream.png';
-// import Receipt from './Images/Receipt.png';
+import '../../Styles/mysass.scss';
 import Bamba from '../../Images/Bamba.png';
 import Doritos from '../../Images/Doritos.png';
 import OreoIceCream from '../../Images/OreoIceCream.png';
 import Receipt from '../../Images/Receipt.png';
-//
-
 import FCTopBar from './FCTopBar';
 import AddIcon from '@material-ui/icons/Add';
 import FCAdd from '../Pages/FCAdd';
@@ -27,6 +20,8 @@ import FCAdd from '../Pages/FCAdd';
 const useStyles = makeStyles({
   root: {
     width: 500,
+    zIndex: 999,
+    display: "block",
   },
 });
 
@@ -78,10 +73,15 @@ function FCBottomNavigation(props) {
   };
 
   return (
-    <div>
-      <FCTopBar title ={value} />
+    <div className={"scrollDiv"}>
+      {/* <FCTopBar title={value}
+        style={{
+          position: "fixed",
+          top: "0px",
+          width: "100%"
+        }} /> */}
       <Switch>
-      <Route path="/add" >
+        <Route path="/add" >
           <FCAdd />
         </Route>
         <Route path="/search" >
@@ -94,14 +94,14 @@ function FCBottomNavigation(props) {
 
       <BottomNavigation value={value} onChange={handleChange} className={classes.root}>
 
-      <BottomNavigationAction label="Add" value="Add" icon={<AddIcon />}
-          onClick={() => props.history.push({ pathname: "/add" })}/>
+        <BottomNavigationAction label="Add" value="Add" icon={<AddIcon />}
+          onClick={() => props.history.push({ pathname: "/add" })} />
 
         <BottomNavigationAction label="Search" value="Search" icon={<SearchIcon />}
-          onClick={() => props.history.push({ pathname: "/search" })}/>
+          onClick={() => props.history.push({ pathname: "/search" })} />
 
         <BottomNavigationAction label="Explore" value="Explore" icon={<ExploreIcon />}
-          onClick={() => props.history.push({ pathname: "/" })}/>
+          onClick={() => props.history.push({ pathname: "/" })} />
 
       </BottomNavigation>
 

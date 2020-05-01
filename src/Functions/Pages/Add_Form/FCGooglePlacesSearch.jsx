@@ -29,7 +29,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function FCGooglePlacesSearch(props) {
+export default function FCGooglePlacesSearch() {
   const classes = useStyles();
   const [inputValue, setInputValue] = React.useState('');
   const [options, setOptions] = React.useState([]);
@@ -38,13 +38,12 @@ export default function FCGooglePlacesSearch(props) {
   if (typeof window !== 'undefined' && !loaded.current) {
     if (!document.querySelector('#google-maps')) {
       loadScript(
-        `https://maps.googleapis.com/maps/api/js?key=
-        AIzaSyC47_J_bDoU4euesrr-ChlFjRpas0HzLQM
-        &libraries=places`,
+        'https://maps.googleapis.com/maps/api/js?key=AIzaSyC47_J_bDoU4euesrr-ChlFjRpas0HzLQM&libraries=places',
         document.querySelector('head'),
         'google-maps',
       );
     }
+
     loaded.current = true;
   }
 
@@ -87,65 +86,49 @@ export default function FCGooglePlacesSearch(props) {
   }, [inputValue, fetch]);
 
   return (
-    <div>
-      <Autocomplete
-        id="google-map-demo"
-        style={{
-          width: 300,
-          color: "white"
-        }}
-        getOptionLabel={(option) => (typeof option === 'string' ? option : option.description)}
-        filterOptions={(x) => x}
-        options={options}
-        autoComplete
-        includeInputInList
-        renderInput={(params) => (
-          <TextField
-            {...params}
-            label="Search a store/address.."
-            variant="outlined"
-            InputLabelProps={{
-              style: { color: props.color ? props.color : null },
-            }}
-            InputProps={{
-              style: {
-                color: props.color ? props.color : null
-              },
-              //disableUnderline: "true",
-              minimum: "0", max: "10", step: "1"
+    <Autocomplete
+      id="google-map-demo"
+      style={{ width: 300 }}
+      getOptionLabel={(option) => (typeof option === 'string' ? option : option.description)}
+      filterOptions={(x) => x}
+      options={options}
+      autoComplete
+      includeInputInList
+      renderInput={(params) => (
+        <TextField
+          {...params}
+          label="Search a store/address.."
+          variant="outlined"
+          fullWidth
+          onChange={handleChange}
+        />
+      )}
+      renderOption={(option) => {
+        const matches = option.structured_formatting.main_text_matched_substrings;
+        const parts = parse(
+          option.structured_formatting.main_text,
+          matches.map((match) => [match.offset, match.offset + match.length]),
+        );
 
-            }}
-            fullWidth
-            onChange={handleChange}
-          />
-        )}
-        renderOption={(option) => {
-          const matches = option.structured_formatting.main_text_matched_substrings;
-          const parts = parse(
-            option.structured_formatting.main_text,
-            matches.map((match) => [match.offset, match.offset + match.length]),
-          );
-
-          return (
-            <Grid container alignItems="center">
-              <Grid item>
-                <LocationOnIcon className={classes.icon} />
-              </Grid>
-              <Grid item xs>
-                {parts.map((part, index) => (
-                  <span key={index} style={{ fontWeight: part.highlight ? 700 : 400 }}>
-                    {part.text}
-                  </span>
-                ))}
-
-                <Typography variant="body2" color="textSecondary">
-                  {option.structured_formatting.secondary_text}
-                </Typography>
-              </Grid>
+        return (
+          <Grid container alignItems="center">
+            <Grid item>
+              <LocationOnIcon className={classes.icon} />
             </Grid>
-          );
-        }}
-      />
-    </div>
+            <Grid item xs>
+              {parts.map((part, index) => (
+                <span key={index} style={{ fontWeight: part.highlight ? 700 : 400 }}>
+                  {part.text}
+                </span>
+              ))}
+
+              <Typography variant="body2" color="textSecondary">
+                {option.structured_formatting.secondary_text}
+              </Typography>
+            </Grid>
+          </Grid>
+        );
+      }}
+    />
   );
 }
