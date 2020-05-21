@@ -21,14 +21,59 @@ function FCGoogleMap(props) {
         positionByUserLocation = !positionByUserLocation;
         //console.log("search: ", search);
     }
+    //
+    function getLocation() {
+        console.log('getLocation was called');
+        navigator.permissions.query({
+            name: 'geolocation'
+        }).then((result) => {
+            if (result.state == 'granted') {
+                console.log(result.state);
+                //geoBtn.style.display = 'none';
+            } else if (result.state == 'prompt') {
+                console.log(result.state);
+                //geoBtn.style.display = 'none';
+
+            } else if (result.state == 'denied') {
+                alert("עליך לאשר שימוש במיקום");
+                //geoBtn.style.display = 'inline';
+            }
+            result.onchange = function () {
+                console.log(result.state);
+            }
+        });
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(showPosition, positionError);
+        } else {
+            console.log('Geolocation is not supported by this device')
+        }
+    }
+    // function revealPosition() { console.log("revealPosition"); };
+    // function positionDenied() { console.log("positionDenied"); };
+    // function geoSettings() { console.log("geoSettings"); };
+    function positionError() {
+        console.log('Geolocation is not enabled. Please enable to use this feature')
+
+        //if(allowGeoRecall) getLocation()
+    }
+    function showPosition() {
+        console.log('position accepted')
+        //allowGeoRecall = false
+    }
+    //
     const handleResetLocation = () => {
-        if ("geolocation" in navigator) {
-            console.log("Available");
-          } else {
-            console.log("Not Available");
-          }
+        getLocation();
+        // if ("geolocation" in navigator) {
+        //     console.log("Available");
+        //   } else {
+        //     console.log("Not Available");
+        //   }
         if (user.userLocation == null) {
             //setUserLocation();
+            navigator.geolocation.getCurrentPosition(function (position) {
+                console.log("Latitude is :", position.coords.latitude);
+                console.log("Longitude is :", position.coords.longitude);
+            });
         }
         setSearch({
             ...search,
