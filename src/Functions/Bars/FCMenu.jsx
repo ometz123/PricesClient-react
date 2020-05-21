@@ -1,4 +1,5 @@
-import React from 'react';
+import React,{useContext} from 'react';
+import { UserContext } from '../../Contexts/UserContext';
 import clsx from 'clsx';
 import { makeStyles } from '@material-ui/core/styles';
 import SwipeableDrawer from '@material-ui/core/SwipeableDrawer';
@@ -11,6 +12,7 @@ import InboxIcon from '@material-ui/icons/MoveToInbox';
 import MailIcon from '@material-ui/icons/Mail';
 import MenuIcon from '@material-ui/icons/Menu';
 import IconButton from '@material-ui/core/IconButton';
+import MeetingRoomIcon from '@material-ui/icons/MeetingRoom';
 
 const useStyles = makeStyles({
   list: {
@@ -22,6 +24,7 @@ const useStyles = makeStyles({
 });
 
 export default function FCMenu() {
+  const { /*user,*/ SetNewUser } = useContext(UserContext);
   const classes = useStyles();
   const [state, setState] = React.useState({
     //top: false,
@@ -48,7 +51,7 @@ export default function FCMenu() {
       onKeyDown={toggleDrawer(anchor, false)}
     >
       <List>
-        {['Inbox', 'Starred', 'Add New'].map((text, index) => (
+        {['Inbox', 'Starred'].map((text, index) => (
           <ListItem button key={text}>
             <ListItemIcon>{index % 2 === 0 ? <InboxIcon /> : <MailIcon />}</ListItemIcon>
             <ListItemText primary={text} />
@@ -57,12 +60,16 @@ export default function FCMenu() {
       </List>
       <Divider />
       <List>
-        {['All mail', 'Trash', 'Spam'].map((text, index) => (
+        {/* {['All mail', 'Trash', 'Spam'].map((text, index) => (
           <ListItem button key={text}>
             <ListItemIcon>{index % 2 === 0 ? <InboxIcon /> : <MailIcon />}</ListItemIcon>
             <ListItemText primary={text} />
           </ListItem>
-        ))}
+        ))} */}
+        <ListItem button key={"logOut"} onClick={() => SetNewUser({  loggedIn: false })}>
+            <ListItemIcon><MeetingRoomIcon /></ListItemIcon>
+            <ListItemText primary={"Log Out"} />
+          </ListItem>
       </List>
     </div>
   );

@@ -13,33 +13,35 @@ function valuetext(value) {
   return `${value}$`;
 }
 
-export default function FCSlider() {
+export default function FCSlider(props) {
   const classes = useStyles();
-  const [value, setValue] = React.useState([20, 30]);
+  const [range, setValue] = React.useState([20, 30]);
   const [distance, setDistance] = React.useState([20]);
 
-  const handleChange = (event, newValue) => {
+  const handlePriceRangeChange = (event, newValue) => {
     setValue(newValue);
+    props.handlePriceRange(newValue);
   };
-const handleDistance=(e, newdistance)=>{
-    setDistance(newdistance)
+const handleDistanceChange=(e, newdistance)=>{
+    setDistance(newdistance);
+    props.handleDistance(newdistance);
 }
   return (
     <div className={classes.root}>
         <Typography id="range-slider" gutterBottom>
-        Distance
+        Maximum Distance {distance} km.
       </Typography>
       <Slider
       value={distance}
-      onChange={handleDistance}
+      onChange={handleDistanceChange}
       />
       <Typography id="range-slider" gutterBottom>
-        Price range
+        Price range {range[0]}-{range[1]}
       </Typography>
       <Slider
-        value={value}
-        onChange={handleChange}
-        valueLabelDisplay="auto"
+        value={range}
+        onChange={handlePriceRangeChange}
+        //valueLabelDisplay="auto"
         aria-labelledby="range-slider"
         getAriaValueText={valuetext}
       />

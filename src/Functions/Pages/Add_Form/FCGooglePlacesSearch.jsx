@@ -16,6 +16,9 @@ function loadScript(src, position, id) {
   const script = document.createElement('script');
   script.setAttribute('async', '');
   script.setAttribute('id', id);
+  //
+  //script.setAttribute('crossorigin','');
+  //
   script.src = src;
   position.appendChild(script);
 }
@@ -29,12 +32,13 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function FCGooglePlacesSearch() {
+export default function FCGooglePlacesSearch(props) {
+
   const classes = useStyles();
   const [inputValue, setInputValue] = React.useState('');
   const [options, setOptions] = React.useState([]);
   const loaded = React.useRef(false);
-
+  const myGoogleKey = `AIzaSyC47_J_bDoU4euesrr-ChlFjRpas0HzLQM`;
   if (typeof window !== 'undefined' && !loaded.current) {
     if (!document.querySelector('#google-maps')) {
       loadScript(
@@ -48,8 +52,62 @@ export default function FCGooglePlacesSearch() {
   }
 
   const handleChange = (event) => {
+    console.log("event:", event);
+    
     setInputValue(event.target.value);
+    //console.log("event: ",event.target);
+
   };
+  const handleLocationChange = (e) => {
+    //console.log("e.place_id: ", e.place_id);
+    console.log(e);
+    //const { latLng } = e;
+    //const lat = latLng.lat();
+    //const lng = latLng.lng();
+    //const response= await fetch(`https://maps.googleapis.com/maps/api/place/details/json?place_id=${e.place_id}&key=${myGoogleKey}`);
+    // const response= await fetch(`https://api.randomuser.me/`);
+    // const data= await response.json();
+    // console.log(data);
+
+    //
+    fetch(`https://maps.googleapis.com/maps/api/place/details/json?place_id=${e.place_id}&key=${myGoogleKey}`, {
+      method: 'GET',
+      headers: new Headers({
+        'Content-Type': 'application/json; charset=UTF-8',
+        //'Access-Control-Allow-Origin':'*'
+        'cors':'*'
+      })
+    })
+      .then(res => {
+        console.log('res=', res);
+        console.log('res.status', res.status);
+        console.log('res.ok', res.ok);
+        return res.json()
+      })
+      .then(
+        (result) => {
+          console.log("fetch FetchGet= ", result);
+          //result.map(st => console.log(st.FullName));
+          //console.log('result[0].FullName=', result[0].FullName);
+        },
+        (error) => {
+          console.log("err post=", error);
+        });
+    //
+    // fetch(
+    // //   `https://maps.googleapis.com/maps/api/place/details/json?
+    // // place_id=${e.place_id}&
+    // // key=${myGoogleKey}`
+    // 'https://api.randomuser.me/',
+    // {mode: 'cors'}
+    // )
+    //   .then(response => response.json())
+    //   .then(data => console.log(data));
+    //https://maps.googleapis.com/maps/api/place/details/json?place_id=ChIJVZUCaRpqHBURvnGwaPyrvD8&key=AIzaSyC47_J_bDoU4euesrr-ChlFjRpas0HzLQM
+    //console.log("location: ",location);
+    //props.handleLocation(location)
+    //kolbo ashdot id:  ChIJS6e0YxpqHBURkJoXT0m2wTY
+  }
 
   const fetch = React.useMemo(
     () =>
@@ -89,6 +147,7 @@ export default function FCGooglePlacesSearch() {
     <Autocomplete
       id="google-map-demo"
       style={{ width: 300 }}
+      //onChange={(...e) => handleLocationChange(e)}
       getOptionLabel={(option) => (typeof option === 'string' ? option : option.description)}
       filterOptions={(x) => x}
       options={options}

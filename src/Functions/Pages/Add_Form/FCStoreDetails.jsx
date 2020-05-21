@@ -1,4 +1,4 @@
-import React/*, { Children }*/ from 'react';
+import React, { useEffect, /*useContext*/ }/*, { Children }*/ from 'react';
 import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
@@ -11,11 +11,13 @@ import StorefrontOutlinedIcon from '@material-ui/icons/StorefrontOutlined';
 import AnnouncementOutlinedIcon from '@material-ui/icons/AnnouncementOutlined';
 import FCGooglePlacesSearch from './FCGooglePlacesSearch';
 import FCGoogleMap from './FCGoogleMap';
+//import { SearchContext } from '../../../Contexts/SearchContext';
 
 export default function FCStoreDetails() {
     const [open, setOpen] = React.useState(false);
     const theme = useTheme();
     const fullScreen = useMediaQuery(theme.breakpoints.down('sm'));
+    //const { search, SetNewSearch } = useContext(SearchContext);
 
     const handleClickOpen = () => {
         setOpen(true);
@@ -24,7 +26,14 @@ export default function FCStoreDetails() {
     const handleClose = () => {
         setOpen(false);
     };
-
+    useEffect(() => {
+        // navigator.geolocation.getCurrentPosition((position) => {
+        //     //console.log(position);
+        //     //console.log("Latitude is :", position.coords.latitude);
+        //     //console.log("Longitude is :", position.coords.longitude);
+        //     SetNewSearch({ ...search, userLocation: position ? position.coords : null });
+        // });
+    })
     return (
         <div>
             <Button variant="outlined" color="primary" onClick={handleClickOpen}>

@@ -1,28 +1,31 @@
-import React, { useState } from 'react';
+import React, {/*useState,*/useContext } from 'react';
 import { /*Switch, Route, Link,*/ withRouter } from 'react-router-dom';
-import FCBottomNavigation from './Bars/FCBottomNavigation';
+//import FCBottomNavigation from './Bars/FCBottomNavigation';
 import FCLogIn from './Pages/FCLogIn';
 import '../Styles/mysass.scss';
 import FCTopBar from './Bars/FCTopBar';
+//import Stam from '../Functions/stam';
+import { UserContext } from '../Contexts/UserContext';
 
 function FCPrices(props) {
-    const [loggedIn/*, setLoggedIn*/] = useState(true)
-    if (loggedIn) {
+    const { user } = useContext(UserContext);
+    //const [loggedIn/*, setLoggedIn*/] = useState(false)
+    if (user.loggedIn) {
         return (
             <div
                 style={{
                     textAlign: "-webkit-center",//מיישר את התוכן
                     // position: "fixed",
                     // top: "0px",
-                     width: "100%"
+                    width: "100%"
                 }}>
                 <FCTopBar />
-                {/* <FCBottomNavigation/> */}
             </div>
         );
     } else
         return (
             <div style={{ textAlign: "-webkit-center" }}>
+                {/* <Stam/>  */}
                 <FCLogIn />
             </div>
         );

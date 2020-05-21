@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
+import { UserContext } from '../../Contexts/UserContext';
 import FCDatePicker from './Add_Form/FCDatePicker';
 
 const myStyles = {
@@ -16,13 +17,14 @@ const myStyles = {
 
 };
 export default function FCLogIn(props) {
-    
+    const { /*user,*/ SetUser } = useContext(UserContext);
+
     // const [startDate, setStartDate] = useState(new Date());    //Log in
     // const [email, setEmail] = useState('');
     // const [password, setPassword] = useState('');
     // const [count, setCount] = useState(0);
-     const [value/*, setValue*/] = useState();
-
+    const [value/*, setValue*/] = useState();
+    const [firstName, setFirstName] = useState("");
 
     //Sing up
     // const NewFNameChange = (e) => {
@@ -55,15 +57,15 @@ export default function FCLogIn(props) {
 
     return (
         <div>
-            <form 
+            <form
             //onSubmit={() => props.LogIn(this.state.email, this.state.password)}
             >
                 <fieldset>
                     <legend>Log In</legend>
                     <input type="text" name="email" id="email" placeholder="Email"
-                         value={value} style={myStyles.logIn} />
+                        value={value} style={myStyles.logIn} />
                     <input type="password" name="password" id="password" placeholder="Password"
-                        style={myStyles.logIn}  value={value} /><br />
+                        style={myStyles.logIn} value={value} /><br />
                     <input type="submit" value="Log In" />
                 </fieldset>
             </form>
@@ -71,7 +73,9 @@ export default function FCLogIn(props) {
             <form >
                 <fieldset>
                     <legend>Sign up!</legend>
-                    <input type="text" placeholder="First Name" style={myStyles.name} value={value} />
+                    <input type="text" placeholder="First Name" style={myStyles.name} value={firstName}
+                    onChange={(e)=>setFirstName(e.target.value)} />
+
                     <input type="text" placeholder="Last Name" style={myStyles.name} value={value} /><br />
                     <input type="text" placeholder="Email" style={myStyles.logIn} value={value} /><br />
                     <input type="password" placeholder="Password" style={myStyles.logIn} value={value} /><br />
@@ -83,7 +87,10 @@ export default function FCLogIn(props) {
                         <input type="radio" name="gender" value="male" /*value={value}*/ /> Male <br />
                         <input type="radio" name="gender" value="female" /*value={value}*/ /> Female
                         </fieldset>
-                    <input type="submit" value="Sign up" />
+                    <button onClick={() => SetUser({ name: firstName, loggedIn: true })}>
+                        change
+                </button>
+                    {/* <input type="submit" value="Sign up" /> */}
                 </fieldset>
             </form>
         </div>

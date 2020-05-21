@@ -1,21 +1,21 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { fade, makeStyles } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import IconButton from '@material-ui/core/IconButton';
 import Typography from '@material-ui/core/Typography';
 import InputBase from '@material-ui/core/InputBase';
-import Badge from '@material-ui/core/Badge';
+//import Badge from '@material-ui/core/Badge';
 import MenuItem from '@material-ui/core/MenuItem';
 import Menu from '@material-ui/core/Menu';
 import SearchIcon from '@material-ui/icons/Search';
 import AccountCircle from '@material-ui/icons/AccountCircle';
-import MailIcon from '@material-ui/icons/Mail';
-import NotificationsIcon from '@material-ui/icons/Notifications';
+//import MailIcon from '@material-ui/icons/Mail';
+//import NotificationsIcon from '@material-ui/icons/Notifications';
 import MoreIcon from '@material-ui/icons/MoreVert';
-import FCMenu from '../Pages/FCMenu';
+import FCMenu from './FCMenu';
 import { useState } from 'react';
-import AddBoxIcon from '@material-ui/icons/AddBox';
+//import AddBoxIcon from '@material-ui/icons/AddBox';
 //
 import FCSearch from '../Pages/FCSearch';
 import { Switch, Route, withRouter } from 'react-router-dom';
@@ -28,6 +28,9 @@ import Receipt from '../../Images/Receipt.png';
 import AddIcon from '@material-ui/icons/Add';
 import FCAdd from '../Pages/FCAdd';
 import ExploreIcon from '@material-ui/icons/Explore';
+import { UserContext } from '../../Contexts/UserContext';
+import { SearchContext } from '../../Contexts/SearchContext';
+
 //
 
 const useStyles = makeStyles(theme => ({
@@ -42,6 +45,12 @@ const useStyles = makeStyles(theme => ({
     marginRight: theme.spacing(2),
   },
   title: {
+    display: 'none',
+    [theme.breakpoints.up('sm')]: {
+      display: 'block',
+    },
+  },
+  user: {
     display: 'none',
     [theme.breakpoints.up('sm')]: {
       display: 'block',
@@ -86,19 +95,21 @@ const useStyles = makeStyles(theme => ({
   },
   sectionDesktop: {
     display: 'none',
-    [theme.breakpoints.up('md')]: {
+    [theme.breakpoints.up('sm')]: {
       display: 'flex',
     },
   },
   sectionMobile: {
     display: 'flex',
-    [theme.breakpoints.up('md')]: {
+    [theme.breakpoints.up('sm')]: {
       display: 'none',
     },
   },
 }));
 
 function FCTopBar(props) {
+  const { user } = useContext(UserContext);
+  const { search, setSearch } = useContext(SearchContext);
   let filteredList = [
     {
       id: 1, title: "Bamba", price: 100, discount: 0, image: Bamba, store: "Moshe's Pitzutzia", receipt: Receipt,
@@ -161,10 +172,26 @@ function FCTopBar(props) {
   const handleMobileMenuOpen = event => {
     setMobileMoreAnchorEl(event.currentTarget);
   };
-const handleRoute=(route)=>{
-   props.history.push({ pathname: "/"+route })
-   handleMobileMenuClose();
-}
+  const handleAdd = () => {
+    props.history.push({ pathname: "/add" })
+    setTitle("Add");
+    handleMobileMenuClose();
+  }
+  const handleExplore = () => {
+    props.history.push({ pathname: "/" })
+    setTitle("Explore");
+    handleMobileMenuClose();
+  }
+  const handleSearch = () => {
+    props.history.push({ pathname: "/search" })
+    setTitle("Search");
+    handleMobileMenuClose();
+  }
+  const handleSearchText=(e)=>{
+    setSearch({
+      ...search, text: e ? e : null
+    })
+  }
   const menuId = 'primary-search-account-menu';
   const renderMenu = (
     <Menu
@@ -176,8 +203,8 @@ const handleRoute=(route)=>{
       open={isMenuOpen}
       onClose={handleMenuClose}
     >
-      <MenuItem onClick={handleMenuClose}>Profile</MenuItem>
-      <MenuItem onClick={handleMenuClose}>My account</MenuItem>
+      <MenuItem onClick={handleMenuClose}>{user.name}'s Profile</MenuItem>
+      {/* <MenuItem onClick={handleMenuClose}>{user.name}'s account</MenuItem> */}
     </Menu>
   );
 
@@ -192,15 +219,15 @@ const handleRoute=(route)=>{
       open={isMobileMenuOpen}
       onClose={handleMobileMenuClose}
     >
-      <MenuItem onClick={()=>handleRoute("add")}>
+      <MenuItem onClick={() => handleAdd()}>
         <IconButton aria-label="add new receipt" color="inherit" >
-            <AddIcon />
+          <AddIcon />
         </IconButton>
         <p>Add Receipt</p>
       </MenuItem>
-      <MenuItem onClick={()=>handleRoute("")}>
+      <MenuItem onClick={() => handleExplore()}>
         <IconButton aria-label="explore items" color="inherit">
-            <ExploreIcon />
+          <ExploreIcon />
         </IconButton>
         <p>Explore</p>
       </MenuItem>
@@ -213,7 +240,7 @@ const handleRoute=(route)=>{
         >
           <AccountCircle />
         </IconButton>
-        <p>Profile</p>
+        <p>{user.name}'s Profile</p>
       </MenuItem>
     </Menu>
   );
@@ -223,7 +250,7 @@ const handleRoute=(route)=>{
       <AppBar position="static"
         style={{
           position: "fixed",
-            top: "0px",
+          top: "0px",
           width: "100%",
           zIndex: 999,
         }}>
@@ -243,9 +270,14 @@ const handleRoute=(route)=>{
                 input: classes.inputInput,
               }}
               inputProps={{ 'aria-label': 'search' }}
-              onClick={()=>handleRoute("search")}
+              onClick={() => handleSearch()}
+              onChange={(e)=>handleSearchText(e.target.value)}
             />
+
           </div>
+          <Typography className={classes.user} variant="h6" noWrap>
+            Hello {user.name}
+          </Typography>
           <div className={classes.grow} />
           <div className={classes.sectionDesktop}>
             <IconButton
@@ -253,27 +285,27 @@ const handleRoute=(route)=>{
               aria-label="account of current user"
               aria-controls={menuId}
               aria-haspopup="true"
-              onClick={() => handleRoute("add")}
+              onClick={() => handleAdd()}
               color="inherit"
             >
               <AddIcon />
             </IconButton>
-            <IconButton
+            {/* <IconButton
               edge="end"
               aria-label="account of current user"
               aria-controls={menuId}
               aria-haspopup="true"
-              onClick={() => props.history.push({ pathname: "/search" })}
+              onClick={() => handleSearch()}
               color="inherit"
             >
               <SearchIcon />
-            </IconButton>
+            </IconButton> */}
             <IconButton
               edge="end"
               aria-label="account of current user"
               aria-controls={menuId}
               aria-haspopup="true"
-              onClick={() => props.history.push({ pathname: "/" })}
+              onClick={() => handleExplore()}
               color="inherit"
             >
               <ExploreIcon />
@@ -319,10 +351,10 @@ const handleRoute=(route)=>{
       </AppBar>
       {renderMobileMenu}
       {renderMenu}
-      <div 
-      style={{
-        paddingTop: "65px"
-      }}
+      <div
+        style={{
+          paddingTop: "65px"
+        }}
       >
         <Switch>
           <Route path="/add" >
