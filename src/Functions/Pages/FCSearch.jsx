@@ -8,9 +8,44 @@ import { SearchContext } from '../../Contexts/SearchContext';
 function FCSearch(props) {
     // const [userLocation, setUserLocation] = useState(null);
     const { search, setSearch } = useContext(SearchContext);
+
+    //let e = `ChIJ7-RHdRGjAhURL2OGWhptgJc`;
+
+    //=`ChIJS6e0YxpqHBURkJoXT0m2wTY`;
+    const myGoogleKey = `AIzaSyC47_J_bDoU4euesrr-ChlFjRpas0HzLQM`;
+
+    //let url1 = `https://maps.googleapis.com/maps/api/place/details/json?place_id=${e}&key=${myGoogleKey}`;
+    //let url2 = `http://proj.ruppin.ac.il/bgroup4/prod/server/api/items/GetItemsForSearch`;
+    let url3 = `https://maps.googleapis.com/maps/api/place/details/json?place_id=ChIJVZUCaRpqHBURvnGwaPyrvD8&key=${myGoogleKey}`;
     const handleSubmit = (e) => {
         e.preventDefault();
         console.log(search);
+        console.log('fetch items: ');
+
+        fetch(url3, {
+            method: 'GET',
+            headers: new Headers({
+                'Content-Type': 'application/json; charset=UTF-8',
+                //'Access-Control-Allow-Origin':'*'
+                //'cors':'no-cors'
+            })
+            , mode: `no-cors`,
+        })
+            .then(res => {
+                console.log('res=', res);
+                console.log('res.status', res.status);
+                console.log('res.ok', res.ok);
+                return res//.json();
+            })
+            .then(
+                (result) => {
+                    console.log("fetch FetchGet= ", result);
+                    //result.map(st => console.log(st.FullName));
+                    //console.log('result[0].FullName=', result[0].FullName);
+                },
+                (error) => {
+                    console.log("err post=", error);
+                });
     }
     const handlePriceRange = (e) => {
 

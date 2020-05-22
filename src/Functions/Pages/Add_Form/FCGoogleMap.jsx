@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { /*useState,*/ useEffect, useContext } from 'react';
 import { Map, GoogleApiWrapper, Marker/*, Circle*/ } from 'google-maps-react';
 import { SearchContext } from '../../../Contexts/SearchContext';
 import { UserContext } from '../../../Contexts/UserContext';
@@ -7,7 +7,7 @@ const googleApiKey = `AIzaSyC47_J_bDoU4euesrr-ChlFjRpas0HzLQM`;
 
 function FCGoogleMap(props) {
     const { search, setSearch } = useContext(SearchContext);
-    const { user, setUserLocation, setUser } = useContext(UserContext);
+    const { user, setUserLocation/*, setUser*/} = useContext(UserContext);
 
     //const [positionByUserLocation, setPositionByUserLocation] = useState(true);
     let positionByUserLocation = false;
@@ -83,26 +83,27 @@ function FCGoogleMap(props) {
         console.log(search);
         positionByUserLocation = !positionByUserLocation;
     }
-    async function asyncuseEffect() {
-        //console.log(12);
-        await setUserLocation();
-        console.log("user(googleMap): ", user);
-        console.log("search(googleMap): ", search);
-        if (positionByUserLocation) {
-            setSearch({
-                ...search,
-                lat: user.userLocation ? user.userLocation.latitude : search.lat,
-                lng: user.userLocation ? user.userLocation.longitude : search.lng
-            });
 
-        }
-
-        //latitude, longitude
-
-        //console.log(34);
-
-    }
     useEffect(() => {
+        async function asyncuseEffect() {
+            //console.log(12);
+            await setUserLocation();
+            console.log("user(googleMap): ", user);
+            console.log("search(googleMap): ", search);
+            if (positionByUserLocation) {
+                setSearch({
+                    ...search,
+                    lat: user.userLocation ? user.userLocation.latitude : search.lat,
+                    lng: user.userLocation ? user.userLocation.longitude : search.lng
+                });
+    
+            }
+    
+            //latitude, longitude
+    
+            //console.log(34);
+    
+        }
         asyncuseEffect();
     }, [positionByUserLocation])
     return (

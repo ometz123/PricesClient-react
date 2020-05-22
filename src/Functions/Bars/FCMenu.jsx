@@ -24,7 +24,7 @@ const useStyles = makeStyles({
 });
 
 export default function FCMenu() {
-  const { /*user,*/ SetNewUser } = useContext(UserContext);
+  const { /*user,*/ SetUser } = useContext(UserContext);
   const classes = useStyles();
   const [state, setState] = React.useState({
     //top: false,
@@ -66,7 +66,7 @@ export default function FCMenu() {
             <ListItemText primary={text} />
           </ListItem>
         ))} */}
-        <ListItem button key={"logOut"} onClick={() => SetNewUser({  loggedIn: false })}>
+        <ListItem button key={"logOut"} onClick={() => SetUser({  loggedIn: false })}>
             <ListItemIcon><MeetingRoomIcon /></ListItemIcon>
             <ListItemText primary={"Log Out"} />
           </ListItem>

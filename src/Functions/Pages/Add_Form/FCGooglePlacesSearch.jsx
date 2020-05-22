@@ -16,9 +16,6 @@ function loadScript(src, position, id) {
   const script = document.createElement('script');
   script.setAttribute('async', '');
   script.setAttribute('id', id);
-  //
-  //script.setAttribute('crossorigin','');
-  //
   script.src = src;
   position.appendChild(script);
 }
@@ -39,10 +36,11 @@ export default function FCGooglePlacesSearch(props) {
   const [options, setOptions] = React.useState([]);
   const loaded = React.useRef(false);
   const myGoogleKey = `AIzaSyC47_J_bDoU4euesrr-ChlFjRpas0HzLQM`;
+
   if (typeof window !== 'undefined' && !loaded.current) {
     if (!document.querySelector('#google-maps')) {
       loadScript(
-        'https://maps.googleapis.com/maps/api/js?key=AIzaSyC47_J_bDoU4euesrr-ChlFjRpas0HzLQM&libraries=places',
+        `https://maps.googleapis.com/maps/api/js?key=${myGoogleKey}&libraries=places`,
         document.querySelector('head'),
         'google-maps',
       );
@@ -52,15 +50,21 @@ export default function FCGooglePlacesSearch(props) {
   }
 
   const handleChange = (event) => {
-    console.log("event:", event);
-    
+    //console.log("event:", event);
+
     setInputValue(event.target.value);
     //console.log("event: ",event.target);
 
   };
   const handleLocationChange = (e) => {
-    //console.log("e.place_id: ", e.place_id);
-    console.log(e);
+    console.log("e[1].place_id: ", e[1].place_id);
+    const place_id=e[1].place_id;
+    //console.log("e: ", e);
+    // const res = await fetch(`https://api.randomuser.me/`);
+    // const data = await res.json();
+    // const [item]= data.results;
+    // console.log("item: ",item);
+
     //const { latLng } = e;
     //const lat = latLng.lat();
     //const lng = latLng.lng();
@@ -70,13 +74,14 @@ export default function FCGooglePlacesSearch(props) {
     // console.log(data);
 
     //
-    fetch(`https://maps.googleapis.com/maps/api/place/details/json?place_id=${e.place_id}&key=${myGoogleKey}`, {
+    fetch(`https://maps.googleapis.com/maps/api/place/details/json?place_id=${place_id}&key=${myGoogleKey}`, {
       method: 'GET',
       headers: new Headers({
         'Content-Type': 'application/json; charset=UTF-8',
         //'Access-Control-Allow-Origin':'*'
-        'cors':'*'
+        //'cors':'*'
       })
+      , mode: `no-cors`,
     })
       .then(res => {
         console.log('res=', res);
@@ -147,7 +152,7 @@ export default function FCGooglePlacesSearch(props) {
     <Autocomplete
       id="google-map-demo"
       style={{ width: 300 }}
-      //onChange={(...e) => handleLocationChange(e)}
+      onChange={(...e) => handleLocationChange(e)}
       getOptionLabel={(option) => (typeof option === 'string' ? option : option.description)}
       filterOptions={(x) => x}
       options={options}
