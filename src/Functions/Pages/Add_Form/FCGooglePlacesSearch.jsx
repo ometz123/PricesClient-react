@@ -19,18 +19,15 @@ function loadScript(src, position, id) {
   script.src = src;
   position.appendChild(script);
 }
-
 const autocompleteService = { current: null };
-
 const useStyles = makeStyles((theme) => ({
   icon: {
     color: theme.palette.text.secondary,
     marginRight: theme.spacing(2),
   },
 }));
-
 export default function FCGooglePlacesSearch(props) {
-
+  const inDevelop = true;
   const classes = useStyles();
   const [inputValue, setInputValue] = React.useState('');
   const [options, setOptions] = React.useState([]);
@@ -58,60 +55,41 @@ export default function FCGooglePlacesSearch(props) {
   };
   const handleLocationChange = (e) => {
     console.log("e[1].place_id: ", e[1].place_id);
-    const place_id=e[1].place_id;
+    let place_id = e[1].place_id;
     //console.log("e: ", e);
-    // const res = await fetch(`https://api.randomuser.me/`);
-    // const data = await res.json();
-    // const [item]= data.results;
-    // console.log("item: ",item);
+    // const { latLng } = e;
+    // const lat = latLng.lat();
+    // const lng = latLng.lng();
+    if (false) {
+      console.log("start fetch from google");
 
-    //const { latLng } = e;
-    //const lat = latLng.lat();
-    //const lng = latLng.lng();
-    //const response= await fetch(`https://maps.googleapis.com/maps/api/place/details/json?place_id=${e.place_id}&key=${myGoogleKey}`);
-    // const response= await fetch(`https://api.randomuser.me/`);
-    // const data= await response.json();
-    // console.log(data);
+      fetch(`https://maps.googleapis.com/maps/api/place/details/json?place_id=${place_id}&key=${myGoogleKey}`, {
+        method: 'GET',
+        headers: new Headers({
+          'Content-Type': 'application/json; charset=UTF-8',
+          //'Access-Control-Allow-Origin':'*'
+          //'cors':'*'
+        })
+        //, mode: `no-cors`,
+      })
+        .then(res => {
+          console.log('res=', res);
+          console.log('res.status', res.status);
+          console.log('res.ok', res.ok);
+          return res.json()
+        })
+        .then(
+          (result) => {
+            console.log("fetch FetchGet= ", result);
+            //result.map(st => console.log(st.FullName));
+            //console.log('result[0].FullName=', result[0].FullName);
+          },
+          (error) => {
+            console.log("err post=", error);
+          });
+      console.log("end fetch");
 
-    //
-    fetch(`https://maps.googleapis.com/maps/api/place/details/json?place_id=${place_id}&key=${myGoogleKey}`, {
-      method: 'GET',
-      headers: new Headers({
-        'Content-Type': 'application/json; charset=UTF-8',
-        //'Access-Control-Allow-Origin':'*'
-        //'cors':'*'
-      })
-      , mode: `no-cors`,
-    })
-      .then(res => {
-        console.log('res=', res);
-        console.log('res.status', res.status);
-        console.log('res.ok', res.ok);
-        return res.json()
-      })
-      .then(
-        (result) => {
-          console.log("fetch FetchGet= ", result);
-          //result.map(st => console.log(st.FullName));
-          //console.log('result[0].FullName=', result[0].FullName);
-        },
-        (error) => {
-          console.log("err post=", error);
-        });
-    //
-    // fetch(
-    // //   `https://maps.googleapis.com/maps/api/place/details/json?
-    // // place_id=${e.place_id}&
-    // // key=${myGoogleKey}`
-    // 'https://api.randomuser.me/',
-    // {mode: 'cors'}
-    // )
-    //   .then(response => response.json())
-    //   .then(data => console.log(data));
-    //https://maps.googleapis.com/maps/api/place/details/json?place_id=ChIJVZUCaRpqHBURvnGwaPyrvD8&key=AIzaSyC47_J_bDoU4euesrr-ChlFjRpas0HzLQM
-    //console.log("location: ",location);
-    //props.handleLocation(location)
-    //kolbo ashdot id:  ChIJS6e0YxpqHBURkJoXT0m2wTY
+    }
   }
 
   const fetch = React.useMemo(
@@ -147,52 +125,61 @@ export default function FCGooglePlacesSearch(props) {
       active = false;
     };
   }, [inputValue, fetch]);
+  if (!inDevelop) {
+    return (
 
-  return (
-    <Autocomplete
-      id="google-map-demo"
-      style={{ width: 300 }}
-      onChange={(...e) => handleLocationChange(e)}
-      getOptionLabel={(option) => (typeof option === 'string' ? option : option.description)}
-      filterOptions={(x) => x}
-      options={options}
-      autoComplete
-      includeInputInList
-      renderInput={(params) => (
-        <TextField
-          {...params}
-          label="Search a store/address.."
-          variant="outlined"
-          fullWidth
-          onChange={handleChange}
-        />
-      )}
-      renderOption={(option) => {
-        const matches = option.structured_formatting.main_text_matched_substrings;
-        const parts = parse(
-          option.structured_formatting.main_text,
-          matches.map((match) => [match.offset, match.offset + match.length]),
-        );
+      <Autocomplete
+        id="google-map-demo"
+        style={{ width: 300 }}
+        onChange={(...e) => handleLocationChange(e)}
+        getOptionLabel={(option) => (typeof option === 'string' ? option : option.description)}
+        filterOptions={(x) => x}
+        options={options}
+        autoComplete
+        includeInputInList
+        renderInput={(params) => (
+          <TextField
+            {...params}
+            label="Search a store/address.."
+            variant="outlined"
+            fullWidth
+            onChange={handleChange}
+          />
+        )}
+        renderOption={(option) => {
+          const matches = option.structured_formatting.main_text_matched_substrings;
+          const parts = parse(
+            option.structured_formatting.main_text,
+            matches.map((match) => [match.offset, match.offset + match.length]),
+          );
 
-        return (
-          <Grid container alignItems="center">
-            <Grid item>
-              <LocationOnIcon className={classes.icon} />
+          return (
+            <Grid container alignItems="center">
+              <Grid item>
+                <LocationOnIcon className={classes.icon} />
+              </Grid>
+              <Grid item xs>
+                {parts.map((part, index) => (
+                  <span key={index} style={{ fontWeight: part.highlight ? 700 : 400 }}>
+                    {part.text}
+                  </span>
+                ))}
+
+                <Typography variant="body2" color="textSecondary">
+                  {option.structured_formatting.secondary_text}
+                </Typography>
+              </Grid>
             </Grid>
-            <Grid item xs>
-              {parts.map((part, index) => (
-                <span key={index} style={{ fontWeight: part.highlight ? 700 : 400 }}>
-                  {part.text}
-                </span>
-              ))}
-
-              <Typography variant="body2" color="textSecondary">
-                {option.structured_formatting.secondary_text}
-              </Typography>
-            </Grid>
-          </Grid>
-        );
-      }}
-    />
-  );
+          );
+        }}
+      />
+    );
+  }
+  else {
+    return (
+      <div>
+        AutoComplete is in developing...
+      </div>
+    );
+  }
 }

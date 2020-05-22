@@ -2,12 +2,13 @@ import React, { /*useState,*/ useEffect, useContext } from 'react';
 import { Map, GoogleApiWrapper, Marker/*, Circle*/ } from 'google-maps-react';
 import { SearchContext } from '../../../Contexts/SearchContext';
 import { UserContext } from '../../../Contexts/UserContext';
+import GpsFixedIcon from '@material-ui/icons/GpsFixed';
 
 const googleApiKey = `AIzaSyC47_J_bDoU4euesrr-ChlFjRpas0HzLQM`;
 
 function FCGoogleMap(props) {
     const { search, setSearch } = useContext(SearchContext);
-    const { user, setUserLocation/*, setUser*/} = useContext(UserContext);
+    const { user, setUserLocation/*, setUser*/ } = useContext(UserContext);
 
     //const [positionByUserLocation, setPositionByUserLocation] = useState(true);
     let positionByUserLocation = false;
@@ -83,7 +84,13 @@ function FCGoogleMap(props) {
         console.log(search);
         positionByUserLocation = !positionByUserLocation;
     }
+    const fetchPlaces = (mapProps, map) => {
+        const { google } = mapProps;
+        //const service = new google.maps.places.PlacesService(map);
+        console.log("google: ", google);
+        console.log("google.maps.places: ", google.maps.places);
 
+    }
     useEffect(() => {
         async function asyncuseEffect() {
             //console.log(12);
@@ -96,19 +103,19 @@ function FCGoogleMap(props) {
                     lat: user.userLocation ? user.userLocation.latitude : search.lat,
                     lng: user.userLocation ? user.userLocation.longitude : search.lng
                 });
-    
+
             }
-    
+
             //latitude, longitude
-    
+
             //console.log(34);
-    
+
         }
         asyncuseEffect();
     }, [positionByUserLocation])
     return (
         <div>
-            <button onClick={() => handleResetLocation()}>  Reset My Location</button>
+            <GpsFixedIcon onClick={() => handleResetLocation()} />
             <Map
                 google={props.google}
                 zoom={12}
@@ -117,6 +124,8 @@ function FCGoogleMap(props) {
                 initialCenter={{ lat: search.lat, lng: search.lng }}
                 center={{ lat: search.lat, lng: search.lng }}
                 onClick={(...e) => handleMapClick(e[2])}
+                onReady={fetchPlaces}
+
             >
                 {/* <Circle
                     radius={1200}

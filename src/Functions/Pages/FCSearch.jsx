@@ -9,43 +9,51 @@ function FCSearch(props) {
     // const [userLocation, setUserLocation] = useState(null);
     const { search, setSearch } = useContext(SearchContext);
 
-    //let e = `ChIJ7-RHdRGjAhURL2OGWhptgJc`;
-
-    //=`ChIJS6e0YxpqHBURkJoXT0m2wTY`;
+    let e = `ChIJS6e0YxpqHBURkJoXT0m2wTY`;
     const myGoogleKey = `AIzaSyC47_J_bDoU4euesrr-ChlFjRpas0HzLQM`;
-
-    //let url1 = `https://maps.googleapis.com/maps/api/place/details/json?place_id=${e}&key=${myGoogleKey}`;
-    //let url2 = `http://proj.ruppin.ac.il/bgroup4/prod/server/api/items/GetItemsForSearch`;
+    let url1 = `https://maps.googleapis.com/maps/api/place/details/json?place_id=${e}&key=${myGoogleKey}`;
+    let url2 = `http://proj.ruppin.ac.il/bgroup4/prod/server/api/items/GetItemsForSearch`;
     let url3 = `https://maps.googleapis.com/maps/api/place/details/json?place_id=ChIJVZUCaRpqHBURvnGwaPyrvD8&key=${myGoogleKey}`;
-    const handleSubmit = (e) => {
-        e.preventDefault();
-        console.log(search);
-        console.log('fetch items: ');
+    let url4 = `https://api.randomuser.me/`;
+    let url5 = `https://maps.googleapis.com/maps/api/place/details/json?key=${myGoogleKey}&place_id=${e}`;
 
-        fetch(url3, {
-            method: 'GET',
-            headers: new Headers({
-                'Content-Type': 'application/json; charset=UTF-8',
-                //'Access-Control-Allow-Origin':'*'
-                //'cors':'no-cors'
-            })
-            , mode: `no-cors`,
-        })
-            .then(res => {
-                console.log('res=', res);
-                console.log('res.status', res.status);
-                console.log('res.ok', res.ok);
-                return res//.json();
-            })
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        console.log("search(FCSearch): ", search);
+        console.log("random user start");
+        await fetch(`https://api.randomuser.me/`)
+            .then(res => res.json())
             .then(
-                (result) => {
-                    console.log("fetch FetchGet= ", result);
-                    //result.map(st => console.log(st.FullName));
-                    //console.log('result[0].FullName=', result[0].FullName);
-                },
-                (error) => {
-                    console.log("err post=", error);
-                });
+                res => console.log(res),
+                err => console.log(err)
+            );
+        if (false) {
+            console.log('fetch items: ');
+
+            fetch(url5, {
+                method: 'GET',
+                headers: new Headers({
+                    'Content-Type': 'application/json; charset=UTF-8',
+                })
+                //, mode: `no-cors`,
+            }
+            )
+                .then(res => {
+                    console.log('res=', res);
+                    console.log('res.status', res.status);
+                    console.log('res.ok', res.ok);
+                    return res.json();
+                })
+                .then(
+                    (result) => {
+                        console.log("fetch FetchGet= ", result);
+                        //result.map(st => console.log(st.FullName));
+                        //console.log('result[0].FullName=', result[0].FullName);
+                    },
+                    (error) => {
+                        console.log("err post=", error);
+                    });
+        }
     }
     const handlePriceRange = (e) => {
 
@@ -76,7 +84,7 @@ function FCSearch(props) {
         <div>
             <form onSubmit={(e) => handleSubmit(e)}>
                 <div >
-                    <FCGooglePlacesSearch color="white" handleLocation={(locationEvent) => handleLocation(locationEvent)} />
+                    {/* <FCGooglePlacesSearch color="white" handleLocation={(locationEvent) => handleLocation(locationEvent)} /> */}
                     <FCGoogleMap handleLocation={(locationEvent) => handleLocation(locationEvent)} search={search} />
                 </div>
                 <div

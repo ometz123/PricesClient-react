@@ -50,7 +50,7 @@ export default function FCStoreDetails() {
                     <DialogContentText>
                         Store Details
                     </DialogContentText>
-                    <FCGooglePlacesSearch />
+                    {/* <FCGooglePlacesSearch /> */}
                     <FCGoogleMap />
                 </DialogContent>
                 <DialogActions>
