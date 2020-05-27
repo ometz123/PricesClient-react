@@ -1,6 +1,7 @@
-import React from 'react';
+import React,{useContext} from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
+import { ReceiptContext } from '../../../Contexts/ReceiptContext';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -13,6 +14,7 @@ const useStyles = makeStyles((theme) => ({
 
 export default function FCDescriptions(props) {
     const classes = useStyles();
+    const{receipt,SetReceipt}=useContext(ReceiptContext)
     const [value/*, setValue*/] = React.useState();
 
     // const handleChange = (event) => {
@@ -26,7 +28,8 @@ export default function FCDescriptions(props) {
                 label="Description:"
                 multiline
                 rows="4"
-                value={value}
+                value={receipt.receiptDescription}
+                onChange={e=>SetReceipt({...receipt,receiptDescription:e.target.value})}
                 //defaultValue="Default Value"
                 variant="outlined"
                 //color="white"

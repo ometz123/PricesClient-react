@@ -7,14 +7,14 @@ import { SearchContext } from '../../Contexts/SearchContext';
 
 function FCSearch(props) {
     // const [userLocation, setUserLocation] = useState(null);
-    const { search, setSearch } = useContext(SearchContext);
+    const { search } = useContext(SearchContext);
 
     let e = `ChIJS6e0YxpqHBURkJoXT0m2wTY`;
     const myGoogleKey = `AIzaSyC47_J_bDoU4euesrr-ChlFjRpas0HzLQM`;
-    let url1 = `https://maps.googleapis.com/maps/api/place/details/json?place_id=${e}&key=${myGoogleKey}`;
-    let url2 = `http://proj.ruppin.ac.il/bgroup4/prod/server/api/items/GetItemsForSearch`;
-    let url3 = `https://maps.googleapis.com/maps/api/place/details/json?place_id=ChIJVZUCaRpqHBURvnGwaPyrvD8&key=${myGoogleKey}`;
-    let url4 = `https://api.randomuser.me/`;
+    // let url1 = `https://maps.googleapis.com/maps/api/place/details/json?place_id=${e}&key=${myGoogleKey}`;
+    // let url2 = `http://proj.ruppin.ac.il/bgroup4/prod/server/api/items/GetItemsForSearch`;
+    // let url3 = `https://maps.googleapis.com/maps/api/place/details/json?place_id=ChIJVZUCaRpqHBURvnGwaPyrvD8&key=${myGoogleKey}`;
+    // let url4 = `https://api.randomuser.me/`;
     let url5 = `https://maps.googleapis.com/maps/api/place/details/json?key=${myGoogleKey}&place_id=${e}`;
 
     const handleSubmit = async (e) => {
@@ -55,29 +55,7 @@ function FCSearch(props) {
                     });
         }
     }
-    const handlePriceRange = (e) => {
 
-        //SetNewSearch({...search, priceRange: e})
-        setSearch({
-            ...search, minPrice: e[0],
-            maxPrice: e[1]
-        })
-    }
-    const handleDistance = (e) => {
-        setSearch({
-            ...search, distance: e[0]
-        })
-    }
-    const handleTags = (e) => {
-        setSearch({
-            ...search, tags: e
-        })
-    }
-    const handleLocation = (e) => {
-        setSearch({
-            ...search, placeId: e ? e.place_id : null
-        })
-    }
 
 
     return (
@@ -85,23 +63,22 @@ function FCSearch(props) {
             <form onSubmit={(e) => handleSubmit(e)}>
                 <div >
                     {/* <FCGooglePlacesSearch color="white" handleLocation={(locationEvent) => handleLocation(locationEvent)} /> */}
-                    <FCGoogleMap handleLocation={(locationEvent) => handleLocation(locationEvent)} search={search} />
+                    <FCGoogleMap />
                 </div>
-                <div
-                    style={{
-                        //width: "300px",
-                        height: "250px",
-                        margin: "10px",
-                    }}
+                <div style={{
+                    //width: "300px",
+                    height: "250px",
+                    margin: "10px",
+                }}
                 >
                 </div>
                 <div >
-                    <FCTags handleTags={(tagsEvent) => handleTags(tagsEvent)} />
+                    <FCTags />
                 </div>
                 <div >
-                    <FCSlider handlePriceRange={(priceEvent) => handlePriceRange(priceEvent)} handleDistance={(DistanceEvent) => handleDistance(DistanceEvent)} />
+                    <FCSlider />
                 </div>
-                <button type="submit" >search</button>
+                <button type="submit" >Search</button>
             </form>
         </div>
     );

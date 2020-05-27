@@ -50,8 +50,8 @@ export default function FCStoreDetails() {
                     <DialogContentText>
                         Store Details
                     </DialogContentText>
-                    {/* <FCGooglePlacesSearch /> */}
-                    <FCGoogleMap />
+                    <FCGooglePlacesSearch />
+                    {/* <FCGoogleMap /> */}
                 </DialogContent>
                 <DialogActions>
                     <Button autoFocus onClick={handleClose} color="primary">

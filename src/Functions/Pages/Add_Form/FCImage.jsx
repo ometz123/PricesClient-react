@@ -1,15 +1,23 @@
-import React, { useState } from 'react'
+import React, { useState, useContext } from 'react'
 import ReceiptOutlinedIcon from '@material-ui/icons/ReceiptOutlined';
 import { Input } from '@material-ui/core';
 import AnnouncementOutlinedIcon from '@material-ui/icons/AnnouncementOutlined';
+import { ReceiptContext } from '../../../Contexts/ReceiptContext';
 
 export default function FCImage(props) {
-  const [image, setImage] = useState({ preview: '', raw: '' })
+  //const [image, setImage] = useState({ preview: '', raw: '' })
+  const { receipt, SetReceipt } = useContext(ReceiptContext);
 
   const handleChange = (e) => {
-    setImage({
-      preview: URL.createObjectURL(e.target.files[0]),
-      raw: e.target.files[0]
+    // setImage({
+    //   preview: URL.createObjectURL(e.target.files[0]),
+    //   raw: e.target.files[0]
+    // })
+    SetReceipt({
+      ...receipt, image: {
+        preview: URL.createObjectURL(e.target.files[0]),
+        raw: e.target.files[0]
+      }
     })
   }
 
@@ -27,7 +35,7 @@ export default function FCImage(props) {
     <div>
       <label htmlFor="upload-button">
         {
-          image.preview ? <img src={image.preview} style={{ maxWidth: 250, maxHeight: 250 }} alt="receipt" /*width="300" height="300"*/ /> : (
+          receipt.image.preview ? <img src={receipt.image.preview} style={{ maxWidth: 250, maxHeight: 250 }} alt="receipt" /*width="300" height="300"*/ /> : (
             <>
               <span className="fa-stack fa-2x mt-3 mb-2">
                 <i className="fas fa-circle fa-stack-2x" />
@@ -45,7 +53,7 @@ export default function FCImage(props) {
         type="file"
         name='receipt'
         id="upload-button"
-        style={{ display: 'none', border:"5px solid red" }} 
+        style={{ display: 'none', border: "5px solid red" }}
         onChange={handleChange}
         required
       />

@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
+import { ReceiptContext } from '../../../Contexts/ReceiptContext';
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -13,6 +14,7 @@ const useStyles = makeStyles(theme => ({
 
 export default function FCDiscount(props) {
     const classes = useStyles();
+    const { receipt,SetReceipt } = useContext(ReceiptContext);
 
     return (
         <div className={classes.root} noValidate autoComplete="off">
@@ -20,6 +22,8 @@ export default function FCDiscount(props) {
                 id="standard-basic-Dollar"
                 label="$ Discount"
                 //color="primary"
+                value={receipt.discoundDollar}
+                onChange={(e)=>SetReceipt({...receipt,discoundDollar:e.target.value})}
                 variant="outlined"
                 InputLabelProps={{
                     style: { color: props.color ? props.color : null },
@@ -40,13 +44,16 @@ export default function FCDiscount(props) {
                 id="standard-basic-percent"
                 label="% Discount"
                 variant="outlined"
+                value={receipt.discountPercent}
+                onChange={(e)=>SetReceipt({...receipt,discountPercent:e.target.value})}
                 color="primary"
                 InputLabelProps={{
                     style: { color: props.color ? props.color : null }
                 }}
                 InputProps={{
                     style: {
-                        color: props.color ? props.color : null},
+                        color: props.color ? props.color : null
+                    },
                 }}
                 type="number"
             />

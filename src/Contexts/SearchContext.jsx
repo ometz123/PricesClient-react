@@ -11,7 +11,7 @@ const SearchContextProvider = (props) => {
         lng: 35.580300,
         //location=null,
         tags: [],
-        distance: 0,
+        distance: 100,
         minPrice: 0,
         maxPrice: 100,
     })

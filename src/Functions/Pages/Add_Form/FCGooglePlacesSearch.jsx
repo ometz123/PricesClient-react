@@ -27,7 +27,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 export default function FCGooglePlacesSearch(props) {
-  const inDevelop = true;
+  const inDevelop = false;
   const classes = useStyles();
   const [inputValue, setInputValue] = React.useState('');
   const [options, setOptions] = React.useState([]);

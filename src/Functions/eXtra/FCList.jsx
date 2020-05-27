@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
@@ -15,6 +15,7 @@ import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import FolderIcon from '@material-ui/icons/Folder';
 import DeleteOutlineIcon from '@material-ui/icons/DeleteOutline';
+import { ReceiptContext } from '../../Contexts/ReceiptContext';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -24,25 +25,68 @@ const useStyles = makeStyles((theme) => ({
   demo: {
     //backgroundColor: theme.palette.background.paper,
     color: "white",
+    //secondaryColor:"white",
     maxHeight: `300px`,
-    maxWidth:`300px`,
+    maxWidth: `300px`,
     overflow: "overlay",
+    // secondary: {
+    //   //color: 'white',
+    // },
   },
   title: {
     margin: theme.spacing(4, 0, 2),
   },
 }));
 
-function generate(element) {
-  return [0, 1].map((value) =>
-    React.cloneElement(element, {
-      key: value,
-    }),
-  );
-}
+
 
 export default function InteractiveList(props) {
   const classes = useStyles();
+  const { receipt, SetReceipt } = useContext(ReceiptContext);
+
+  const removeItem = (e, itemId) => {
+    let items = receipt.items;
+    let pos = items.map((item) => { return item.id; }).indexOf(itemId);
+    console.log(pos);
+    items.splice(pos, 1);
+
+    SetReceipt({ ...receipt, items: items });
+
+    // for (let i = 0; i < items.length; i++) {
+    //   if (items[i].id === itemId) {
+    //     items.splice(i, 1);
+    //     SetReceipt({ ...receipt, items: items });
+    //     break;
+    //   }
+    // }
+
+    //SetReceipt({ ...receipt, items: receipt.items.splice(itemId, 1) });
+
+  }
+  let list = receipt.items.map((item) => {
+    return (
+      <div key={(item.id).toString()}>
+        <ListItem>
+          <ListItemAvatar>
+            <Avatar>
+              <FolderIcon />
+            </Avatar>
+          </ListItemAvatar>
+          <ListItemText
+            primary={item.itemName ? item.itemName : "Error Name"}
+            secondary={item.price}
+          />
+          <ListItemSecondaryAction
+            onClick={(e) => { removeItem(e, item.id) }}>
+            <IconButton edge="end" aria-label="delete">
+              <DeleteOutlineIcon />
+            </IconButton>
+          </ListItemSecondaryAction>
+        </ListItem>
+      </div>
+    )
+  })
+
   return (
     <div className={classes.root}>
       <Grid container spacing={0}>
@@ -52,24 +96,7 @@ export default function InteractiveList(props) {
           </Typography>
           <div className={classes.demo}>
             <List dense>
-              {generate(
-                <ListItem>
-                  <ListItemAvatar>
-                    <Avatar>
-                      <FolderIcon />
-                    </Avatar>
-                  </ListItemAvatar>
-                  <ListItemText 
-                    primary={props.primary ? props.primary : "itdasdasf asdf asdf sadf afasfasfaem"}
-                    secondary={props.secondary ? props.secondary : null}
-                  />
-                  <ListItemSecondaryAction>
-                    <IconButton edge="end" aria-label="delete">
-                      <DeleteOutlineIcon />
-                    </IconButton>
-                  </ListItemSecondaryAction>
-                </ListItem>,
-              )}
+              {list}
             </List>
           </div>
         </Grid>

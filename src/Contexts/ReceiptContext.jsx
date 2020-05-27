@@ -3,41 +3,37 @@ export const ReceiptContext = createContext();
 
 const ReceiptContextProvider = (props) => {
     const [receipt, setReceipt] = useState({
-        image: {},
-        date: new date(),
-        discoundDollar: 0,
-        discountPercent: 0,
-        store: {
-            name: "",
-            lat: "",
-            lon: ""
-        },
-        items: [],
+        image: { preview: "", raw: "" },
+        date: new Date(),
+        discoundDollar: "",
+        discountPercent: "",
+        store: { name: "", lat: "", lon: "" },
+        items: [],//[{ name: "omer", id: 1 }, { name: "tzafrir", id: 2 }],
         receiptDescription: "",
     })
     const [item, setItem] = useState({
-        category: {
-            id: 0,
-            title: ""
-        },
-        subCategory: {
-            id: 0,
-            title: ""
-        },
+        id: "",
+        category: { id: 0, title: "" },
+        subCategory: { id: 0, title: "" },
         itemName: "",
         barcode: "",
         discoundDollar: 0,
         discountPercent: 0,
         tags: [],
-        itemDescription: ""
+        itemDescription: "",
+        price:""
     })
-    const [tag, setTag] = useState({
-        id: 0,
-        title: ""
-    })
+    const [tag, setTag] = useState({ id: 0, title: "" })
 
     return (
-        <ReceiptContext.Provider value={{ receipt, SetNewReceipt: setReceipt }}>
+        <ReceiptContext.Provider value={{
+            receipt,
+            item,
+            tag,
+            SetReceipt: setReceipt,
+            SetItem: setItem,
+            SetTag: setTag
+        }}>
             {props.children}
         </ReceiptContext.Provider>
     );

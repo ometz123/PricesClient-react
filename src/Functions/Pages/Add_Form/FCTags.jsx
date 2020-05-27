@@ -3,11 +3,14 @@ import React from 'react';
 import Chip from '@material-ui/core/Chip';
 import TextField from '@material-ui/core/TextField';
 import Autocomplete from '@material-ui/lab/Autocomplete';
+import { SearchContext } from '../../../Contexts/SearchContext';
 
 export default function FCTags(props) {
-  const handleTagsAdd = (tags) => {
-    props.handleTags(tags)
-  }
+  // const handleTagsAdd = (tags) => {
+  //   props.handleTags(tags)
+  // }
+  const { search, setSearch } = React.useContext(SearchContext);
+
   return (
     <div>
       <Autocomplete
@@ -15,7 +18,10 @@ export default function FCTags(props) {
         id="fixed-tags-demo"
         options={tags}
         getOptionLabel={(option) => option.title}
-        onChange={(e, tags) => handleTagsAdd(tags)}
+        //onChange={(e, tags) => handleTagsAdd(tags)}
+        onChange={(e, tags) => setSearch({
+          ...search, tags: tags
+        })}
         //defaultValue={[top100Films[6], top100Films[13]]}
         renderTags={(value, getTagProps) =>
           value.map((option, index) => (

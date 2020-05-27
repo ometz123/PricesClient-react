@@ -3,6 +3,7 @@ import './App.css';
 import FCPrices from './Functions/FCPrices';
 import UserContextProvider from './Contexts/UserContext';
 import SearchContextProvider from './Contexts/SearchContext';
+import ReceiptContextProvider from './Contexts/ReceiptContext';
 
 
 function App() {
@@ -11,7 +12,9 @@ function App() {
       <header className="App-header">
         <UserContextProvider>
           <SearchContextProvider>
-            <FCPrices />
+            <ReceiptContextProvider>
+              <FCPrices />
+            </ReceiptContextProvider>
           </SearchContextProvider>
         </UserContextProvider>
       </header>

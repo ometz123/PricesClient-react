@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import { DatePicker } from "@material-ui/pickers";
 //import lightBlue from "@material-ui/core/colors/lightBlue";
 import { createMuiTheme } from "@material-ui/core";
@@ -6,43 +6,8 @@ import { ThemeProvider } from "@material-ui/styles";
 import { purple } from '@material-ui/core/colors';
 import DateFnsUtils from '@date-io/date-fns';
 import { MuiPickersUtilsProvider } from '@material-ui/pickers';
-//#region Commented out Styles 
+import { ReceiptContext } from "../../../Contexts/ReceiptContext";
 
-// const materialTheme = createMuiTheme({
-//     overrides: {
-//         MuiPickersToolbar: {
-//             toolbar: {
-//                 backgroundColor: lightBlue.A200,
-//             },
-//         },
-//         MuiPickersCalendarHeader: {
-//             switchHeader: {
-//                 // backgroundColor: lightBlue.A200,
-//                 // color: "white",
-//             },
-//         },
-//         MuiPickersDay: {
-//             day: {
-//                 color: lightBlue.A700,
-//             },
-//             daySelected: {
-//                 backgroundColor: lightBlue["400"],
-//             },
-//             dayDisabled: {
-//                 color: lightBlue["100"],
-//             },
-//             current: {
-//                 color: lightBlue["900"],
-//             },
-//         },
-//         MuiPickersModal: {
-//             dialogAction: {
-//                 color: lightBlue["400"],
-//             },
-//         },
-//     },
-// });
-//#endregion
 
 const theme = createMuiTheme({
     overrides: {
@@ -70,6 +35,7 @@ const theme = createMuiTheme({
 
 export default function FCDatePicker(props) {
     const [selectedDate, handleDateChange] = useState(new Date());
+    const { receipt,SetReceipt } = useContext(ReceiptContext);
     //const [selectedDate, handleDateChange] = useState(null);
     return (
 
@@ -81,8 +47,8 @@ export default function FCDatePicker(props) {
                     //clearable
                     disableFuture
                     //variant="outlined"
-                    value={selectedDate}
-                    onChange={handleDateChange}
+                    value={receipt.date}
+                    onChange={(e)=>SetReceipt({...receipt,date:e})}
                     margin="normal"
                     InputLabelProps={{
                         style: { color: '#fff' },

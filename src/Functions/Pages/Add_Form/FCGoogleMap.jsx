@@ -11,7 +11,7 @@ function FCGoogleMap(props) {
     const { user, setUserLocation/*, setUser*/ } = useContext(UserContext);
 
     //const [positionByUserLocation, setPositionByUserLocation] = useState(true);
-    let positionByUserLocation = false;
+    let positionByUserLocation = true;
     const handleMapClick = (e) => {
         const { latLng } = e;
         setSearch({
@@ -28,14 +28,14 @@ function FCGoogleMap(props) {
         navigator.permissions.query({
             name: 'geolocation'
         }).then((result) => {
-            if (result.state == 'granted') {
+            if (result.state === 'granted') {
                 console.log(result.state);
                 //geoBtn.style.display = 'none';
-            } else if (result.state == 'prompt') {
+            } else if (result.state === 'prompt') {
                 console.log(result.state);
                 //geoBtn.style.display = 'none';
 
-            } else if (result.state == 'denied') {
+            } else if (result.state === 'denied') {
                 alert("עליך לאשר שימוש במיקום");
                 //geoBtn.style.display = 'inline';
             }
