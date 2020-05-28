@@ -10,7 +10,7 @@ import { useTheme } from '@material-ui/core/styles';
 import StorefrontOutlinedIcon from '@material-ui/icons/StorefrontOutlined';
 import AnnouncementOutlinedIcon from '@material-ui/icons/AnnouncementOutlined';
 import FCGooglePlacesSearch from './FCGooglePlacesSearch';
-import FCGoogleMap from './FCGoogleMap';
+//import FCGoogleMap from './FCGoogleMap';
 //import { SearchContext } from '../../../Contexts/SearchContext';
 
 export default function FCStoreDetails() {

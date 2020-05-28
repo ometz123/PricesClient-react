@@ -9,28 +9,21 @@ function FCSearch(props) {
     // const [userLocation, setUserLocation] = useState(null);
     const { search } = useContext(SearchContext);
 
-    let e = `ChIJS6e0YxpqHBURkJoXT0m2wTY`;
-    const myGoogleKey = `AIzaSyC47_J_bDoU4euesrr-ChlFjRpas0HzLQM`;
+    //let e = `ChIJS6e0YxpqHBURkJoXT0m2wTY`;
+    //const myGoogleKey = `AIzaSyC47_J_bDoU4euesrr-ChlFjRpas0HzLQM`;
     // let url1 = `https://maps.googleapis.com/maps/api/place/details/json?place_id=${e}&key=${myGoogleKey}`;
-    // let url2 = `http://proj.ruppin.ac.il/bgroup4/prod/server/api/items/GetItemsForSearch`;
+    let url2 = `http://proj.ruppin.ac.il/bgroup4/prod/server/api/items/GetItemsForSearch`;
     // let url3 = `https://maps.googleapis.com/maps/api/place/details/json?place_id=ChIJVZUCaRpqHBURvnGwaPyrvD8&key=${myGoogleKey}`;
     // let url4 = `https://api.randomuser.me/`;
-    let url5 = `https://maps.googleapis.com/maps/api/place/details/json?key=${myGoogleKey}&place_id=${e}`;
+    //let url5 = `https://maps.googleapis.com/maps/api/place/details/json?key=${myGoogleKey}&place_id=${e}`;
 
-    const handleSubmit = async (e) => {
-        e.preventDefault();
+    const handleSubmit = (e) => {
+        //e.preventDefault();
         console.log("search(FCSearch): ", search);
-        console.log("random user start");
-        await fetch(`https://api.randomuser.me/`)
-            .then(res => res.json())
-            .then(
-                res => console.log(res),
-                err => console.log(err)
-            );
-        if (false) {
+        if (true) {
             console.log('fetch items: ');
 
-            fetch(url5, {
+            fetch(url2, {
                 method: 'GET',
                 headers: new Headers({
                     'Content-Type': 'application/json; charset=UTF-8',
@@ -60,7 +53,7 @@ function FCSearch(props) {
 
     return (
         <div>
-            <form onSubmit={(e) => handleSubmit(e)}>
+            <div onSubmit={(e) => handleSubmit(e)}>
                 <div >
                     {/* <FCGooglePlacesSearch color="white" handleLocation={(locationEvent) => handleLocation(locationEvent)} /> */}
                     <FCGoogleMap />
@@ -79,7 +72,7 @@ function FCSearch(props) {
                     <FCSlider />
                 </div>
                 <button type="submit" >Search</button>
-            </form>
+            </div>
         </div>
     );
 }

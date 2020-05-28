@@ -1,5 +1,5 @@
 import React, { /*useState,*/ useEffect, useContext } from 'react';
-import { Map, GoogleApiWrapper, Marker/*, Circle*/ } from 'google-maps-react';
+import Circle, { Map, GoogleApiWrapper, Marker } from 'google-maps-react';
 import { SearchContext } from '../../../Contexts/SearchContext';
 import { UserContext } from '../../../Contexts/UserContext';
 import GpsFixedIcon from '@material-ui/icons/GpsFixed';
@@ -12,6 +12,7 @@ function FCGoogleMap(props) {
 
     //const [positionByUserLocation, setPositionByUserLocation] = useState(true);
     let positionByUserLocation = true;
+    let coords = null;
     const handleMapClick = (e) => {
         const { latLng } = e;
         setSearch({
@@ -29,14 +30,16 @@ function FCGoogleMap(props) {
             name: 'geolocation'
         }).then((result) => {
             if (result.state === 'granted') {
-                console.log(result.state);
+                console.log("result.state: ", result.state);
                 //geoBtn.style.display = 'none';
             } else if (result.state === 'prompt') {
-                console.log(result.state);
+                console.log("result.state: ", result.state);
                 //geoBtn.style.display = 'none';
 
             } else if (result.state === 'denied') {
-                alert("עליך לאשר שימוש במיקום");
+                console.log("עליך לאשר שימוש במיקום");
+                console.log("result.state: ", result.state);
+
                 //geoBtn.style.display = 'inline';
             }
             result.onchange = function () {
@@ -69,6 +72,7 @@ function FCGoogleMap(props) {
         //   } else {
         //     console.log("Not Available");
         //   }
+        setUserLocation();
         if (user.userLocation == null) {
             //setUserLocation();
             navigator.geolocation.getCurrentPosition(function (position) {
@@ -125,11 +129,15 @@ function FCGoogleMap(props) {
                 center={{ lat: search.lat, lng: search.lng }}
                 onClick={(...e) => handleMapClick(e[2])}
                 onReady={fetchPlaces}
-
             >
+                <Marker
+                    position={{ lat: search.lat, lng: search.lng }}
+                    animation={props.google.maps.Animation.BOUNCE} />
+               
+
                 {/* <Circle
-                    radius={1200}
-                    center={coords}
+                    radius={search.distance}
+                    center={{ lat: search.lat, lng: search.lng }}
                     onMouseover={() => console.log('mouseover')}
                     onClick={() => console.log('click')}
                     onMouseout={() => console.log('mouseout')}
@@ -139,14 +147,13 @@ function FCGoogleMap(props) {
                     fillColor='#FF0000'
                     fillOpacity={0.2}
                 /> */}
-                <Marker position={{ lat: search.lat, lng: search.lng }} />
             </Map>
         </div>
     );
 }
 const mapStyles = {
-    maxWidth: '300px',
-    maxHeight: '300px',
+    //maxWidth: '300px',
+    maxHeight: '260px',
     //position: 'relative',
     width: '100%',
     height: '100%'

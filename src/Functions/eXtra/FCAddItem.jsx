@@ -75,6 +75,42 @@ export default function FCAddItem(props) {
     const handleItemNameChange = (itemName) => {
         setTempItem({ ...tempItem, itemName: itemName });
     }
+    const handleBarcode = (barcode) => {
+        let bamba = `7290000066318`;
+        let corsAnywhere=`https://cors-anywhere.herokuapp.com/`;
+        let api = 'https://api.upcitemdb.com/prod/trial/lookup?upc=';
+        let request = new Request('https://api.upcitemdb.com/prod/trial/lookup?upc=7290000066318');
+        let randomUser = new Request(`https://api.randomuser.me/?results=5`);
+        //let params = [`UPC`, `ISBN`, `EAN`];
+        console.log("Start fetch");
+
+        //#region 
+        if (true) {
+            fetch(corsAnywhere+api+barcode, {
+                method: 'GET',
+                headers: new Headers({
+                    'Content-Type': 'application/json; charset=UTF-8',
+                })
+            })
+                .then(res => {
+                    console.log('res=', res);
+                    console.log('res.status', res.status);
+                    console.log('res.ok', res.ok);
+                    return res.json()
+                })
+                .then(
+                    (result) => {
+                        console.log("fetch FetchGet= ", result);
+                    },
+                    (error) => {
+                        console.log("err post=", error);
+                    }); 
+        }
+        
+        //#endregion
+        console.log("End fetch");
+
+    }
     const handleItemPriceChange = (itemPrice) => {
         setTempItem({ ...tempItem, price: itemPrice });
 
@@ -170,8 +206,10 @@ export default function FCAddItem(props) {
                         <div style={{ float: "left" }} >
                             <TextField
                                 label="BarCode"
+                                onChange={e=>handleBarcode(e.target.value)}
                                 type="number"
-                                variant="outlined" />
+                                variant="outlined"
+                            />
                         </div>
                         <div style={{ float: "left" }}>
                             {/* <FCItemDiscount

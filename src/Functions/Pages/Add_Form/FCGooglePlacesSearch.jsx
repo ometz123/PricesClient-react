@@ -54,23 +54,24 @@ export default function FCGooglePlacesSearch(props) {
 
   };
   const handleLocationChange = (e) => {
-    console.log("e[1].place_id: ", e[1].place_id);
+    //console.log("e[1].place_id: ", e[1].place_id);
     let place_id = e[1].place_id;
     //console.log("e: ", e);
     // const { latLng } = e;
     // const lat = latLng.lat();
     // const lng = latLng.lng();
-    if (false) {
+    if (true) {
       console.log("start fetch from google");
-
-      fetch(`https://maps.googleapis.com/maps/api/place/details/json?place_id=${place_id}&key=${myGoogleKey}`, {
+      let api = `https://maps.googleapis.com/maps/api/place/details/json?place_id=${place_id}&key=${myGoogleKey}`;
+      let corsAnywhere = `https://cors-anywhere.herokuapp.com/`;
+      fetch(corsAnywhere + api, {
         method: 'GET',
         headers: new Headers({
           'Content-Type': 'application/json; charset=UTF-8',
           //'Access-Control-Allow-Origin':'*'
           //'cors':'*'
         })
-        //, mode: `no-cors`,
+        , mode: `no-cors`,
       })
         .then(res => {
           console.log('res=', res);
@@ -81,8 +82,6 @@ export default function FCGooglePlacesSearch(props) {
         .then(
           (result) => {
             console.log("fetch FetchGet= ", result);
-            //result.map(st => console.log(st.FullName));
-            //console.log('result[0].FullName=', result[0].FullName);
           },
           (error) => {
             console.log("err post=", error);
