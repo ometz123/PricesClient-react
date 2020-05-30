@@ -1,5 +1,5 @@
 import React, { /*useState,*/ useEffect, useContext } from 'react';
-import Circle, { Map, GoogleApiWrapper, Marker } from 'google-maps-react';
+import /*Circle,*/ { Map, GoogleApiWrapper, Marker } from 'google-maps-react';
 import { SearchContext } from '../../../Contexts/SearchContext';
 import { UserContext } from '../../../Contexts/UserContext';
 import GpsFixedIcon from '@material-ui/icons/GpsFixed';
@@ -12,7 +12,7 @@ function FCGoogleMap(props) {
 
     //const [positionByUserLocation, setPositionByUserLocation] = useState(true);
     let positionByUserLocation = true;
-    let coords = null;
+    //let coords = null;
     const handleMapClick = (e) => {
         const { latLng } = e;
         setSearch({
@@ -96,7 +96,7 @@ function FCGoogleMap(props) {
 
     }
     useEffect(() => {
-        async function asyncuseEffect() {
+        const asyncuseEffect= async()=> {
             //console.log(12);
             await setUserLocation();
             console.log("user(googleMap): ", user);
@@ -116,7 +116,7 @@ function FCGoogleMap(props) {
 
         }
         asyncuseEffect();
-    }, [positionByUserLocation])
+    }, [positionByUserLocation/*,search, setSearch, setUserLocation, user*/])
     return (
         <div>
             <GpsFixedIcon onClick={() => handleResetLocation()} />
@@ -132,7 +132,7 @@ function FCGoogleMap(props) {
             >
                 <Marker
                     position={{ lat: search.lat, lng: search.lng }}
-                    animation={props.google.maps.Animation.BOUNCE} />
+                    animation={props.google.maps.Animation.DROP} />
                
 
                 {/* <Circle

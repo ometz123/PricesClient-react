@@ -63,15 +63,18 @@ export default function FCGooglePlacesSearch(props) {
     if (true) {
       console.log("start fetch from google");
       let api = `https://maps.googleapis.com/maps/api/place/details/json?place_id=${place_id}&key=${myGoogleKey}`;
-      let corsAnywhere = `https://cors-anywhere.herokuapp.com/`;
-      fetch(corsAnywhere + api, {
+      //let corsAnywhere = `https://cors-anywhere.herokuapp.com/`;
+      console.log("api: ", api);
+      
+      fetch(api, {
         method: 'GET',
         headers: new Headers({
           'Content-Type': 'application/json; charset=UTF-8',
-          //'Access-Control-Allow-Origin':'*'
-          //'cors':'*'
+          // 'Accept':'*/*',
+          // 'Accept-Encoding':'gzip, deflate, br',
+          // 'Connection':'keep-alive',
         })
-        , mode: `no-cors`,
+        //, mode: `no-cors`,
       })
         .then(res => {
           console.log('res=', res);

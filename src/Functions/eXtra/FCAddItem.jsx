@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useState/*,useEffect*/ } from 'react';
 import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
@@ -11,11 +11,10 @@ import AddCircleOutlineRounded from '@material-ui/icons/AddCircleOutlineRounded'
 import TextField from '@material-ui/core/TextField';
 import Autocomplete, { createFilterOptions } from '@material-ui/lab/Autocomplete';
 //import AnnouncementOutlinedIcon from '@material-ui/icons/AnnouncementOutlined';
-import FCTags from '../Pages/Add_Form/FCTags';
+//import FCTags from '../Pages/Add_Form/FCTags';
 import Chip from '@material-ui/core/Chip';
-import FCDescriptions from '../Pages/Add_Form/FCDescriptions';
+//import FCDescriptions from '../Pages/Add_Form/FCDescriptions';
 import { ReceiptContext } from '../../Contexts/ReceiptContext';
-import { useEffect } from 'react';
 
 export default function FCAddItem(props) {
     const [open, setOpen] = useState(false);
@@ -43,7 +42,7 @@ export default function FCAddItem(props) {
     const handleClose = () => {
         if (tempItem.price !== '') {
             for (let i = 0; i < tempItem.tags.length; i++) {
-                if (tempItem.tags[i].inputValue != undefined) {
+                if (tempItem.tags[i].inputValue !== undefined) {
                     tempItem.tags[i] = { title: tempItem.tags[i].inputValue }
                 }
             }
@@ -76,11 +75,11 @@ export default function FCAddItem(props) {
         setTempItem({ ...tempItem, itemName: itemName });
     }
     const handleBarcode = (barcode) => {
-        let bamba = `7290000066318`;
+        //let bamba = `7290000066318`;
         let corsAnywhere=`https://cors-anywhere.herokuapp.com/`;
         let api = 'https://api.upcitemdb.com/prod/trial/lookup?upc=';
-        let request = new Request('https://api.upcitemdb.com/prod/trial/lookup?upc=7290000066318');
-        let randomUser = new Request(`https://api.randomuser.me/?results=5`);
+        //let request = new Request('https://api.upcitemdb.com/prod/trial/lookup?upc=7290000066318');
+        //let randomUser = new Request(`https://api.randomuser.me/?results=5`);
         //let params = [`UPC`, `ISBN`, `EAN`];
         console.log("Start fetch");
 
@@ -329,10 +328,10 @@ const top100Films = [
     { title: '12 Angry Men', id: 1957 },
     { title: "omer", id: 1 }
 ];
-const tags = [{ title: "omer", id: 4 },
-{ title: 'The Shawshank Redemption', year: 1994 },
-{ title: 'The Godfather', year: 1972 },
-{ title: 'The Godfather: Part II', year: 1974 },
-{ title: 'The Dark Knight', year: 2008 },
-{ title: '12 Angry Men', year: 1957 },
-];
+// const tags = [{ title: "omer", id: 4 },
+// { title: 'The Shawshank Redemption', year: 1994 },
+// { title: 'The Godfather', year: 1972 },
+// { title: 'The Godfather: Part II', year: 1974 },
+// { title: 'The Dark Knight', year: 2008 },
+// { title: '12 Angry Men', year: 1957 },
+// ];

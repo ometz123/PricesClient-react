@@ -87,7 +87,7 @@ export default function FCLogIn(props) {
                         <input type="radio" name="gender" value="male" /*value={value}*/ /> Male <br />
                         <input type="radio" name="gender" value="female" /*value={value}*/ /> Female
                         </fieldset>
-                    <button onClick={() => SetUser({ name: firstName, loggedIn: true })}>
+                    <button onClick={() => SetUser({ firstName: firstName, loggedIn: true })}>
                         change
                 </button>
                     {/* <input type="submit" value="Sign up" /> */}

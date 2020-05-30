@@ -15,7 +15,7 @@ import FCStoreDetails from './Add_Form/FCStoreDetails';
 import FCAddItem from '../eXtra/FCAddItem';
 import FCList from '../eXtra/FCList';
 import { ReceiptContext } from '../../Contexts/ReceiptContext';
-import FCGooglePlacesSearch from './Add_Form/FCGooglePlacesSearch';
+//import FCGooglePlacesSearch from './Add_Form/FCGooglePlacesSearch';
 
 const useStyles = makeStyles((theme) => ({
     table: {
@@ -35,10 +35,27 @@ const useStyles = makeStyles((theme) => ({
 function FCAdd(props) {
     const classes = useStyles();
     const { receipt } = useContext(ReceiptContext);
-    
+
     const handleSubmit = (event) => {
         console.log("receipt: ", receipt);
+        let api = `https://localhost:44377/api/receipts`;
 
+        fetch(api ,{
+            method: 'POST',
+            body: JSON.stringify(receipt),
+            headers: new Headers({
+                'Content-Type': 'application/json; charset=UTF-8',
+            })
+        }).then(res => {
+            return res.json();
+        })
+        .then(
+            (result) => {
+                console.log("fetch FetchGet= ", result);
+            },
+            (error) => {
+                console.log("err post=", error);
+            });
     };
 
     return (

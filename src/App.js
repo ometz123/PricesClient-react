@@ -18,6 +18,7 @@ function App() {
           </SearchContextProvider>
         </UserContextProvider>
       </header>
+      <footer>Created by Omer Tzafrir</footer>
     </div>
   );
 }

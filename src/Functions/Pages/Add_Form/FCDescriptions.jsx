@@ -15,7 +15,7 @@ const useStyles = makeStyles((theme) => ({
 export default function FCDescriptions(props) {
     const classes = useStyles();
     const{receipt,SetReceipt}=useContext(ReceiptContext)
-    const [value/*, setValue*/] = React.useState();
+    //const [value/*, setValue*/] = React.useState();
 
     // const handleChange = (event) => {
     //     setValue(event.target.value);

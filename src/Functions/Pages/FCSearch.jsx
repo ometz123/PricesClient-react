@@ -1,5 +1,5 @@
 import React, { useContext, /*useState*/ } from 'react';
-import FCGooglePlacesSearch from './Add_Form/FCGooglePlacesSearch';
+//import FCGooglePlacesSearch from './Add_Form/FCGooglePlacesSearch';
 import FCTags from './Add_Form/FCTags';
 import FCGoogleMap from './Add_Form/FCGoogleMap';
 import FCSlider from '../eXtra/FCSlider';

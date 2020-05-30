@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react";
+import React, { useContext } from "react";
 import { DatePicker } from "@material-ui/pickers";
 //import lightBlue from "@material-ui/core/colors/lightBlue";
 import { createMuiTheme } from "@material-ui/core";
@@ -34,7 +34,7 @@ const theme = createMuiTheme({
 });
 
 export default function FCDatePicker(props) {
-    const [selectedDate, handleDateChange] = useState(new Date());
+    //const [selectedDate, handleDateChange] = useState(new Date());
     const { receipt,SetReceipt } = useContext(ReceiptContext);
     //const [selectedDate, handleDateChange] = useState(null);
     return (

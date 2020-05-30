@@ -1,52 +1,77 @@
 import React, { useContext, useEffect } from 'react';
 import FCCard from '../eXtra/FCCard';
 import { SearchContext } from '../../Contexts/SearchContext';
+import { UserContext } from '../../Contexts/UserContext';
+import { useState } from 'react';
 
 export default function FCExplore(props) {
-
-    let list = props.filteredList.map(el => {
-        return <FCCard details={el} key={el.id} />
-    })
+    // let list = props.filteredList.map(el => {
+    //     return <FCCard details={el} key={el.id} />
+    // })
+    const [exploreItems, setExploreItems] = useState("...Loading");
     const { search } = useContext(SearchContext);
-    //let search = 'omer'
-    const getItems = () => {
-        let api = `https://localhost:44377/api/items/GetItemsForSearch`;
-        //let api = `http://proj.ruppin.ac.il/bgroup4/prod/server/api/items/GetItemsForSearch`;
-        const proxyurl = "https://cors-anywhere.herokuapp.com/";
+    const { user, setUserLocation } = useContext(UserContext)
+    let Search = {
+        User: {
+            User_rank: user.rank,
+            Lon: null,
+            Lat: null,
+        },
+        Distance_radius: 100,
+        Max_price: 1000,
 
-        fetch(api+"?search=omer", {
-            method: 'GetItemsForSearch',
-            //body: JSON.stringify(search),
+    }
+    const getItems = () => {
+        Search.User.Lat = user.userLocation.latitude;
+        Search.User.Lon = user.userLocation.longitude;
+        let api = `https://localhost:44377/api/items/GetItemsForSearch`;
+        fetch(api, {
+            method: 'POST',
+            body: JSON.stringify(Search),
             headers: new Headers({
                 'Content-Type': 'application/json; charset=UTF-8',
             })
-            //, mode: `no-cors`,
         }
         )
             .then(res => {
-                console.log('res=', res);
-                console.log('res.status', res.status);
-                console.log('res.ok', res.ok);
                 return res.json();
             })
             .then(
                 (result) => {
                     console.log("fetch FetchGet= ", result);
-                    //result.map(st => console.log(st.FullName));
-                    //console.log('result[0].FullName=', result[0].FullName);
+                    setExploreItems(result.map(item => {
+                        return <FCCard item={item} key={item.Item_id} />
+
+                    }))
                 },
                 (error) => {
                     console.log("err post=", error);
                 });
-
     }
+ 
     useEffect(() => {
-        //getItems();
-    }, [])
-    return (
-        <div>
-            {list}
-        </div>
-    );
+        const a = async () => { await setUserLocation(); };
+        a().
+            then(() => {
+                if (user.userLocation) {
+                    getItems();
+                }
+            });
+
+    }, [user.userLocation ? user.userLocation.latitude : []])
+    if (user.userLocation) {
+        return (
+            <div>
+                {exploreItems}
+            </div>
+        );
+    } else {
+        return (
+            <div>
+                in order to use this feature, you have to enable location access
+            </div>
+        );
+    }
+
 }
 

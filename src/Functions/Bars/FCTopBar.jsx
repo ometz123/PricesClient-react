@@ -21,10 +21,10 @@ import FCSearch from '../Pages/FCSearch';
 import { Switch, Route, withRouter } from 'react-router-dom';
 import FCExplore from '../Pages/FCExplore';
 import '../../Styles/mysass.scss';
-import Bamba from '../../Images/Bamba.png';
-import Doritos from '../../Images/Doritos.png';
-import OreoIceCream from '../../Images/OreoIceCream.png';
-import Receipt from '../../Images/Receipt.png';
+// import Bamba from '../../Images/Bamba.png';
+// import Doritos from '../../Images/Doritos.png';
+// import OreoIceCream from '../../Images/OreoIceCream.png';
+// import Receipt from '../../Images/Receipt.png';
 import AddIcon from '@material-ui/icons/Add';
 import FCAdd from '../Pages/FCAdd';
 import ExploreIcon from '@material-ui/icons/Explore';
@@ -110,44 +110,46 @@ const useStyles = makeStyles(theme => ({
 function FCTopBar(props) {
   const { user } = useContext(UserContext);
   const { search, setSearch } = useContext(SearchContext);
-  let filteredList = [
-    {
-      id: 1, title: "Bamba", price: 100, discount: 0, image: Bamba, store: "Moshe's Pitzutzia", receipt: Receipt,
-      description: {
-        top: `Bamba is a baked snack containing 50% peanuts,
-                    enriched in vitamins and iron and free of preservatives and food coloring.`,
-        middle: `Due to its uniqueness – soft yet crispy, savory yet sweet – Bamba is loved by Israelis of all ages.
-                    Bamba is the bestselling snack in Israel, accounting for close to a quarter of the snacks market.`,
-        bottom: `90% of Israeli households buy Bamba regularly and every day 1 million bags of Bamba are produced.        
-                    Bamba was first produced in 1964 with a cheese flavor and in 1966 the cheese flavor was replaced in favor of peanut butter – 
-                    the winning flavor that has made Bamba part of Israeli culture.`,
+  //#region 
+  // let filteredList = [
+  //   {
+  //     id: 1, title: "Bamba", price: 100, discount: 0, image: Bamba, store: "Moshe's Pitzutzia", receipt: Receipt,
+  //     description: {
+  //       top: `Bamba is a baked snack containing 50% peanuts,
+  //                   enriched in vitamins and iron and free of preservatives and food coloring.`,
+  //       middle: `Due to its uniqueness – soft yet crispy, savory yet sweet – Bamba is loved by Israelis of all ages.
+  //                   Bamba is the bestselling snack in Israel, accounting for close to a quarter of the snacks market.`,
+  //       bottom: `90% of Israeli households buy Bamba regularly and every day 1 million bags of Bamba are produced.        
+  //                   Bamba was first produced in 1964 with a cheese flavor and in 1966 the cheese flavor was replaced in favor of peanut butter – 
+  //                   the winning flavor that has made Bamba part of Israeli culture.`,
 
-      }
-    },
-    {
-      title: "Doritos", price: 200, id: 2, image: Doritos, store: "Haim's Pitzutzia", receipt: Receipt,
-      description: {
-        top: `"Some things simply go best with the guys" At Doritos, we believe that your very best friends are much more than just friends.`,
-        middle: `They are the ones who make up the experiences, memories and moments that stay with you for life,
-         the ones that leave you hungry for more long after they're gone.
-          Because between us, the things you'll remember in life aren't the exams or the math lessons, but that time when you were sitting on the fence,
-           eating Sweet 'N Sour Doritos and telling jokes for hours.`,
-        bottom: `Or that day in summer when it was soooo hot you all had absolutely no choice but to cut history class
-        and go hang out on the beach with a bag of Flaming Hot Doritos. Like a snuggle rug in winter,
-         ketchup on fries or a song by Britney at a great party, Doritos is that little extra "crunch"
-          that hits the spot every time you meet up with the guys, making each get-together perfect.
-           No matter if it's summer or winter, if you're home or out or if the music is the coolest or sucks,
-            all you need is a bag of Doritos and your very best friends, and it'll turn into that kind of evening you'll never forget…`,
-      }
-    },
-    {
-      title: "Oreo Ice Cream", price: 300, id: 3, image: OreoIceCream, store: "Dani's Pitzutzia", receipt: Receipt,
-      description: {
-        top: ``,
-        middle: ``,
-        bottom: ``,
-      }
-    }];
+  //     }
+  //   },
+  //   {
+  //     title: "Doritos", price: 200, id: 2, image: Doritos, store: "Haim's Pitzutzia", receipt: Receipt,
+  //     description: {
+  //       top: `"Some things simply go best with the guys" At Doritos, we believe that your very best friends are much more than just friends.`,
+  //       middle: `They are the ones who make up the experiences, memories and moments that stay with you for life,
+  //        the ones that leave you hungry for more long after they're gone.
+  //         Because between us, the things you'll remember in life aren't the exams or the math lessons, but that time when you were sitting on the fence,
+  //          eating Sweet 'N Sour Doritos and telling jokes for hours.`,
+  //       bottom: `Or that day in summer when it was soooo hot you all had absolutely no choice but to cut history class
+  //       and go hang out on the beach with a bag of Flaming Hot Doritos. Like a snuggle rug in winter,
+  //        ketchup on fries or a song by Britney at a great party, Doritos is that little extra "crunch"
+  //         that hits the spot every time you meet up with the guys, making each get-together perfect.
+  //          No matter if it's summer or winter, if you're home or out or if the music is the coolest or sucks,
+  //           all you need is a bag of Doritos and your very best friends, and it'll turn into that kind of evening you'll never forget…`,
+  //     }
+  //   },
+  //   {
+  //     title: "Oreo Ice Cream", price: 300, id: 3, image: OreoIceCream, store: "Dani's Pitzutzia", receipt: Receipt,
+  //     description: {
+  //       top: ``,
+  //       middle: ``,
+  //       bottom: ``,
+  //     }
+  //   }];
+  //#endregion
   const [title, setTitle] = useState("Prices")
   const classes = useStyles();
   const [anchorEl, setAnchorEl] = React.useState(null);
@@ -187,7 +189,7 @@ function FCTopBar(props) {
     setTitle("Search");
     handleMobileMenuClose();
   }
-  const handleSearchText=(e)=>{
+  const handleSearchText = (e) => {
     setSearch({
       ...search, text: e ? e : null
     })
@@ -203,7 +205,7 @@ function FCTopBar(props) {
       open={isMenuOpen}
       onClose={handleMenuClose}
     >
-      <MenuItem onClick={handleMenuClose}>{user.name}'s Profile</MenuItem>
+      <MenuItem onClick={handleMenuClose}>{user.firstName}'s Profile</MenuItem>
       {/* <MenuItem onClick={handleMenuClose}>{user.name}'s account</MenuItem> */}
     </Menu>
   );
@@ -240,7 +242,7 @@ function FCTopBar(props) {
         >
           <AccountCircle />
         </IconButton>
-        <p>{user.name}'s Profile</p>
+        <p>{user.firstName}'s Profile</p>
       </MenuItem>
     </Menu>
   );
@@ -271,12 +273,12 @@ function FCTopBar(props) {
               }}
               inputProps={{ 'aria-label': 'search' }}
               onClick={() => handleSearch()}
-              onChange={(e)=>handleSearchText(e.target.value)}
+              onChange={(e) => handleSearchText(e.target.value)}
             />
 
           </div>
           <Typography className={classes.user} variant="h6" noWrap>
-            Hello {user.name}
+            Hello {user.firstName}
           </Typography>
           <div className={classes.grow} />
           <div className={classes.sectionDesktop}>
@@ -364,7 +366,7 @@ function FCTopBar(props) {
             <FCSearch />
           </Route>
           <Route exact path="/">
-            <FCExplore filteredList={filteredList} />
+            <FCExplore />
           </Route>
         </Switch>
       </div>

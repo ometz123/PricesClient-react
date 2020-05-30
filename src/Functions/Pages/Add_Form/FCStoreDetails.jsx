@@ -45,10 +45,10 @@ export default function FCStoreDetails() {
                 onClose={handleClose}
                 aria-labelledby="responsive-dialog-title"
             >
-                <DialogTitle id="responsive-dialog-title">{"Use Google's location service?"}</DialogTitle>
+                <DialogTitle id="responsive-dialog-title">{"Store Details"}</DialogTitle>
                 <DialogContent>
                     <DialogContentText>
-                        Store Details
+                        Google Places
                     </DialogContentText>
                     <FCGooglePlacesSearch />
                     {/* <FCGoogleMap /> */}

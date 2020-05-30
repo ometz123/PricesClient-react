@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import clsx from 'clsx';
 import Card from '@material-ui/core/Card';
@@ -16,11 +16,10 @@ import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
 import FCCheckBox2Compare from './FCCheckBox2Compare'
 
-
 const useStyles = makeStyles(theme => ({
   card: {
     maxWidth: 345,
-    margin:20,
+    margin: 20,
   },
   media: {
     height: 0,
@@ -44,44 +43,39 @@ const useStyles = makeStyles(theme => ({
 export default function FCCard(props) {
   const classes = useStyles();
   const [expanded, setExpanded] = React.useState(false);
-
   const handleExpandClick = () => {
     setExpanded(!expanded);
   };
-
   return (
-    <Card className={classes.card}>
+    <Card className={classes.card} >
       <CardHeader
-        avatar={
-            <FCCheckBox2Compare></FCCheckBox2Compare>
-        }
-        action={
-          <IconButton aria-label="settings">
-            <MoreVertIcon />
-          </IconButton>
-        }
-        title={props.details.title}
-        subheader={props.details.price+"$"}
+        // avatar={
+        //   <FCCheckBox2Compare></FCCheckBox2Compare>
+        // }
+        // action={
+        //   <IconButton aria-label="settings">
+        //     <MoreVertIcon />
+        //   </IconButton>
+        // }
+        title={props.item.Item_title}
+        subheader={props.item.Price + "$"}
       />
       <CardMedia
         className={classes.media}
-        //image="/static/images/cards/paella.jpg"
-        image={props.details.image}
-        title="Paella dish"
+        image={props.item.Item_image}
       />
       <CardContent>
-
         <Typography variant="body2" color="textSecondary" component="p">
-      {props.details.description.top}
+          {props.item.Item_Description}
         </Typography>
       </CardContent>
       <CardActions disableSpacing>
-        <IconButton aria-label="add to favorites">
+        {/* <IconButton aria-label="add to favorites">
           <FavoriteIcon />
         </IconButton>
         <IconButton aria-label="share">
           <ShareIcon />
-        </IconButton>
+        </IconButton> */}
         <IconButton
           className={clsx(classes.expand, {
             [classes.expandOpen]: expanded,
@@ -95,18 +89,11 @@ export default function FCCard(props) {
       </CardActions>
       <Collapse in={expanded} timeout="auto" unmountOnExit>
         <CardContent>
-          { <Typography paragraph>{/* if (info)=> More info:*/}</Typography> }
           <Typography paragraph>
-          {props.details.description.middle}
-          </Typography>
-          <Typography paragraph>
-          {props.details.description.bottom}
-          </Typography>
-          <Typography paragraph>
-        {/*text*/}
+            {props.item.Store_name}
           </Typography>
           <Typography>
-            {/* {text} */}
+            {props.item.Distance} km
           </Typography>
         </CardContent>
       </Collapse>
