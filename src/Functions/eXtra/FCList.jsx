@@ -69,7 +69,7 @@ export default function InteractiveList(props) {
         <ListItem>
           <ListItemAvatar>
             <Avatar>
-              <FolderIcon />
+              {item.image.preview?<img src={item.image.preview} style={{maxHeight:50,maxWidth:50}}/>:<FolderIcon />}
             </Avatar>
           </ListItemAvatar>
           <ListItemText

@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useState, useContext } from "react";
 import { DatePicker } from "@material-ui/pickers";
 //import lightBlue from "@material-ui/core/colors/lightBlue";
 import { createMuiTheme } from "@material-ui/core";
@@ -35,7 +35,12 @@ const theme = createMuiTheme({
 
 export default function FCDatePicker(props) {
     //const [selectedDate, handleDateChange] = useState(new Date());
-    const { receipt,SetReceipt } = useContext(ReceiptContext);
+    //const { receipt, SetReceipt } = useContext(ReceiptContext);
+    const [selectedDate, handleDateChange] = useState(null);
+    const onDateChange = (e) => {
+        props.onDateChange(e)
+        handleDateChange(e)
+    }
     //const [selectedDate, handleDateChange] = useState(null);
     return (
 
@@ -43,21 +48,25 @@ export default function FCDatePicker(props) {
             <ThemeProvider theme={theme}>
                 <DatePicker
                     autoOk
-                    label="Receipt Date"
+                    label={props.title ? props.title : "Receipt Date"}
                     //clearable
                     disableFuture
-                    //variant="outlined"
-                    value={receipt.date}
-                    onChange={(e)=>SetReceipt({...receipt,date:e})}
+                    inputVariant="outlined"
+                    //value={receipt.date}
+                    value={selectedDate}
+                    //onChange={(e)=>SetReceipt({...receipt,date:e})}
+                    onChange={e => onDateChange(e)}
                     margin="normal"
                     InputLabelProps={{
-                        style: { color: '#fff' },
+                        style: { color: 'white', },
+                        
                     }}
                     InputProps={{
                         style: {
-                            color: '#fff',
+                            color: 'white',
+                            border: "solid white 1px",
+                            
                         }
-                        //disableUnderline: "true"
                     }}
                 />
             </ThemeProvider >

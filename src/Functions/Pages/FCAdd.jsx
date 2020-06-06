@@ -15,6 +15,8 @@ import FCStoreDetails from './Add_Form/FCStoreDetails';
 import FCAddItem from '../eXtra/FCAddItem';
 import FCList from '../eXtra/FCList';
 import { ReceiptContext } from '../../Contexts/ReceiptContext';
+import { UserContext } from '../../Contexts/UserContext';
+import { SearchContext } from '../../Contexts/SearchContext';
 //import FCGooglePlacesSearch from './Add_Form/FCGooglePlacesSearch';
 
 const useStyles = makeStyles((theme) => ({
@@ -34,39 +36,91 @@ const useStyles = makeStyles((theme) => ({
 
 function FCAdd(props) {
     const classes = useStyles();
-    const { receipt } = useContext(ReceiptContext);
+    const { receipt,SetReceipt } = useContext(ReceiptContext);
+    const { user } = useContext(UserContext);
+    const { search } = useContext(SearchContext);
 
     const handleSubmit = (event) => {
         console.log("receipt: ", receipt);
-        let api = `https://localhost:44377/api/receipts`;
+        //let api = `https://localhost:44377/api/receipts`
+        let api = `http://proj.ruppin.ac.il/bgroup4/prod/server/api/receipts`;
+        let Receipt = {
+            Date: receipt.date,
+            User_id: user.userId,
+            Receipt_Description: receipt.receiptDescription,
+            Discount_dollar: receipt.discoundDollar,
+            Discount_percent: receipt.discountPercent,
+            Items: [],
+            Temp_receipt_image: receipt.image,
+            Store: {
+                Store_name: receipt.store.name,
+                Lat: search.lat,
+                Lon: search.lng
+            }
+        }
+        for (let i = 0; i < receipt.items.length; i++) {
+            Receipt.Items[i] = {
+                Item_title: receipt.items[i].itemName,
+                Category: receipt.items[i].category,
+                SubCategory: receipt.items[i].subCategory,
+                Price: receipt.items[i].price,
+                Discount_dollar: receipt.items[i].discoundDollar,
+                Discount_percent: receipt.items[i].discountPercent,
+                Item_Description: receipt.items[i].itemDescription,
+                tags: [],
+                Temp_item_image: receipt.items[i].image,
+                Barcode: receipt.items[i].barcode
+            }
+            for (let j = 0; j < receipt.items[i].tags.length; j++) {
+                if (receipt.items[i].tags[j].id == undefined) {
+                    Receipt.Items[i].tags[j] = {
+                        //Tag_id: receipt.items[i].tags[j].id,
+                        Tag_title: receipt.items[i].tags[j].title
+                    }
+                } else {
+                    Receipt.Items[i].tags[j] = {
+                        Tag_id: receipt.items[i].tags[j].id,
+                        //Tag_title: receipt.items[i].tags[j].title
+                    }
+                }
+            }
 
-        fetch(api ,{
-            method: 'POST',
-            body: JSON.stringify(receipt),
-            headers: new Headers({
-                'Content-Type': 'application/json; charset=UTF-8',
+        }
+        console.log(Receipt);
+
+        if (true) {
+            fetch(api, {
+                method: 'POST',
+                body: JSON.stringify(Receipt),
+                headers: new Headers({
+                    'Content-Type': 'application/json; charset=UTF-8',
+                })
+            }).then(res => {
+                return res.json();
             })
-        }).then(res => {
-            return res.json();
-        })
-        .then(
-            (result) => {
-                console.log("fetch FetchGet= ", result);
-            },
-            (error) => {
-                console.log("err post=", error);
-            });
-    };
+                .then(
+                    (result) => {
+                        console.log("fetch FetchGet= ", result);
+                    },
+                    (error) => {
+                        console.log("err post=", error);
+                    });
+        };
+    }
+
 
     return (
         <div>
             <div className={classes.table} >
                 <div >
                     <div style={{ float: 'left', width: "250px", }}>
-                        <FCImage />
+                        <FCImage parent={"Receipt"} key={"item"} />
                     </div>
                     <div style={{ float: 'right', width: "250px", }} >
-                        <FCDatePicker />
+                        <FCDatePicker 
+                        title={"Receipt Date"}
+                        onDateChange={(e)=>SetReceipt({...receipt,date:e})}
+                        />
                         <AnnouncementOutlinedIcon htmlColor="red" />
                     </div>
                 </div>
@@ -75,6 +129,7 @@ function FCAdd(props) {
                     <div
                         style={{ height: "100px", width: "250px", float: 'left' }}>
                         <FCStoreDetails />
+                        {receipt.store.name}
                         {/* <FCGooglePlacesSearch/> */}
                     </div>
                     <div style={{ float: 'right', width: "250px", }} >

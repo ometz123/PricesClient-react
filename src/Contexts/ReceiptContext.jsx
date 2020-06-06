@@ -17,6 +17,7 @@ const ReceiptContextProvider = (props) => {
         subCategory: { id: 0, title: "" },
         itemName: "",
         barcode: "",
+        image: { preview: "", raw: "" },
         discoundDollar: 0,
         discountPercent: 0,
         tags: [],

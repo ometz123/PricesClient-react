@@ -96,7 +96,7 @@ function FCGoogleMap(props) {
 
     }
     useEffect(() => {
-        const asyncuseEffect= async()=> {
+        const asyncuseEffect = async () => {
             //console.log(12);
             await setUserLocation();
             console.log("user(googleMap): ", user);
@@ -133,20 +133,6 @@ function FCGoogleMap(props) {
                 <Marker
                     position={{ lat: search.lat, lng: search.lng }}
                     animation={props.google.maps.Animation.DROP} />
-               
-
-                {/* <Circle
-                    radius={search.distance}
-                    center={{ lat: search.lat, lng: search.lng }}
-                    onMouseover={() => console.log('mouseover')}
-                    onClick={() => console.log('click')}
-                    onMouseout={() => console.log('mouseout')}
-                    strokeColor='transparent'
-                    strokeOpacity={0}
-                    strokeWeight={5}
-                    fillColor='#FF0000'
-                    fillOpacity={0.2}
-                /> */}
             </Map>
         </div>
     );

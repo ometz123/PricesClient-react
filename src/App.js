@@ -5,7 +5,6 @@ import UserContextProvider from './Contexts/UserContext';
 import SearchContextProvider from './Contexts/SearchContext';
 import ReceiptContextProvider from './Contexts/ReceiptContext';
 
-
 function App() {
   return (
     <div className="App">

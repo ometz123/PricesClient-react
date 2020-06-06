@@ -1,12 +1,14 @@
 import React from 'react';
 import TextField from '@material-ui/core/TextField';
-import Autocomplete from '@material-ui/lab/Autocomplete';
+import Autocomplete, { createFilterOptions } from '@material-ui/lab/Autocomplete';
 import LocationOnIcon from '@material-ui/icons/LocationOn';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import parse from 'autosuggest-highlight/parse';
 import throttle from 'lodash/throttle';
+import { useContext } from 'react';
+import { ReceiptContext } from '../../../Contexts/ReceiptContext';
 
 function loadScript(src, position, id) {
   if (!position) {
@@ -27,9 +29,12 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 export default function FCGooglePlacesSearch(props) {
+  const { receipt } = useContext(ReceiptContext)
   const inDevelop = false;
   const classes = useStyles();
+  const filter = createFilterOptions();
   const [inputValue, setInputValue] = React.useState('');
+  const [latLon, setLatLon] = React.useState(null)
   const [options, setOptions] = React.useState([]);
   const loaded = React.useRef(false);
   const myGoogleKey = `AIzaSyC47_J_bDoU4euesrr-ChlFjRpas0HzLQM`;
@@ -54,18 +59,23 @@ export default function FCGooglePlacesSearch(props) {
 
   };
   const handleLocationChange = (e) => {
-    //console.log("e[1].place_id: ", e[1].place_id);
-    let place_id = e[1].place_id;
+    if (e[1]) {
+      console.log(e);
+      console.log("e[1].place_id: ", e[1].place_id);
+      props.getPlaceDetails(e[1].place_id, e[1].description);
+    }
     //console.log("e: ", e);
     // const { latLng } = e;
     // const lat = latLng.lat();
     // const lng = latLng.lng();
-    if (true) {
-      console.log("start fetch from google");
-      let api = `https://maps.googleapis.com/maps/api/place/details/json?place_id=${place_id}&key=${myGoogleKey}`;
+
+    if (false) {
+      let place_id = e[1].place_id;
+      console.log("start fetch from google, place id=", place_id);
+      let api = `https://maps.googleapis.com/maps/api/geocode/json?place_id=${place_id}&key=${myGoogleKey}`;
       //let corsAnywhere = `https://cors-anywhere.herokuapp.com/`;
       console.log("api: ", api);
-      
+      api = `https://localhost:44377/api/items`;
       fetch(api, {
         method: 'GET',
         headers: new Headers({
@@ -127,61 +137,65 @@ export default function FCGooglePlacesSearch(props) {
       active = false;
     };
   }, [inputValue, fetch]);
-  if (!inDevelop) {
-    return (
 
-      <Autocomplete
-        id="google-map-demo"
-        style={{ width: 300 }}
-        onChange={(...e) => handleLocationChange(e)}
-        getOptionLabel={(option) => (typeof option === 'string' ? option : option.description)}
-        filterOptions={(x) => x}
-        options={options}
-        autoComplete
-        includeInputInList
-        renderInput={(params) => (
-          <TextField
-            {...params}
-            label="Search a store/address.."
-            variant="outlined"
-            fullWidth
-            onChange={handleChange}
-          />
-        )}
-        renderOption={(option) => {
-          const matches = option.structured_formatting.main_text_matched_substrings;
-          const parts = parse(
-            option.structured_formatting.main_text,
-            matches.map((match) => [match.offset, match.offset + match.length]),
-          );
+  return (
 
-          return (
-            <Grid container alignItems="center">
-              <Grid item>
-                <LocationOnIcon className={classes.icon} />
-              </Grid>
-              <Grid item xs>
-                {parts.map((part, index) => (
-                  <span key={index} style={{ fontWeight: part.highlight ? 700 : 400 }}>
-                    {part.text}
-                  </span>
-                ))}
+    <Autocomplete
+      id="google-map-demo"
+      style={{ width: 300 }}
+      onChange={(...e) => handleLocationChange(e)}
+      getOptionLabel={(option) => (typeof option === 'string' ? option : option.description)}
+      filterOptions={(x) => x}
+      // filterOptions={(options, params) => {
+      //   const filtered = {structured_formatting:filter(options, params)}
+      //   // Suggest the creation of a new value
+      //   if (params.inputValue !== '') {
+      //     filtered.structured_formatting.push({
+      //       description: params.inputValue,
+      //       main_text_matched_substrings: `Add "${params.inputValue}"?`,
+      //     });
+      //   }
+      //   //console.log("filtered: ", filtered);
+      //   return filtered;
+      // }}
+      options={options}
+      autoComplete
+      includeInputInList
+      renderInput={(params) => (
+        <TextField
+          {...params}
+          label="Search a store/address.."
+          variant="outlined"
+          fullWidth
+          onChange={handleChange}
+        />
+      )}
+      renderOption={(option) => {
+        const matches = option.structured_formatting.main_text_matched_substrings;
+        const parts = parse(
+          option.structured_formatting.main_text,
+          matches.map((match) => [match.offset, match.offset + match.length]),
+        );
 
-                <Typography variant="body2" color="textSecondary">
-                  {option.structured_formatting.secondary_text}
-                </Typography>
-              </Grid>
+        return (
+          <Grid container alignItems="center">
+            <Grid item>
+              <LocationOnIcon className={classes.icon} />
             </Grid>
-          );
-        }}
-      />
-    );
-  }
-  else {
-    return (
-      <div>
-        AutoComplete is in developing...
-      </div>
-    );
-  }
+            <Grid item xs>
+              {parts.map((part, index) => (
+                <span key={index} style={{ fontWeight: part.highlight ? 700 : 400 }}>
+                  {part.text}
+                </span>
+              ))}
+
+              <Typography variant="body2" color="textSecondary">
+                {option.structured_formatting.secondary_text}
+              </Typography>
+            </Grid>
+          </Grid>
+        );
+      }}
+    />
+  );
 }

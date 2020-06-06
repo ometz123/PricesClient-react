@@ -11,7 +11,7 @@ import { UserContext } from '../Contexts/UserContext';
 function FCPrices(props) {
     const { user, setUserLocation } = useContext(UserContext);
     //const [loggedIn/*, setLoggedIn*/] = useState(false)
-    useEffect(setUserLocation, []);
+    //useEffect(setUserLocation, []);
     if (user.loggedIn) {
         return (
             <div

@@ -24,7 +24,10 @@ export default function FCExplore(props) {
     const getItems = () => {
         Search.User.Lat = user.userLocation.latitude;
         Search.User.Lon = user.userLocation.longitude;
-        let api = `https://localhost:44377/api/items/GetItemsForSearch`;
+        //let api = `https://localhost:44377/api/items/GetItemsForSearch`;
+        let api = `http://proj.ruppin.ac.il/bgroup4/prod/server/api/items/GetItemsForSearch`;
+
+        //http://proj.ruppin.ac.il/bgroup4/prod/server
         fetch(api, {
             method: 'POST',
             body: JSON.stringify(Search),
@@ -38,7 +41,7 @@ export default function FCExplore(props) {
             })
             .then(
                 (result) => {
-                    console.log("fetch FetchGet= ", result);
+                    console.log("Explore fetch= ", result);
                     setExploreItems(result.map(item => {
                         return <FCCard item={item} key={item.Item_id} />
 
@@ -47,8 +50,36 @@ export default function FCExplore(props) {
                 (error) => {
                     console.log("err post=", error);
                 });
+
+
+        if (false) {
+            api = `https://localhost:44377/api/items`;
+            fetch(api, {
+                method: 'GET',
+                headers: new Headers({
+                    'Content-Type': 'application/json; charset=UTF-8',
+                    // 'Accept':'*/*',
+                    // 'Accept-Encoding':'gzip, deflate, br',
+                    // 'Connection':'keep-alive',
+                })
+                //, mode: `no-cors`,
+            })
+                .then(res => {
+                    console.log('res=', res);
+                    console.log('res.status', res.status);
+                    console.log('res.ok', res.ok);
+                    return res.json()
+                })
+                .then(
+                    (result) => {
+                        console.log("fetch FetchGet= ", result);
+                    },
+                    (error) => {
+                        console.log("err post=", error);
+                    });
+        }
     }
- 
+
     useEffect(() => {
         const a = async () => { await setUserLocation(); };
         a().

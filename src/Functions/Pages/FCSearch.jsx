@@ -1,24 +1,22 @@
 import React, { useContext, /*useState*/ } from 'react';
-//import FCGooglePlacesSearch from './Add_Form/FCGooglePlacesSearch';
+import FCGooglePlacesSearch from './Add_Form/FCGooglePlacesSearch';
 import FCTags from './Add_Form/FCTags';
 import FCGoogleMap from './Add_Form/FCGoogleMap';
 import FCSlider from '../eXtra/FCSlider';
 import { SearchContext } from '../../Contexts/SearchContext';
+import { ReceiptContext } from '../../Contexts/ReceiptContext';
 
 function FCSearch(props) {
     // const [userLocation, setUserLocation] = useState(null);
-    const { search } = useContext(SearchContext);
+    const { search,setSearch } = useContext(SearchContext);
+    const { receipt,SetReceipt } = useContext(ReceiptContext);
+    const myGoogleKey = `AIzaSyC47_J_bDoU4euesrr-ChlFjRpas0HzLQM`;
 
-    //let e = `ChIJS6e0YxpqHBURkJoXT0m2wTY`;
-    //const myGoogleKey = `AIzaSyC47_J_bDoU4euesrr-ChlFjRpas0HzLQM`;
-    // let url1 = `https://maps.googleapis.com/maps/api/place/details/json?place_id=${e}&key=${myGoogleKey}`;
-    let url2 = `http://proj.ruppin.ac.il/bgroup4/prod/server/api/items/GetItemsForSearch`;
-    // let url3 = `https://maps.googleapis.com/maps/api/place/details/json?place_id=ChIJVZUCaRpqHBURvnGwaPyrvD8&key=${myGoogleKey}`;
-    // let url4 = `https://api.randomuser.me/`;
-    //let url5 = `https://maps.googleapis.com/maps/api/place/details/json?key=${myGoogleKey}&place_id=${e}`;
 
     const handleSubmit = (e) => {
         //e.preventDefault();
+        let url2 = `http://proj.ruppin.ac.il/bgroup4/prod/server/api/items/GetItemsForSearch`;
+
         console.log("search(FCSearch): ", search);
         if (true) {
             console.log('fetch items: ');
@@ -48,14 +46,43 @@ function FCSearch(props) {
                     });
         }
     }
+    const getPlaceDetails = (place_id, storeName) => {
+        SetReceipt({ ...receipt, store: { name: storeName } })
 
+        let api = `https://maps.googleapis.com/maps/api/geocode/json?place_id=${place_id}&key=${myGoogleKey}`;
+        let corsAnywhere = `https://cors-anywhere.herokuapp.com/`;
+        fetch(corsAnywhere + api, {
+            method: 'GET',
+            headers: new Headers({ 'Content-Type': 'application/json; charset=UTF-8' })
+        })
+            .then(res => { return res.json() })
+            .then((result) => {
+                console.log("fetch FetchGet= ", result);
+                let storeLatLon = result.results[0].geometry.location;
+                console.log(storeLatLon);
+                //setLatLon(storeLatLon)
+                setSearch({
+                    ...search,
+                    lat: storeLatLon.lat,
+                    lng: storeLatLon.lng
+                });
+                SetReceipt({ ...receipt, store: { name: storeName, lat: storeLatLon.lat, lon: storeLatLon.lng } })
+
+            },
+                (error) => {
+                    console.log("err post=", error);
+                });
+    }
 
 
     return (
         <div>
             <div onSubmit={(e) => handleSubmit(e)}>
                 <div >
-                    {/* <FCGooglePlacesSearch color="white" handleLocation={(locationEvent) => handleLocation(locationEvent)} /> */}
+                    <FCGooglePlacesSearch color="white" 
+                    getPlaceDetails={getPlaceDetails}
+                    //handleLocation={(locationEvent) => handleLocation(locationEvent)}
+                     />
                     <FCGoogleMap />
                 </div>
                 <div style={{

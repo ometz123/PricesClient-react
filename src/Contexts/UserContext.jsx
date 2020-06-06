@@ -4,11 +4,18 @@ export const UserContext = createContext();
 
 const UserContextProvider = (props) => {
     const [user, setUser] = useState({
+        userId:"John@Doe.com",
         firstName: "John",
         lastName: "Doe",
         rank: 1000,
-        loggedIn: true,
-        userLocation: null
+        loggedIn: false,
+        userLocation: null,
+        birthDate:null,
+        gender:null,
+        state:null,
+        city:null,
+        password:null
+
     })
 
     const setUserLocation = () => {
