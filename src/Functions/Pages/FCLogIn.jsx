@@ -19,7 +19,7 @@ const myStyles = {
 };
 export default function FCLogIn(props) {
     const { user, SetUser } = useContext(UserContext);
-
+    const emailPattern = "[a-z0-9._%+-]+@[a-z0-9.-]+.[a-z]{2,4}$";
     const [newUser, SetNewUser] = useState({
         userId: "John@Doe.com",
         firstName: "John",
@@ -47,8 +47,8 @@ export default function FCLogIn(props) {
             City: newUser.city,
             User_rank: newUser.rank
         };
-        //let api = `https://localhost:44377/api/Users/SignUp`
-        let api = `http://proj.ruppin.ac.il/bgroup4/prod/server/api/Users/SignUp`;
+        let api = `https://localhost:44377/api/Users/SignUp`
+        //let api = `http://proj.ruppin.ac.il/bgroup4/prod/server/api/Users/SignUp`;
         fetch(api, {
             method: 'POST',
             body: JSON.stringify(NewUser),
@@ -67,11 +67,12 @@ export default function FCLogIn(props) {
                 },
                 (error) => {
                     console.log("err post=", error);
+                    alert("sorry, somthing went wrong")
                 });
     }
     const logIn = (e) => {
         if (e) {
-            e.preventDefault()
+            e.preventDefault();
         }
         console.log("user: ", user);
         let User = {
@@ -101,10 +102,10 @@ export default function FCLogIn(props) {
                     console.log("err post=", error);
                 });
     }
-    const logUserIn = (result, User) => {
+    const logUserIn =async (result, User) => {
         console.log(result.User_id == User.User_id && result.Password == User.Password);
         if (result.User_id == User.User_id && result.Password == User.Password) {
-            SetUser({
+            await SetUser({
                 ...user,
                 userId: result.Userid,
                 firstName: result.First_name,
@@ -117,6 +118,12 @@ export default function FCLogIn(props) {
                 city: result.City,
                 password: result.Password
             });
+            // localStorage.setItem('user', user);
+            // let temp= localStorage.getItem('user');
+            // console.log("local: ",localStorage.getItem('user').);
+            //console.log(temp);
+            
+
         }
         else {
             alert("שם משתמש או סיסמה שגויה");
@@ -124,64 +131,86 @@ export default function FCLogIn(props) {
     }
     return (
         <div>
-            <form>
+            <form onSubmit={(e) => logIn(e)}>
                 <fieldset>
                     <legend>Log In</legend>
-                    <input type="text" name="email" id="email" placeholder="Email"
+                    <input type="email" name="email" id="email" placeholder="Email"
+                        required
+                        pattern={emailPattern}
                         onChange={(e) => SetUser({ ...user, userId: e.target.value })}
                         style={myStyles.logIn} />
                     <input type="password" name="password" id="password" placeholder="Password"
+                        minLength="8"
+                        maxLength="16"
                         onChange={(e) => SetUser({ ...user, password: e.target.value })}
-                        style={myStyles.logIn} />
+                        style={myStyles.logIn} required />
                     <br />
-                    {/* <input type="submit" onSubmit={(e) => logIn(e)} value="Log In" /> */}
-                    <button onClick={(e) => logIn(e)}>
-                        Log In
-                </button>
+                    <input type="submit" value="Log In"
+                        //onClick={(e) => logIn(e)}
+                    />
+
                 </fieldset>
             </form>
             <br />
-            <form >
+            <form  onSubmit={(e) => SignUpNewUser(e)}>
                 <fieldset>
                     <legend>Sign up!</legend>
                     <input type="text" placeholder="First Name" style={myStyles.name}
-                        onChange={(e) => SetNewUser({ ...newUser, firstName: e.target.value })}
                         required
+                        minLength="2"
+                        maxLength="50"
+                        onChange={(e) => SetNewUser({ ...newUser, firstName: e.target.value })}
                     />
                     <input type="text" placeholder="Last Name" style={myStyles.name}
+                        required
+                        minLength="2"
+                        maxLength="50"
                         onChange={(e) => SetNewUser({ ...newUser, lastName: e.target.value })}
                     />
                     <br />
-                    <input type="text" placeholder="Email" style={myStyles.logIn}
+                    <input type="email" placeholder="Email" style={myStyles.logIn}
+                        required
+                        pattern={emailPattern}
                         onChange={(e) => SetNewUser({ ...newUser, userId: e.target.value })}
                     />
                     <input type="password" placeholder="Password" style={myStyles.logIn}
+                        required
+                        minLength="8"
+                        maxLength="16"
                         onChange={(e) => SetNewUser({ ...newUser, password: e.target.value })}
                     />
                     <br />
                     <input type="text" placeholder="State" style={myStyles.logIn}
+                        required
+                        minLength="3"
+                        maxLength="50"
                         onChange={(e) => SetNewUser({ ...newUser, state: e.target.value })}
                     />
                     <input type="text" placeholder="City" style={myStyles.logIn}
+                        required
+                        minLength="2"
+                        maxLength="50"
                         onChange={(e) => SetNewUser({ ...newUser, city: e.target.value })}
                     /><br />
                     <FCDatePicker
                         title={"BirthDay"}
+                        req={true}
                         onDateChange={(e) => SetNewUser({ ...newUser, birthDate: e })} />
                     <br />
                     {/* <TextField type="date" variant="outlined" /> */}
                     <fieldset>
                         <legend>Gender</legend>
-                        <input type="radio" name="gender" value={true}
+                        <input type="radio" name="gender" value={true} required
                             onChange={(e) => SetNewUser({ ...newUser, gender: e.target.value })}
                         /> Male
                         <br />
-                        <input type="radio" name="gender" value={false}
+                        <input type="radio" name="gender" value={false} required
                             onChange={(e) => SetNewUser({ ...newUser, gender: e.target.value })} /> Female
                     </fieldset>
-                    <button onClick={(e) => SignUpNewUser(e)}>
-                        Sign Up!
-                </button>
+                    <input type="submit"
+                        //onClick={(e) => SignUpNewUser(e)}
+                         value="Sign Up!" />
+
                 </fieldset>
             </form>
         </div>

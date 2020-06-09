@@ -8,7 +8,7 @@ const UserContextProvider = (props) => {
         firstName: "John",
         lastName: "Doe",
         rank: 1000,
-        loggedIn: false,
+        loggedIn: true,
         userLocation: null,
         birthDate:null,
         gender:null,

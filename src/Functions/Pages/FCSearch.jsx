@@ -5,41 +5,54 @@ import FCGoogleMap from './Add_Form/FCGoogleMap';
 import FCSlider from '../eXtra/FCSlider';
 import { SearchContext } from '../../Contexts/SearchContext';
 import { ReceiptContext } from '../../Contexts/ReceiptContext';
+import Button from '@material-ui/core/Button';
+import { UserContext } from '../../Contexts/UserContext';
 
 function FCSearch(props) {
     // const [userLocation, setUserLocation] = useState(null);
-    const { search,setSearch } = useContext(SearchContext);
-    const { receipt,SetReceipt } = useContext(ReceiptContext);
+    const { search, setSearch } = useContext(SearchContext);
+    const { user } = useContext(UserContext)
+    const { receipt, SetReceipt } = useContext(ReceiptContext);
     const myGoogleKey = `AIzaSyC47_J_bDoU4euesrr-ChlFjRpas0HzLQM`;
 
 
     const handleSubmit = (e) => {
-        //e.preventDefault();
-        let url2 = `http://proj.ruppin.ac.il/bgroup4/prod/server/api/items/GetItemsForSearch`;
-
+        let api = `https://localhost:44377/api/items/GetItemsForSearch`;
         console.log("search(FCSearch): ", search);
+
+        //let url2 = `http://proj.ruppin.ac.il/bgroup4/prod/server/api/items/GetItemsForSearch`;
+
         if (true) {
             console.log('fetch items: ');
+            let Search = {
+                User: {
+                    User_rank: user.rank,
+                    Lon: search.lng,
+                    Lat: search.lat,
+                },
+                Distance_radius: search.distance,
+                Max_price: search.maxPrice,
+                Min_price:search.minPrice,
+                Title_Words: search.text,
+                Tags: search.tags
 
-            fetch(url2, {
-                method: 'GET',
+            }
+            console.log(Search);
+
+            fetch(api, {
+                method: 'POST',
+                body: JSON.stringify(Search),
                 headers: new Headers({
                     'Content-Type': 'application/json; charset=UTF-8',
                 })
-                //, mode: `no-cors`,
             }
             )
                 .then(res => {
-                    console.log('res=', res);
-                    console.log('res.status', res.status);
-                    console.log('res.ok', res.ok);
                     return res.json();
                 })
                 .then(
                     (result) => {
                         console.log("fetch FetchGet= ", result);
-                        //result.map(st => console.log(st.FullName));
-                        //console.log('result[0].FullName=', result[0].FullName);
                     },
                     (error) => {
                         console.log("err post=", error);
@@ -77,12 +90,12 @@ function FCSearch(props) {
 
     return (
         <div>
-            <div onSubmit={(e) => handleSubmit(e)}>
+            <div>
                 <div >
-                    <FCGooglePlacesSearch color="white" 
-                    getPlaceDetails={getPlaceDetails}
+                    <FCGooglePlacesSearch color="white"
+                        getPlaceDetails={getPlaceDetails}
                     //handleLocation={(locationEvent) => handleLocation(locationEvent)}
-                     />
+                    />
                     <FCGoogleMap />
                 </div>
                 <div style={{
@@ -98,7 +111,19 @@ function FCSearch(props) {
                 <div >
                     <FCSlider />
                 </div>
-                <button type="submit" >Search</button>
+                {/* <input
+                    type="button"
+                    onClick={() => { console.log(search) }}
+                    value="Search"
+                /> */}
+                <Button
+                    type="submit"
+                    variant="contained"
+                    color="primary"
+                    onClick={() => { handleSubmit() }}
+                >
+                    Search
+                </Button>
             </div>
         </div>
     );

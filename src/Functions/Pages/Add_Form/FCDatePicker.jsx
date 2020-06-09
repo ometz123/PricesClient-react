@@ -50,6 +50,7 @@ export default function FCDatePicker(props) {
                     autoOk
                     label={props.title ? props.title : "Receipt Date"}
                     //clearable
+                    required={props.req?props.req:false}
                     disableFuture
                     inputVariant="outlined"
                     //value={receipt.date}
@@ -59,13 +60,11 @@ export default function FCDatePicker(props) {
                     margin="normal"
                     InputLabelProps={{
                         style: { color: 'white', },
-                        
                     }}
                     InputProps={{
                         style: {
                             color: 'white',
                             border: "solid white 1px",
-                            
                         }
                     }}
                 />
