@@ -36,76 +36,92 @@ const useStyles = makeStyles((theme) => ({
 
 function FCAdd(props) {
     const classes = useStyles();
-    const { receipt,SetReceipt } = useContext(ReceiptContext);
+    const { receipt, SetReceipt } = useContext(ReceiptContext);
     const { user } = useContext(UserContext);
     const { search } = useContext(SearchContext);
+    let local = false;
+    let http = `http://proj.ruppin.ac.il/bgroup4/prod/server/api/`;
+    if (local) {
+        http = `https://localhost:44377/api/`;
+    }
 
     const handleSubmit = (event) => {
         console.log("receipt: ", receipt);
-        //let api = `https://localhost:44377/api/receipts`
-        let api = `http://proj.ruppin.ac.il/bgroup4/prod/server/api/receipts`;
-        let Receipt = {
-            Date: receipt.date,
-            User_id: user.userId,
-            Receipt_Description: receipt.receiptDescription,
-            Discount_dollar: receipt.discoundDollar,
-            Discount_percent: receipt.discountPercent,
-            Items: [],
-            Temp_receipt_image: receipt.image,
-            Store: {
-                Store_name: receipt.store.name,
-                Lat: search.lat,
-                Lon: search.lng
-            }
-        }
-        for (let i = 0; i < receipt.items.length; i++) {
-            Receipt.Items[i] = {
-                Item_title: receipt.items[i].itemName,
-                Category: receipt.items[i].category,
-                SubCategory: receipt.items[i].subCategory,
-                Price: receipt.items[i].price,
-                Discount_dollar: receipt.items[i].discoundDollar,
-                Discount_percent: receipt.items[i].discountPercent,
-                Item_Description: receipt.items[i].itemDescription,
-                tags: [],
-                Temp_item_image: receipt.items[i].image,
-                Barcode: receipt.items[i].barcode
-            }
-            for (let j = 0; j < receipt.items[i].tags.length; j++) {
-                if (receipt.items[i].tags[j].id == undefined) {
-                    Receipt.Items[i].tags[j] = {
-                        //Tag_id: receipt.items[i].tags[j].id,
-                        Tag_title: receipt.items[i].tags[j].title
-                    }
-                } else {
-                    Receipt.Items[i].tags[j] = {
-                        Tag_id: receipt.items[i].tags[j].id,
-                        //Tag_title: receipt.items[i].tags[j].title
-                    }
+
+        if (window.confirm("ready to share your prices?")) {
+            console.log("receipt: ", receipt);
+            //let api = `https://localhost:44377/api/receipts`
+            let api = http+`receipts`;
+            let Receipt = {
+                Date: receipt.date,
+                User_id: user.userId,
+                Receipt_Description: receipt.receiptDescription,
+                Discount_dollar: receipt.discoundDollar,
+                Discount_percent: receipt.discountPercent,
+                Items: [],
+                Temp_receipt_image: receipt.image,
+                Store: {
+                    Store_name: receipt.store.name,
+                    Lat: search.lat,
+                    Lon: search.lng
                 }
             }
-
-        }
-        console.log(Receipt);
-
-        if (true) {
-            fetch(api, {
-                method: 'POST',
-                body: JSON.stringify(Receipt),
-                headers: new Headers({
-                    'Content-Type': 'application/json; charset=UTF-8',
-                })
-            }).then(res => {
-                return res.json();
-            })
-                .then(
-                    (result) => {
-                        console.log("fetch FetchGet= ", result);
+            for (let i = 0; i < receipt.items.length; i++) {
+                Receipt.Items[i] = {
+                    Item_title: receipt.items[i].itemName,
+                    Category: {
+                        Category_title: receipt.items[i].category.title,
+                        Category_id: receipt.items[i].category.id
                     },
-                    (error) => {
-                        console.log("err post=", error);
-                    });
-        };
+                    Sub_category: {
+                        Sub_category_title: receipt.items[i].subCategory.title,
+                        Sub_category_id: receipt.items[i].subCategory.id
+                    },
+                    Price: receipt.items[i].price,
+                    Discount_dollar: receipt.items[i].discoundDollar,
+                    Discount_percent: receipt.items[i].discountPercent,
+                    Item_Description: receipt.items[i].itemDescription,
+                    tags: [],
+                    Temp_item_image: receipt.items[i].image,
+                    Barcode: receipt.items[i].barcode
+                }
+                for (let j = 0; j < receipt.items[i].tags.length; j++) {
+                    if (receipt.items[i].tags[j].id == undefined) {
+                        Receipt.Items[i].tags[j] = {
+                            //Tag_id: receipt.items[i].tags[j].id,
+                            Tag_title: receipt.items[i].tags[j].title
+                        }
+                    } else {
+                        Receipt.Items[i].tags[j] = {
+                            Tag_id: receipt.items[i].tags[j].id,
+                            //Tag_title: receipt.items[i].tags[j].title
+                        }
+                    }
+                }
+
+            }
+            console.log(Receipt);
+
+            if (true) {
+                fetch(api, {
+                    method: 'POST',
+                    body: JSON.stringify(Receipt),
+                    headers: new Headers({
+                        'Content-Type': 'application/json; charset=UTF-8',
+                    })
+                }).then(res => {
+                    return res.json();
+                })
+                    .then(
+                        (result) => {
+                            console.log("fetch FetchGet= ", result);
+                        },
+                        (error) => {
+                            console.log("err post=", error);
+                        });
+            };
+        }
+
     }
 
 
@@ -117,9 +133,9 @@ function FCAdd(props) {
                         <FCImage parent={"Receipt"} key={"item"} />
                     </div>
                     <div style={{ float: 'right', width: "250px", }} >
-                        <FCDatePicker 
-                        title={"Receipt Date"}
-                        onDateChange={(e)=>SetReceipt({...receipt,date:e})}
+                        <FCDatePicker
+                            title={"Receipt Date"}
+                            onDateChange={(e) => SetReceipt({ ...receipt, date: e })}
                         />
                         <AnnouncementOutlinedIcon htmlColor="red" />
                     </div>

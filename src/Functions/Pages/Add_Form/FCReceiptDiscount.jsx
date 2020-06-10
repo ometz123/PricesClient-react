@@ -30,7 +30,8 @@ export default function FCDiscount(props) {
                 }}
                 InputProps={{
                     style: {
-                        color: props.color ? props.color : null
+                        color: props.color ? props.color : null,
+                        border:props.color ? props.color+" 1px solid" : null
                     },
                     //disableUnderline: "true",
                     minimum: "0", max: "10", step: "1"
@@ -52,7 +53,8 @@ export default function FCDiscount(props) {
                 }}
                 InputProps={{
                     style: {
-                        color: props.color ? props.color : null
+                        color: props.color ? props.color : null,
+                        border:props.color ? props.color+" 1px solid" : null
                     },
                 }}
                 type="number"

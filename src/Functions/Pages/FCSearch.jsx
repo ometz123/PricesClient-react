@@ -14,10 +14,14 @@ function FCSearch(props) {
     const { user } = useContext(UserContext)
     const { receipt, SetReceipt } = useContext(ReceiptContext);
     const myGoogleKey = `AIzaSyC47_J_bDoU4euesrr-ChlFjRpas0HzLQM`;
-
+    let local = false;
+    let http = `http://proj.ruppin.ac.il/bgroup4/prod/server/api/`;
+    if (local) {
+        http = `https://localhost:44377/api/`;
+    }
 
     const handleSubmit = (e) => {
-        let api = `https://localhost:44377/api/items/GetItemsForSearch`;
+        let api = http+`items/GetItemsForSearch`;
         console.log("search(FCSearch): ", search);
 
         //let url2 = `http://proj.ruppin.ac.il/bgroup4/prod/server/api/items/GetItemsForSearch`;
@@ -35,7 +39,6 @@ function FCSearch(props) {
                 Min_price:search.minPrice,
                 Title_Words: search.text,
                 Tags: search.tags
-
             }
             console.log(Search);
 

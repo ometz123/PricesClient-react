@@ -16,13 +16,16 @@ import Chip from '@material-ui/core/Chip';
 //import FCDescriptions from '../Pages/Add_Form/FCDescriptions';
 import { ReceiptContext } from '../../Contexts/ReceiptContext';
 import FCImage from '../Pages/Add_Form/FCImage';
+import { ListsContext } from '../../Contexts/ListsContext';
+import { useEffect } from 'react';
 
 export default function FCAddItem(props) {
     const [open, setOpen] = useState(false);
     const theme = useTheme();
     const filter = createFilterOptions();
     const fullScreen = useMediaQuery(theme.breakpoints.down('xs'));
-    const { receipt, /*item, SetItem,*/ SetReceipt } = useContext(ReceiptContext);
+    const { receipt, SetReceipt } = useContext(ReceiptContext);
+    const {tags,FetchTags,categories,FetchCategories,subCategories,FetchSubCategories} = useContext(ListsContext)
     const [tempItem, setTempItem] = useState({
         id: "",
         category: { id: 0, title: "" },
@@ -53,7 +56,9 @@ export default function FCAddItem(props) {
         setOpen(false);
     };
     const handleCategoryChange = (category) => {
-        if (category.inputValue) {
+        console.log("category: ",category);
+        
+        if (category) {
             let newCategory = { title: "" };
             newCategory = { title: category.inputValue };
             setTempItem({ ...tempItem, category: newCategory });
@@ -62,7 +67,7 @@ export default function FCAddItem(props) {
         }
     }
     const handleSubCategoryChange = (subCategory) => {
-        if (subCategory.inputValue) {
+        if (subCategory) {
             let newSubCategory = { title: "" };
             newSubCategory = { title: subCategory.inputValue };
             setTempItem({ ...tempItem, subCategory: newSubCategory });
@@ -132,6 +137,11 @@ export default function FCAddItem(props) {
         console.log("tags: ", tags);
         setTempItem({ ...tempItem, tags: tags });
     }
+    useEffect(()=>{
+        FetchTags();
+        FetchCategories();
+        FetchSubCategories();
+    },[])
 
     return (
         <div>
@@ -154,28 +164,28 @@ export default function FCAddItem(props) {
                         <div style={{ float: "left", width: "300px" /*maxWidth: 300*/ }}>
                             <Autocomplete
                                 id="combo-box-category"
-                                options={top100Films}
+                                options={categories}
                                 filterOptions={(options, params) => {
                                     const filtered = filter(options, params);
                                     // Suggest the creation of a new value
                                     if (params.inputValue !== '') {
                                         filtered.push({
                                             inputValue: params.inputValue,
-                                            title: `Add "${params.inputValue}"?`,
+                                            Category_title: `New Category: "${params.inputValue}"`,
                                         });
                                     }
-                                    console.log("filtered: ", filtered);
+                                    console.log("filteredC: ", filtered);
                                     return filtered;
                                 }}
                                 onChange={(e, category) => handleCategoryChange(category)}
-                                getOptionLabel={(option) => option.title}
+                                getOptionLabel={(option) => option.Category_title}
                                 renderInput={(params) => <TextField {...params} label="Category" variant="outlined" />}
                             />
                         </div>
                         <div style={{ float: "left", width: "300px" /*maxWidth: 300*/ }}>
                             <Autocomplete
                                 id="combo-box-sub-category"
-                                options={top100Films}
+                                options={subCategories}
                                 onChange={(e, category) => handleSubCategoryChange(category)}
                                 filterOptions={(options, params) => {
                                     const filtered = filter(options, params);
@@ -183,12 +193,14 @@ export default function FCAddItem(props) {
                                     if (params.inputValue !== '') {
                                         filtered.push({
                                             inputValue: params.inputValue,
-                                            title: `Add "${params.inputValue}"?`,
+                                            Sub_category_title: `New Sub Category: "${params.inputValue}"`,
                                         });
                                     }
+                                    console.log("filteredSC: ",filtered);
+                                    
                                     return filtered;
                                 }}
-                                getOptionLabel={(option) => option.title}
+                                getOptionLabel={(option) => option.Sub_category_title}
                                 renderInput={(list) => <TextField {...list} label="Sub Category" variant="outlined" />}
                             />
                         </div>
@@ -261,8 +273,8 @@ export default function FCAddItem(props) {
                             <Autocomplete
                                 multiple
                                 id="fixed-tags-demo"
-                                options={top100Films}
-                                getOptionLabel={(option) => option.title}
+                                options={tags}
+                                getOptionLabel={(option) => option.Tag_title}
                                 onChange={(e, tags) => handleTagsChange(tags)}
                                 filterOptions={(options, params) => {
                                     const filtered = filter(options, params);
@@ -270,7 +282,7 @@ export default function FCAddItem(props) {
                                     if (params.inputValue !== '') {
                                         filtered.push({
                                             inputValue: params.inputValue,
-                                            title: `Add "${params.inputValue}"?`,
+                                            Tag_title: `New Tag: "${params.inputValue}"`,
                                         });
                                     }
                                     //console.log("filtered: ", filtered);
@@ -280,7 +292,7 @@ export default function FCAddItem(props) {
                                 renderTags={(value, getTagProps) =>
                                     value.map((option, index) => (
                                         <Chip
-                                            label={option.title}
+                                            label={option.Tag_title}
                                             {...getTagProps({ index })}
                                         //disabled={index === 0}
                                         />
@@ -325,18 +337,4 @@ export default function FCAddItem(props) {
         </div>
     );
 }
-const top100Films = [
-    { title: 'The Shawshank Redemption', id: 1994 },
-    { title: 'The Godfather', id: 1972 },
-    { title: 'The Godfather: Part II', id: 1974 },
-    { title: 'The Dark Knight', id: 2008 },
-    { title: '12 Angry Men', id: 1957 },
-    { title: "omer", id: 1 }
-];
-// const tags = [{ title: "omer", id: 4 },
-// { title: 'The Shawshank Redemption', year: 1994 },
-// { title: 'The Godfather', year: 1972 },
-// { title: 'The Godfather: Part II', year: 1974 },
-// { title: 'The Dark Knight', year: 2008 },
-// { title: '12 Angry Men', year: 1957 },
-// ];
+

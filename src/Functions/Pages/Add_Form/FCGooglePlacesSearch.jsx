@@ -142,22 +142,13 @@ export default function FCGooglePlacesSearch(props) {
 
     <Autocomplete
       id="google-map-demo"
-      style={{ width: 300 }}
+      style={{
+        width: 300,
+        //border: 'solid white 1px',
+      }}
       onChange={(...e) => handleLocationChange(e)}
       getOptionLabel={(option) => (typeof option === 'string' ? option : option.description)}
       filterOptions={(x) => x}
-      // filterOptions={(options, params) => {
-      //   const filtered = {structured_formatting:filter(options, params)}
-      //   // Suggest the creation of a new value
-      //   if (params.inputValue !== '') {
-      //     filtered.structured_formatting.push({
-      //       description: params.inputValue,
-      //       main_text_matched_substrings: `Add "${params.inputValue}"?`,
-      //     });
-      //   }
-      //   //console.log("filtered: ", filtered);
-      //   return filtered;
-      // }}
       options={options}
       autoComplete
       includeInputInList
@@ -166,17 +157,24 @@ export default function FCGooglePlacesSearch(props) {
           {...params}
           label="Search a store/address.."
           variant="outlined"
+          InputLabelProps={{
+            style: { color: 'white', },
+          }}
+          style={{
+            color: 'white',
+            border: "solid white 1px",
+          }}
           fullWidth
           onChange={handleChange}
         />
-      )}
+      )
+      }
       renderOption={(option) => {
         const matches = option.structured_formatting.main_text_matched_substrings;
         const parts = parse(
           option.structured_formatting.main_text,
           matches.map((match) => [match.offset, match.offset + match.length]),
         );
-
         return (
           <Grid container alignItems="center">
             <Grid item>

@@ -4,7 +4,7 @@ import FCPrices from './Functions/FCPrices';
 import UserContextProvider from './Contexts/UserContext';
 import SearchContextProvider from './Contexts/SearchContext';
 import ReceiptContextProvider from './Contexts/ReceiptContext';
-import TagsContextProvider from './Contexts/TagsContext';
+import ListsContextProvider from './Contexts/ListsContext';
 
 function App() {
   return (
@@ -13,9 +13,9 @@ function App() {
         <UserContextProvider>
           <SearchContextProvider>
             <ReceiptContextProvider>
-              <TagsContextProvider>
+              <ListsContextProvider>
                 <FCPrices />
-              </TagsContextProvider>
+              </ListsContextProvider>
             </ReceiptContextProvider>
           </SearchContextProvider>
         </UserContextProvider>

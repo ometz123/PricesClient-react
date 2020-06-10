@@ -6,12 +6,12 @@ import '../Styles/mysass.scss';
 import FCTopBar from './Bars/FCTopBar';
 //import Stam from '../Functions/stam';
 import { UserContext } from '../Contexts/UserContext';
-import { TagsContext } from '../Contexts/TagsContext';
+import {  ListsContext } from '../Contexts/ListsContext';
 //import { useEffect } from 'react';
 
 function FCPrices(props) {
     const { user, setUserLocation } = useContext(UserContext);
-    const { tags, FetchTags } = useContext(TagsContext);
+    const { tags, FetchTags } = useContext(ListsContext);
     //const [loggedIn/*, setLoggedIn*/] = useState(false)
     //useEffect(setUserLocation, []);
     useEffect(()=>{ FetchTags() }, []);
