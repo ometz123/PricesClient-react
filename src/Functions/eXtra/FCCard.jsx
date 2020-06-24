@@ -15,6 +15,8 @@ import ShareIcon from '@material-ui/icons/Share';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
 import FCCheckBox2Compare from './FCCheckBox2Compare'
+import { useState } from 'react';
+import { Chip } from '@material-ui/core';
 
 const useStyles = makeStyles(theme => ({
   card: {
@@ -42,16 +44,22 @@ const useStyles = makeStyles(theme => ({
 
 export default function FCCard(props) {
   const classes = useStyles();
-  const [expanded, setExpanded] = React.useState(false);
+  const [expanded, setExpanded] = useState(false);
+  const [color, SetColor] = useState(false);
+
   const handleExpandClick = () => {
     setExpanded(!expanded);
   };
+  const handleLike = () => {
+    console.log(props.item.Item_id);
+    SetColor(!color);
+  }
   return (
     <Card className={classes.card} >
       <CardHeader
-        // avatar={
-        //   <FCCheckBox2Compare></FCCheckBox2Compare>
-        // }
+        avatar={props.compare ?
+          <FCCheckBox2Compare></FCCheckBox2Compare> : null
+        }
         // action={
         //   <IconButton aria-label="settings">
         //     <MoreVertIcon />
@@ -65,15 +73,29 @@ export default function FCCard(props) {
         image={props.item.Item_image}
       />
       <CardContent>
-        <Typography variant="body2" color="textSecondary" component="p">
-          {props.item.Item_Description}
-        </Typography>
+        {props.item.Tags.map(tag => {
+          return <Chip label={tag.Tag_title} variant="outlined" key={tag.Tag_id} />
+        })}
+        {/* <Typography variant="body2" color="textSecondary" component="p">
+
+          {props.item.Tags.map(tag => {
+            return <Chip label={tag.Tag_title} variant="outlined" key={tag.Tag_id} />
+          })}
+        </Typography> */}
+
       </CardContent>
+      <Typography variant="body2" color="textSecondary" component="p">
+        {props.item.Item_Description}
+      </Typography>
       <CardActions disableSpacing>
-        {/* <IconButton aria-label="add to favorites">
+        <IconButton
+          onClick={handleLike}
+          aria-label="add to favorites"
+          color={color ? 'secondary' : 'default'}
+        >
           <FavoriteIcon />
         </IconButton>
-        <IconButton aria-label="share">
+        {/* <IconButton aria-label="share">
           <ShareIcon />
         </IconButton> */}
         <IconButton
@@ -93,7 +115,7 @@ export default function FCCard(props) {
             {props.item.Store_name}
           </Typography>
           <Typography>
-            {props.item.Distance} km
+            {Number((props.item.Distance).toFixed(2))} km
           </Typography>
         </CardContent>
       </Collapse>

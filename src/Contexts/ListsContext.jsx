@@ -27,7 +27,7 @@ const ListsContextProvider = (props) => {
             })
             .then(
                 (result) => {
-                    console.log("Tags fetch= ", result);
+                    //console.log("Tags fetch= ", result);
                     setTags(result);
                 },
                 (error) => {
@@ -44,7 +44,7 @@ const ListsContextProvider = (props) => {
             })
             .then(
                 (result) => {
-                    console.log("Categories fetch= ", result);
+                    //console.log("Categories fetch= ", result);
                     setCategories(result);
                 },
                 (error) => {
@@ -62,7 +62,7 @@ const ListsContextProvider = (props) => {
             })
             .then(
                 (result) => {
-                    console.log("SubCategories fetch= ", result);
+                    //console.log("SubCategories fetch= ", result);
                     setSubCategories(result);
                 },
                 (error) => {

@@ -39,7 +39,7 @@ function FCAdd(props) {
     const { receipt, SetReceipt } = useContext(ReceiptContext);
     const { user } = useContext(UserContext);
     const { search } = useContext(SearchContext);
-    let local = false;
+    let local = true;
     let http = `http://proj.ruppin.ac.il/bgroup4/prod/server/api/`;
     if (local) {
         http = `https://localhost:44377/api/`;
@@ -51,7 +51,7 @@ function FCAdd(props) {
         if (window.confirm("ready to share your prices?")) {
             console.log("receipt: ", receipt);
             //let api = `https://localhost:44377/api/receipts`
-            let api = http+`receipts`;
+            let api = http + `receipts`;
             let Receipt = {
                 Date: receipt.date,
                 User_id: user.userId,
@@ -59,12 +59,12 @@ function FCAdd(props) {
                 Discount_dollar: receipt.discoundDollar,
                 Discount_percent: receipt.discountPercent,
                 Items: [],
-                Temp_receipt_image: receipt.image,
                 Store: {
                     Store_name: receipt.store.name,
                     Lat: search.lat,
                     Lon: search.lng
-                }
+                },
+                Receipt_image: receipt.image.base64
             }
             for (let i = 0; i < receipt.items.length; i++) {
                 Receipt.Items[i] = {
@@ -82,8 +82,9 @@ function FCAdd(props) {
                     Discount_percent: receipt.items[i].discountPercent,
                     Item_Description: receipt.items[i].itemDescription,
                     tags: [],
-                    Temp_item_image: receipt.items[i].image,
-                    Barcode: receipt.items[i].barcode
+                    Item_image: receipt.items[i].image.base64,
+                    Barcode: receipt.items[i].barcode,
+                    Id_type:"UserUser"//to check where details are from: upcitemdb or original
                 }
                 for (let j = 0; j < receipt.items[i].tags.length; j++) {
                     if (receipt.items[i].tags[j].id == undefined) {
@@ -115,9 +116,11 @@ function FCAdd(props) {
                     .then(
                         (result) => {
                             console.log("fetch FetchGet= ", result);
+                            alert("Thanks for sharing the prices! \nA senior user will verify the correctness of the data")
                         },
                         (error) => {
                             console.log("err post=", error);
+                            alert("Error sharing the prices. \nPlease try again later")
                         });
             };
         }

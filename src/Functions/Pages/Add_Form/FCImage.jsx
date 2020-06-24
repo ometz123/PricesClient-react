@@ -2,7 +2,6 @@ import React, { useState, useContext, useEffect } from 'react'
 import { ReceiptContext } from '../../../Contexts/ReceiptContext';
 import ReceiptOutlinedIcon from '@material-ui/icons/ReceiptOutlined';
 import PhotoCameraIcon from '@material-ui/icons/PhotoCamera';
-import { Input } from '@material-ui/core';
 import AnnouncementOutlinedIcon from '@material-ui/icons/AnnouncementOutlined';
 
 export default function FCImage(props) {
@@ -11,48 +10,43 @@ export default function FCImage(props) {
   const [icon, setIcon] = useState();
   const [image, setImage] = useState({ image: { preview: null, raw: null } });
 
-  const handleChange = (e) => {
-
-    console.log("change: ", props.parent);
+  const handleChange = async (e) => {
+    let image = e.target.files[0];
+    let preview = URL.createObjectURL(image);
     setImage({
-      preview: URL.createObjectURL(e.target.files[0]),
-      raw: e.target.files[0]
-    })
+      preview: preview,
+      raw: image
+    });
 
-    if (props.parent === "Receipt") {
-      SetReceipt({
-        ...receipt, image: {
-          preview: URL.createObjectURL(e.target.files[0]),
-          raw: e.target.files[0]
-        }
-      })
+    //  create 64 base  
+    let reader = new FileReader();
+    reader.readAsDataURL(image);
+    reader.onloadend = () => {
+      let base64 = reader.result;
 
+      if (props.parent === "Receipt") {
+        SetReceipt({
+          ...receipt, image: {
+            preview: preview,
+            raw: image,
+            base64: base64
+          }
+        })
+      } else if (props.parent === "Item") {
+        props.onItemImageChange(image, base64);
+      }
     }
-    else if (props.parent === "Item") {
-      props.onItemImageChange(e)
-      SetItem({
-        ...item, image: {
-          preview: URL.createObjectURL(e.target.files[0]),
-          raw: e.target.files[0]
-        }
-      })
-    }
-
+    //
   }
 
   useEffect(() => {
     if (props.parent === "Item") { setIcon(<PhotoCameraIcon />) }
     else if (props.parent === "Receipt") { setIcon(<ReceiptOutlinedIcon />) }
-  }, [image])
-  //const handleUpload = async (e) => {
-  //console.log(e);
-  // e.preventDefault()
-  // const formData = new FormData()
-  // formData.append('image', image.raw)
-  // const config = { headers: { 'content-type': 'multipart/form-data' } }		
 
-  // await uploadToBackend('endpoint', {image: image.raw}, config)
-  //}
+
+    //props.apiItemSrc ? setImage(props.apiItemSrc) : setImage(image);
+  }, [image])
+
 
   return (
     <div>
@@ -70,12 +64,13 @@ export default function FCImage(props) {
             </p>
           </>
           )
-        }<Input
+        }<input
           type="file"
           name={props.parent}
           style={{ display: 'none', border: "5px solid red" }}
           onChange={handleChange}
-          required={props.parent==="Receipt"}
+          required={props.parent === "Receipt"}
+          accept="image/*"
         />
       </label>
 

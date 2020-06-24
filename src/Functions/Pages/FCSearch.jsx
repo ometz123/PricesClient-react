@@ -7,21 +7,64 @@ import { SearchContext } from '../../Contexts/SearchContext';
 import { ReceiptContext } from '../../Contexts/ReceiptContext';
 import Button from '@material-ui/core/Button';
 import { UserContext } from '../../Contexts/UserContext';
+import { useState } from 'react';
+import { makeStyles } from '@material-ui/core/styles';
+import FCCard from '../eXtra/FCCard';
+import { useEffect } from 'react';
+
+const useStyles = makeStyles((theme) => ({
+    show: {
+        display: 'block',
+        position: 'fixed',
+        bottom: '20px',
+        right: '30px',
+        zIndex: '99',
+        //size: '18px',
+        border: 'none',
+        outline: 'none',
+        backgroundColor: 'red',
+        color: 'white',
+        cursor: 'pointer',
+        padding: '15px',
+        borderRadius: '4px',
+        display: "inline-block",
+    },
+    hide: {
+        display: 'none',
+        position: 'fixed',
+        bottom: '20px',
+        right: '30px',
+        zIndex: '99',
+        //size: '18px',
+        border: 'none',
+        outline: 'none',
+        backgroundColor: 'red',
+        color: 'white',
+        cursor: 'pointer',
+        padding: '15px',
+        borderRadius: '4px',
+        display: "inline-block",
+    },
+}));
 
 function FCSearch(props) {
+    const classes = useStyles();
+
     // const [userLocation, setUserLocation] = useState(null);
     const { search, setSearch } = useContext(SearchContext);
-    const { user } = useContext(UserContext)
+    const { user } = useContext(UserContext);
+    let show = false;
+    const [resultItems, setResultItems] = useState();
     const { receipt, SetReceipt } = useContext(ReceiptContext);
     const myGoogleKey = `AIzaSyC47_J_bDoU4euesrr-ChlFjRpas0HzLQM`;
-    let local = false;
+    let local = true;
     let http = `http://proj.ruppin.ac.il/bgroup4/prod/server/api/`;
     if (local) {
         http = `https://localhost:44377/api/`;
     }
 
     const handleSubmit = (e) => {
-        let api = http+`items/GetItemsForSearch`;
+        let api = http + `items/GetItemsForSearch`;
         console.log("search(FCSearch): ", search);
 
         //let url2 = `http://proj.ruppin.ac.il/bgroup4/prod/server/api/items/GetItemsForSearch`;
@@ -36,7 +79,7 @@ function FCSearch(props) {
                 },
                 Distance_radius: search.distance,
                 Max_price: search.maxPrice,
-                Min_price:search.minPrice,
+                Min_price: search.minPrice,
                 Title_Words: search.text,
                 Tags: search.tags
             }
@@ -56,6 +99,10 @@ function FCSearch(props) {
                 .then(
                     (result) => {
                         console.log("fetch FetchGet= ", result);
+                        setResultItems(result.map(item => {
+                            return <FCCard item={item} key={item.Item_id} compare />
+
+                        }))
                     },
                     (error) => {
                         console.log("err post=", error);
@@ -89,8 +136,18 @@ function FCSearch(props) {
                     console.log("err post=", error);
                 });
     }
-
-
+    window.onscroll = () => {
+        if (/*document.body.scrollTop > 20 ||*/ document.documentElement.scrollTop > 20) {
+            show = false;
+            //console.log("block");
+            //mybutton.style.display = "block";
+        } else {
+            //console.log("none");
+            show = true;
+            //mybutton.style.display = "none";
+        }
+    }
+    useEffect(() => { window.scrollTo(0, 0) }, [])
     return (
         <div>
             <div>
@@ -128,6 +185,12 @@ function FCSearch(props) {
                     Search
                 </Button>
             </div>
+            {resultItems}
+            <button
+                className={show ? classes.show : classes.hide}
+                onClick={() => window.scrollTo(0, 0)}
+            >TOP</button>
+
         </div>
     );
 }

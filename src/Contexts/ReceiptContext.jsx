@@ -3,7 +3,7 @@ export const ReceiptContext = createContext();
 
 const ReceiptContextProvider = (props) => {
     const [receipt, setReceipt] = useState({
-        image: { preview: "", raw: "" },
+        image: { preview: "", raw: "",base64:"" },
         date: new Date(),
         discoundDollar: "",
         discountPercent: "",
@@ -17,7 +17,7 @@ const ReceiptContextProvider = (props) => {
         subCategory: { id: 0, title: "" },
         itemName: "",
         barcode: "",
-        image: { preview: "", raw: "" },
+        image: { preview: "", raw: "",base64:"" },
         discoundDollar: 0,
         discountPercent: 0,
         tags: [],

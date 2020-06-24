@@ -44,11 +44,11 @@ export default function InteractiveList(props) {
   const classes = useStyles();
   const { receipt, SetReceipt } = useContext(ReceiptContext);
 
-  const removeItem = (e, itemId) => {
+  const removeItem = (e, i) => {
     let items = receipt.items;
-    let pos = items.map((item) => { return item.id; }).indexOf(itemId);
-    console.log(pos);
-    items.splice(pos, 1);
+    //let pos = items.map((item) => { return item.id; }).indexOf(itemId);
+    console.log(i);
+    items.splice(i, 1);
 
     SetReceipt({ ...receipt, items: items });
 
@@ -63,9 +63,9 @@ export default function InteractiveList(props) {
     //SetReceipt({ ...receipt, items: receipt.items.splice(itemId, 1) });
 
   }
-  let list = receipt.items.map((item) => {
+  let list = receipt.items.map((item,i) => {
     return (
-      <div key={(item.id).toString()}>
+      <div key={i}>
         <ListItem>
           <ListItemAvatar>
             <Avatar>
@@ -74,10 +74,10 @@ export default function InteractiveList(props) {
           </ListItemAvatar>
           <ListItemText
             primary={item.itemName ? item.itemName : "Error Name"}
-            secondary={item.price}
+            secondary={<span style={{color:"white"}}>{item.price}$</span>}
           />
           <ListItemSecondaryAction
-            onClick={(e) => { removeItem(e, item.id) }}>
+            onClick={(e) => { removeItem(e, i) }}>
             <IconButton edge="end" aria-label="delete">
               <DeleteOutlineIcon />
             </IconButton>

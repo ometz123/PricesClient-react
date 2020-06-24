@@ -67,11 +67,6 @@ function FCGoogleMap(props) {
     //
     const handleResetLocation = () => {
         getLocation();
-        // if ("geolocation" in navigator) {
-        //     console.log("Available");
-        //   } else {
-        //     console.log("Not Available");
-        //   }
         setUserLocation();
         if (user.userLocation == null) {
             //setUserLocation();
