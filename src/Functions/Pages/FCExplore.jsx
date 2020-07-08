@@ -3,15 +3,27 @@ import FCCard from '../eXtra/FCCard';
 import { SearchContext } from '../../Contexts/SearchContext';
 import { UserContext } from '../../Contexts/UserContext';
 import { useState } from 'react';
+import CircularProgress from '@material-ui/core/CircularProgress';
+import { makeStyles } from '@material-ui/core/styles';
 
+// Inspired by the former Facebook spinners.
+const progressCircle = makeStyles((theme) => ({
+    circle: {
+        color: '#fcaf17',
+        animationDuration: '550ms',
+        strokeLinecap: 'round',
+    },
+}));
 export default function FCExplore(props) {
     // let list = props.filteredList.map(el => {
     //     return <FCCard details={el} key={el.id} />
     // })
-    const [exploreItems, setExploreItems] = useState("...Loading");
+    const classes = progressCircle();
+
+    const [exploreItems, setExploreItems] = useState(<CircularProgress className={classes.circle} size={45} thickness={4} />);
     const { search } = useContext(SearchContext);
     const { user, setUserLocation } = useContext(UserContext);
-    let local = false;
+    let local = true;
     let http = `http://proj.ruppin.ac.il/bgroup4/prod/server/api/`;
     if (local) {
         http = `https://localhost:44377/api/`;
@@ -22,11 +34,12 @@ export default function FCExplore(props) {
             Lon: null,
             Lat: null,
         },
-        Distance_radius: 100,
+        Distance_radius: 20,
         Max_price: 1000,
 
     }
     const getItems = () => {
+        setExploreItems(<CircularProgress className={classes.circle} size={45} thickness={4} />);
         Search.User.Lat = user.userLocation.latitude;
         Search.User.Lon = user.userLocation.longitude;
         let api = http + `items/GetItemsForSearch`;

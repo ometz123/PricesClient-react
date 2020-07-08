@@ -4,7 +4,7 @@ import { /*Switch, Route, Link,*/ withRouter } from 'react-router-dom';
 import FCLogIn from './Pages/FCLogIn';
 import '../Styles/mysass.scss';
 import FCTopBar from './Bars/FCTopBar';
-//import Stam from '../Functions/stam';
+import Stam from '../Functions/stam';
 import { UserContext } from '../Contexts/UserContext';
 import {  ListsContext } from '../Contexts/ListsContext';
 //import { useEffect } from 'react';
@@ -31,7 +31,7 @@ function FCPrices(props) {
     } else
         return (
             <div style={{ textAlign: "-webkit-center" }}>
-                {/* <Stam/>  */}
+                <Stam/> 
                 <FCLogIn />
             </div>
         );

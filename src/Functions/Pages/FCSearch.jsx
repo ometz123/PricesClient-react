@@ -1,4 +1,4 @@
-import React, { useContext, /*useState*/ } from 'react';
+import React, { useContext, useRef, useEffect /*useState*/ } from 'react';
 import FCGooglePlacesSearch from './Add_Form/FCGooglePlacesSearch';
 import FCTags from './Add_Form/FCTags';
 import FCGoogleMap from './Add_Form/FCGoogleMap';
@@ -10,11 +10,17 @@ import { UserContext } from '../../Contexts/UserContext';
 import { useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import FCCard from '../eXtra/FCCard';
-import { useEffect } from 'react';
+import FCCompareGrid from '../eXtra/FCCompareGrid';
+import { Fab } from '@material-ui/core';
+import KeyboardArrowUpTwoToneIcon from '@material-ui/icons/KeyboardArrowUpTwoTone';
+import FCCompareList from '../eXtra/FCCompareList';
+import CircularProgress from '@material-ui/core/CircularProgress';
+
+const scrollToRef = (ref) => window.scrollTo(0, ref.current.offsetTop - 50);
 
 const useStyles = makeStyles((theme) => ({
     show: {
-        display: 'block',
+        //display: 'block',
         position: 'fixed',
         bottom: '20px',
         right: '30px',
@@ -22,12 +28,12 @@ const useStyles = makeStyles((theme) => ({
         //size: '18px',
         border: 'none',
         outline: 'none',
-        backgroundColor: 'red',
-        color: 'white',
+        //backgroundColor: 'red',
+        //color: 'white',
         cursor: 'pointer',
         padding: '15px',
-        borderRadius: '4px',
-        display: "inline-block",
+        borderRadius: '20px',
+        //display: "inline-block",
     },
     hide: {
         display: 'none',
@@ -38,34 +44,44 @@ const useStyles = makeStyles((theme) => ({
         //size: '18px',
         border: 'none',
         outline: 'none',
-        backgroundColor: 'red',
-        color: 'white',
+        //backgroundColor: 'red',
+        //color: 'white',
         cursor: 'pointer',
         padding: '15px',
-        borderRadius: '4px',
-        display: "inline-block",
+        //borderRadius: '4px',
+        //display: "inline-block",
+    },
+    circle: {
+        color: '#fcaf17',
+        animationDuration: '550ms',
+        strokeLinecap: 'round',
     },
 }));
 
 function FCSearch(props) {
     const classes = useStyles();
-
-    // const [userLocation, setUserLocation] = useState(null);
+    const [items, setItems] = useState([]);
+    const [itemToCheck, setItemToCheck] = useState({});
     const { search, setSearch } = useContext(SearchContext);
     const { user } = useContext(UserContext);
-    let show = false;
+    const [show, setShow] = useState(false)
     const [resultItems, setResultItems] = useState();
     const { receipt, SetReceipt } = useContext(ReceiptContext);
+    const [searchResults, setSearchResults] = useState([]);
+
     const myGoogleKey = `AIzaSyC47_J_bDoU4euesrr-ChlFjRpas0HzLQM`;
     let local = true;
     let http = `http://proj.ruppin.ac.il/bgroup4/prod/server/api/`;
     if (local) {
         http = `https://localhost:44377/api/`;
     }
+    const myRef = useRef(null)
+    const executeScroll = () => scrollToRef(myRef)
 
     const handleSubmit = (e) => {
         let api = http + `items/GetItemsForSearch`;
         console.log("search(FCSearch): ", search);
+        setResultItems(<CircularProgress className={classes.circle} size={45} thickness={4} />);
 
         //let url2 = `http://proj.ruppin.ac.il/bgroup4/prod/server/api/items/GetItemsForSearch`;
 
@@ -91,23 +107,36 @@ function FCSearch(props) {
                 headers: new Headers({
                     'Content-Type': 'application/json; charset=UTF-8',
                 })
-            }
-            )
+            })
                 .then(res => {
                     return res.json();
                 })
                 .then(
                     (result) => {
                         console.log("fetch FetchGet= ", result);
-                        setResultItems(result.map(item => {
-                            return <FCCard item={item} key={item.Item_id} compare />
-
-                        }))
+                        updateResultItems(result);
+                        // setResultItems(
+                        //     result.map((item, i) => <FCCard
+                        //         item={item} key={i}
+                        //         compare
+                        //         hadleCompareList={hadleCompareList}
+                        //     />
+                        //     ));
                     },
                     (error) => {
                         console.log("err post=", error);
                     });
         }
+    }
+    const updateResultItems = (result) => {        
+        setResultItems(
+            result.map((item, i) => <FCCard
+                item={item} key={i}
+                compare
+                hadleCompareList={hadleCompareList}
+            />));
+        executeScroll();
+
     }
     const getPlaceDetails = (place_id, storeName) => {
         SetReceipt({ ...receipt, store: { name: storeName } })
@@ -137,26 +166,41 @@ function FCSearch(props) {
                 });
     }
     window.onscroll = () => {
-        if (/*document.body.scrollTop > 20 ||*/ document.documentElement.scrollTop > 20) {
-            show = false;
+        //console.log(document.documentElement.scrollTop);
+
+        if (document.documentElement.scrollTop < 216) {
+            setShow(false)
+
             //console.log("block");
             //mybutton.style.display = "block";
         } else {
             //console.log("none");
-            show = true;
+            setShow(true);
             //mybutton.style.display = "none";
         }
     }
-    useEffect(() => { window.scrollTo(0, 0) }, [])
+    const hadleCompareList = (check, itemToHandle) => {
+        if (check) {
+            setItems(oldItems => [...oldItems, itemToHandle]);
+        } else {
+            setItems(oldItems => (oldItems.filter((item) => item.Item_id !== itemToHandle.Item_id)));
+        }
+    }
+    useEffect(() => { window.scrollTo(0, 0) }, []);
+
+
     return (
         <div>
             <div>
                 <div >
                     <FCGooglePlacesSearch color="white"
                         getPlaceDetails={getPlaceDetails}
+                    //autoCompleteFromFCGoogleMap={autoCompleteFromFCGoogleMap}
                     //handleLocation={(locationEvent) => handleLocation(locationEvent)}
                     />
-                    <FCGoogleMap />
+                    <FCGoogleMap
+                    //setAutoCompleteFromFCGoogleMap={setAutoCompleteFromFCGoogleMap}
+                    />
                 </div>
                 <div style={{
                     //width: "300px",
@@ -181,15 +225,22 @@ function FCSearch(props) {
                     variant="contained"
                     color="primary"
                     onClick={() => { handleSubmit() }}
+                    ref={myRef}
                 >
                     Search
                 </Button>
             </div>
+            {/* {items2Compare.length > 0 ? <FCCompareGrid items={items2Compare} /> : null} */}
+            {/* <Stam /> */}
+            {/* {items.length > 0 && <FCCompareGrid items={items} />} */}
+            <FCCompareList items={items} hadleCompareList={hadleCompareList} />
             {resultItems}
-            <button
+            <Fab //upButton
+                size="small"
+                color={"secondary"}
                 className={show ? classes.show : classes.hide}
                 onClick={() => window.scrollTo(0, 0)}
-            >TOP</button>
+            ><KeyboardArrowUpTwoToneIcon /></Fab>
 
         </div>
     );

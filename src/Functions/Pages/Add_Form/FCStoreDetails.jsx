@@ -14,6 +14,11 @@ import TextField from '@material-ui/core/TextField';
 import { ReceiptContext } from '../../../Contexts/ReceiptContext';
 import FCGoogleMap from './FCGoogleMap';
 import { SearchContext } from '../../../Contexts/SearchContext';
+import { Chip, Avatar } from '@material-ui/core';
+import { green, yellow } from '@material-ui/core/colors';
+import StorefrontTwoToneIcon from '@material-ui/icons/StorefrontTwoTone';
+import StorefrontIcon from '@material-ui/icons/Storefront';
+import { GoogleApiWrapper } from 'google-maps-react';
 //import { SearchContext } from '../../../Contexts/SearchContext';
 
 export default function FCStoreDetails() {
@@ -56,7 +61,6 @@ export default function FCStoreDetails() {
     const handleClickOpen = () => {
         setOpen(true);
     };
-
     const handleClose = () => {
         setOpen(false);
     };
@@ -68,53 +72,62 @@ export default function FCStoreDetails() {
         })
 
     }
-    // useEffect(() => {
-    //     // navigator.geolocation.getCurrentPosition((position) => {
-    //     //     //console.log(position);
-    //     //     //console.log("Latitude is :", position.coords.latitude);
-    //     //     //console.log("Longitude is :", position.coords.longitude);
-    //     //     SetNewSearch({ ...search, userLocation: position ? position.coords : null });
-    //     // });
-    // })
+
     return (
-        <div>
-            <Button variant="outlined" color="primary" onClick={handleClickOpen}>
-                <StorefrontOutlinedIcon htmlColor="yellow" />Store <AnnouncementOutlinedIcon htmlColor="red" style={{ float: "none" }} />
-            </Button>
-            <Dialog
-                fullScreen={fullScreen}
-                open={open}
-                onClose={handleClose}
-                aria-labelledby="responsive-dialog-title"
-            >
-                <DialogTitle id="responsive-dialog-title">{"Store Details"}</DialogTitle>
-                <DialogContent>
-                    <DialogContentText>
-                        Google Places
-                    </DialogContentText>
-                    <FCGooglePlacesSearch
-                        getPlaceDetails={getPlaceDetails}
-                    />
-                    <DialogContentText>
-                        or insert manually:
-                    </DialogContentText>
-                    <TextField
-                        label="Store Name"
-                        value={receipt.store.name}
-                        onChange={e => handleStoreNameChange(e.target.value)}
-                        variant="outlined"
-                        InputProps={{ style: { width: "400px" } }} />
-                    <FCGoogleMap />
-                </DialogContent>
-                <DialogActions>
-                    {/* <Button autoFocus onClick={handleClose} color="primary">
+        <div >
+            <Chip
+                label={"Store"}
+                variant="outlined"
+                color="primary"
+                onClick={handleClickOpen}
+                avatar={<Avatar style={{ backgroundColor: "inherit" }}><StorefrontIcon style={{ color: yellow[500], float: "none" }} /></Avatar>}
+            />
+            <AnnouncementOutlinedIcon color="secondary" />
+            {/* <StorefrontOutlinedIcon htmlColor="yellow" />Store <AnnouncementOutlinedIcon htmlColor="red" style={{ float: "none" }} /> */}
+            {/* </Button> */}
+            <div style={{ textAlign: "-webkit-center", color:"black" }}>
+                <Dialog
+                    fullScreen={fullScreen}
+                    open={open}
+                    onClose={handleClose}
+                    aria-labelledby="responsive-dialog-title"
+                >
+                    <div style={{ textAlign: "-webkit-center" }}>
+
+                        <DialogTitle id="responsive-dialog-title">{"Store Details"}</DialogTitle>
+                        <DialogContent>
+
+                            <DialogContentText>Google Places</DialogContentText>
+                            <FCGooglePlacesSearch getPlaceDetails={getPlaceDetails} />
+                            <DialogContentText>or insert manually:</DialogContentText>
+                            <TextField
+                                label="Store Name"
+                                value={receipt.store.name}
+                                onChange={e => handleStoreNameChange(e.target.value)}
+                                variant="outlined"
+                                InputProps={{ style: { width: "400px" } }} />
+                            <div style={{ width: "400px" }}>
+                                <FCGoogleMap parent={"FCStoreDetails"} />
+                            </div>
+                            <div style={{
+                                //width: "300px",
+                                height: "250px",
+                                margin: "10px",
+                            }}
+                            >
+                            </div>
+                        </DialogContent>
+                        <DialogActions>
+                            {/* <Button autoFocus onClick={handleClose} color="primary">
                         Disagree
                     </Button> */}
-                    <Button onClick={handleClose} color="primary" autoFocus>
-                        Done
+                            <Button onClick={handleClose} color="primary" autoFocus>
+                                Done
                     </Button>
-                </DialogActions>
-            </Dialog>
+                        </DialogActions>
+                    </div>
+                </Dialog>
+            </div>
         </div>
     );
 }

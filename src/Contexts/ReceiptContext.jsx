@@ -22,7 +22,8 @@ const ReceiptContextProvider = (props) => {
         discountPercent: 0,
         tags: [],
         itemDescription: "",
-        price:""
+        price:"",
+        Id_type:"UserUser"
     })
     const [tag, setTag] = useState({ id: 0, title: "" })
 

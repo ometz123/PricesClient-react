@@ -16,7 +16,7 @@ import Typography from '@material-ui/core/Typography';
 import FolderIcon from '@material-ui/icons/Folder';
 import DeleteOutlineIcon from '@material-ui/icons/DeleteOutline';
 import { ReceiptContext } from '../../Contexts/ReceiptContext';
-
+import DeleteForeverTwoToneIcon from '@material-ui/icons/DeleteForeverTwoTone';
 const useStyles = makeStyles((theme) => ({
   root: {
     flexGrow: 1,
@@ -63,23 +63,23 @@ export default function InteractiveList(props) {
     //SetReceipt({ ...receipt, items: receipt.items.splice(itemId, 1) });
 
   }
-  let list = receipt.items.map((item,i) => {
+  let list = receipt.items.map((item, i) => {
     return (
-      <div key={i}>
+      <div key={i} style={{ backgroundColor: "#fcaf17", borderRadius: "50px",margin:"2px" }}>
         <ListItem>
-          <ListItemAvatar>
-            <Avatar>
-              {item.image.preview?<img src={item.image.preview} style={{maxHeight:50,maxWidth:50}}/>:<FolderIcon />}
+          <ListItemAvatar >
+            <Avatar style={{border:"solid black 1px"}}>
+              {item.image.preview ? <img src={item.image.preview} style={{ maxHeight: 50, maxWidth: 50 }} /> : <FolderIcon />}
             </Avatar>
           </ListItemAvatar>
-          <ListItemText
+          <ListItemText style={{color:"black"}}
             primary={item.itemName ? item.itemName : "Error Name"}
-            secondary={<span style={{color:"white"}}>{item.price}$</span>}
+            secondary={<span style={{ color: "white",backgroundColor:"black",borderRadius:"5px",padding:"3px" }}>{item.price}$</span>}
           />
           <ListItemSecondaryAction
             onClick={(e) => { removeItem(e, i) }}>
             <IconButton edge="end" aria-label="delete">
-              <DeleteOutlineIcon />
+              <DeleteForeverTwoToneIcon htmlColor="red" />
             </IconButton>
           </ListItemSecondaryAction>
         </ListItem>

@@ -261,7 +261,7 @@ function FCTopBar(props) {
           <Typography className={classes.title} variant="h6" noWrap>
             {title}
           </Typography>
-          <div className={classes.search}>
+          <div className={classes.search} onClick={() => handleSearch()}>
             <div className={classes.searchIcon}>
               <SearchIcon />
             </div>
@@ -272,7 +272,7 @@ function FCTopBar(props) {
                 input: classes.inputInput,
               }}
               inputProps={{ 'aria-label': 'search' }}
-              onClick={() => handleSearch()}
+              //onClick={() => handleSearch()}
               onChange={(e) => handleSearchText(e.target.value)}
             />
 

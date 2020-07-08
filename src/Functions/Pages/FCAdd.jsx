@@ -17,6 +17,8 @@ import FCList from '../eXtra/FCList';
 import { ReceiptContext } from '../../Contexts/ReceiptContext';
 import { UserContext } from '../../Contexts/UserContext';
 import { SearchContext } from '../../Contexts/SearchContext';
+import { useEffect } from 'react';
+
 //import FCGooglePlacesSearch from './Add_Form/FCGooglePlacesSearch';
 
 const useStyles = makeStyles((theme) => ({
@@ -82,9 +84,10 @@ function FCAdd(props) {
                     Discount_percent: receipt.items[i].discountPercent,
                     Item_Description: receipt.items[i].itemDescription,
                     tags: [],
-                    Item_image: receipt.items[i].image.base64,
+                    //Item_image: receipt.items[i].image.base64==="src"?receipt.items[i].image.preview:receipt.items[i].image.base64,
+                    Item_image: receipt.items[i].Id_type==="src"?receipt.items[i].image.preview:receipt.items[i].image.base64,
                     Barcode: receipt.items[i].barcode,
-                    Id_type:"UserUser"//to check where details are from: upcitemdb or original
+                    Id_type: receipt.items[i].Id_type//to check where details are from: upcitemdb or original
                 }
                 for (let j = 0; j < receipt.items[i].tags.length; j++) {
                     if (receipt.items[i].tags[j].id == undefined) {
@@ -126,7 +129,7 @@ function FCAdd(props) {
         }
 
     }
-
+    useEffect(() => { window.scrollTo(0, 0) }, [])
 
     return (
         <div>
@@ -140,52 +143,50 @@ function FCAdd(props) {
                             title={"Receipt Date"}
                             onDateChange={(e) => SetReceipt({ ...receipt, date: e })}
                         />
-                        <AnnouncementOutlinedIcon htmlColor="red" />
-                    </div>
-                </div>
-                <br style={{ clear: "both" }} />
-                <div >
-                    <div
-                        style={{ height: "100px", width: "250px", float: 'left' }}>
-                        <FCStoreDetails />
-                        {receipt.store.name}
-                        {/* <FCGooglePlacesSearch/> */}
-                    </div>
-                    <div style={{ float: 'right', width: "250px", }} >
+                        {/* <AnnouncementOutlinedIcon htmlColor="red" /> */}
                         <FCDiscount color={"white"} />
                     </div>
                 </div>
                 <br style={{ clear: "both" }} />
-                <div>
-                    <div style={{ float: 'left', width: "250px", }}>
-                        <FCAddItem />
+                <div >
+                    <div style={{ /*height: "100px",*/ width: "250px", float: 'left' }}>
+                        <FCStoreDetails />
+                        {receipt.store.name}
+                        <br />
+                        <div >
+                            <FCDescriptions color={"white"} />
+                        </div>
+
                     </div>
                     <div style={{ float: 'right' }}>
+                        <FCAddItem />
                         <FCList />
                     </div>
                 </div>
-                <div >
-                    <FCDescriptions color={"white"} />
-                </div>
+                <br style={{ clear: "both" }} />
+                <div>
 
-                <div >
-                    <Button
-                        //type="submit"
-                        //fullWidth
-                        onClick={handleSubmit}
-                        variant="contained"
-                        color="primary"
-                    //className={classes.submit}
-                    >
-                        <CheckCircleOutlineIcon />
-                    </Button>
+                    <div style={{ float: "left" }}>
+                        <AnnouncementOutlinedIcon color="secondary" /> required
+                </div>
+                    {/* <br style={{ clear: "both" }} /> */}
+                    <div style={{/* clear: "both",*/ float: "right" }}>
+                        <Button
+                            //type="submit"
+                            //fullWidth
+                            onClick={handleSubmit}
+                            variant="contained"
+                            color="primary"
+                        //className={classes.submit}
+                        >
+                            <CheckCircleOutlineIcon />
+                        </Button>
+
+                    </div>
 
                 </div>
-                <div style={{ float: "left" }}>
-                    <AnnouncementOutlinedIcon htmlColor="red" /> required
-                </div>
+                
             </div>
-            <br />
         </div >
     );
 }

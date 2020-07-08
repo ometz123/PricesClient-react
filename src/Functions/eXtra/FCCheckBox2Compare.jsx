@@ -9,33 +9,34 @@ import Checkbox from '@material-ui/core/Checkbox';
 // import Favorite from '@material-ui/icons/Favorite';
 // import FavoriteBorder from '@material-ui/icons/FavoriteBorder';
 
-const GreenCheckbox = withStyles({
+const MyCheckbox = withStyles({
   root: {
-    color: green[400],
+    color: "#fcaf17",//green[400],
     '&$checked': {
-      color: green[600],
+      color: "#fcaf17"//green[600],
     },
   },
   checked: {},
 })(props => <Checkbox color="default" {...props} />);
 
-export default function FCCheckBox2Compare() {
+export default function FCCheckBox2Compare(props) {
   const [state, setState] = React.useState({
-    checkedA: true,
-    checkedB: true,
-    checkedF: true,
+    //checkedA: true,
+    //checkedB: true,
+    //checkedF: true,
     checkedG: false,
   });
 
   const handleChange = name => event => {
     setState({ ...state, [name]: event.target.checked });
+    props.onChange(event.target.checked)
   };
 
   return (
     <FormGroup row>
       <FormControlLabel
         control={
-          <GreenCheckbox
+          <MyCheckbox
             checked={state.checkedG}
             onChange={handleChange('checkedG')}
             value="checkedG"

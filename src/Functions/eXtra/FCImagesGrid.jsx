@@ -47,7 +47,10 @@ export default function FCImagesGrid(props) {
     src != sorce ? setSorce(src) : setSorce("");
     //props.setSrc(src);
   }
-  useEffect(()=>{props.setSrc(sorce);},[sorce])
+  useEffect(() => {
+    props.setSrc(sorce);
+    console.log(props);
+  }, [sorce])//???
 
   return (
     <div className={classes.root}>

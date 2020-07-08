@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { makeStyles } from '@material-ui/core/styles';
+import { makeStyles, withStyles } from '@material-ui/core/styles';
 import clsx from 'clsx';
 import Card from '@material-ui/core/Card';
 import CardHeader from '@material-ui/core/CardHeader';
@@ -16,7 +16,7 @@ import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
 import FCCheckBox2Compare from './FCCheckBox2Compare'
 import { useState } from 'react';
-import { Chip } from '@material-ui/core';
+import { Chip, Checkbox, FormControlLabel } from '@material-ui/core';
 
 const useStyles = makeStyles(theme => ({
   card: {
@@ -41,32 +41,69 @@ const useStyles = makeStyles(theme => ({
     backgroundColor: red[500],
   },
 }));
+const MyCheckbox = withStyles({
+  root: {
+    color: "#fcaf17",//green[400],
+    '&$checked': {
+      color: "#fcaf17"//green[600],
+    },
+  },
+  checked: {},
+})(props => <Checkbox color="default" {...props} />);
 
 export default function FCCard(props) {
   const classes = useStyles();
   const [expanded, setExpanded] = useState(false);
-  const [color, SetColor] = useState(false);
+  const [color, setColor] = useState(false);
+  const [check, setCheck] = useState(false);
 
   const handleExpandClick = () => {
     setExpanded(!expanded);
   };
   const handleLike = () => {
     console.log(props.item.Item_id);
-    SetColor(!color);
+    setColor(!color);
+  }
+  const handleCheck = (checked) => {
+    props.hadleCompareList(checked, props.item)
+    setCheck(!check);
+  }
+  //useEffect(() => {
+  //console.log(props.item);
+  //}, [props.check])
+  let priceTitle = () => {
+    let defauldPrice = props.item.Price + "$";
+    if (props.item.Discount_dollar > 0 || props.item.Discount_percent > 0) {
+      return <><span style={{ textDecorationLine: "line-through" }}>{defauldPrice}</span>&#160;&nbsp;&nbsp;&nbsp;{`${((props.item.Price - props.item.Discount_dollar) * (1 - props.item.Discount_percent / 100))}$`}</>;
+    } else {
+      return defauldPrice;
+    }
   }
   return (
     <Card className={classes.card} >
       <CardHeader
-        avatar={props.compare ?
-          <FCCheckBox2Compare></FCCheckBox2Compare> : null
+        //avatar={props.compare ? <FCCheckBox2Compare onChange={(check) => props.hadleCompareList(check,props.item)}></FCCheckBox2Compare> : null}
+        avatar={props.compare &&
+          <FormControlLabel
+            control={
+              <MyCheckbox
+                onChange={(event) => handleCheck(event.target.checked)}
+                //value={check}
+                checked={check}
+              />
+            }
+            label="Compare"
+          />
         }
+
         // action={
         //   <IconButton aria-label="settings">
         //     <MoreVertIcon />
         //   </IconButton>
         // }
         title={props.item.Item_title}
-        subheader={props.item.Price + "$"}
+        subheader={priceTitle()}
+      //subheader={"After discounts: " + ((props.item.Price - props.item.Discount_dollar) * (1 - props.item.Discount_percent / 100)) + "$"}
       />
       <CardMedia
         className={classes.media}

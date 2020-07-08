@@ -1,4 +1,4 @@
-import React,{useContext} from 'react';
+import React, { useContext } from 'react';
 import { UserContext } from '../../Contexts/UserContext';
 import clsx from 'clsx';
 import { makeStyles } from '@material-ui/core/styles';
@@ -13,6 +13,11 @@ import MailIcon from '@material-ui/icons/Mail';
 import MenuIcon from '@material-ui/icons/Menu';
 import IconButton from '@material-ui/core/IconButton';
 import MeetingRoomIcon from '@material-ui/icons/MeetingRoom';
+import ChatTwoToneIcon from '@material-ui/icons/ChatTwoTone';
+import LoyaltyTwoToneIcon from '@material-ui/icons/LoyaltyTwoTone';
+import Red from '@material-ui/core/colors/red';
+import green from '@material-ui/core/colors/green';
+import { useState } from 'react';
 
 const useStyles = makeStyles({
   list: {
@@ -24,8 +29,11 @@ const useStyles = makeStyles({
 });
 
 export default function FCMenu() {
+
   const { /*user,*/ SetUser } = useContext(UserContext);
   const classes = useStyles();
+  const [chatOpen, setChatOpen] = useState(false);
+  const [favoritesOpen, setFavoritesOpen] = useState(false)
   const [state, setState] = React.useState({
     //top: false,
     left: false,
@@ -37,10 +45,13 @@ export default function FCMenu() {
     if (event && event.type === 'keydown' && (event.key === 'Tab' || event.key === 'Shift')) {
       return;
     }
-
     setState({ ...state, [anchor]: open });
   };
+  const handleChat = () => {
+  }
+  const handleFavorites = () => {
 
+  }
   const list = anchor => (
     <div
       className={clsx(classes.list, {
@@ -51,12 +62,20 @@ export default function FCMenu() {
       onKeyDown={toggleDrawer(anchor, false)}
     >
       <List>
-        {['Inbox', 'Starred'].map((text, index) => (
+        {/* {['Inbox', 'Starred'].map((text, index) => (
           <ListItem button key={text}>
             <ListItemIcon>{index % 2 === 0 ? <InboxIcon /> : <MailIcon />}</ListItemIcon>
             <ListItemText primary={text} />
           </ListItem>
-        ))}
+        ))} */}
+        <ListItem button >
+          <ListItemIcon onClick={handleChat}><ChatTwoToneIcon htmlColor={green[700]} /></ListItemIcon>
+          <ListItemText primary={"Chats"} />
+        </ListItem>
+        <ListItem button>
+          <ListItemIcon onClick={handleFavorites}><LoyaltyTwoToneIcon htmlColor={Red['A700']} /></ListItemIcon>
+          <ListItemText primary={"Favorites"} />
+        </ListItem>
       </List>
       <Divider />
       <List>
@@ -66,10 +85,10 @@ export default function FCMenu() {
             <ListItemText primary={text} />
           </ListItem>
         ))} */}
-        <ListItem button key={"logOut"} onClick={() => SetUser({  loggedIn: false })}>
-            <ListItemIcon><MeetingRoomIcon /></ListItemIcon>
-            <ListItemText primary={"Log Out"} />
-          </ListItem>
+        <ListItem button key={"logOut"} onClick={() => SetUser({ loggedIn: false })}>
+          <ListItemIcon><MeetingRoomIcon htmlColor={'#fcaf17'} /></ListItemIcon>
+          <ListItemText primary={"Log Out"} />
+        </ListItem>
       </List>
     </div>
   );

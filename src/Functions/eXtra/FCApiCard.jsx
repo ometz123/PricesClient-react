@@ -53,9 +53,9 @@ export default function FCApiCard(props) {
         setExpanded(!expanded);
     };
     const handleItemFromAPI = () => {
-        if (src!="") {
+        if (src != "") {
             props.addItem(props.item, src)
-        }else{
+        } else {
             alert("Please choose an image")
         }
     }
@@ -75,7 +75,7 @@ export default function FCApiCard(props) {
         setFullDetails(list)
     }, [])
     return (
-        <Card className={classes.card} >
+        <Card className={classes.card}  >
             <CardHeader title={props.item.title} />
             <CardContent>
                 <FCImagesGrid images={props.item.images} setSrc={setSrc} />

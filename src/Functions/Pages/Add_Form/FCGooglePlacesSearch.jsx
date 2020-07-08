@@ -21,6 +21,7 @@ function loadScript(src, position, id) {
   script.src = src;
   position.appendChild(script);
 }
+
 const autocompleteService = { current: null };
 const useStyles = makeStyles((theme) => ({
   icon: {
@@ -30,7 +31,6 @@ const useStyles = makeStyles((theme) => ({
 }));
 export default function FCGooglePlacesSearch(props) {
   const { receipt } = useContext(ReceiptContext)
-  const inDevelop = false;
   const classes = useStyles();
   const filter = createFilterOptions();
   const [inputValue, setInputValue] = React.useState('');
@@ -60,8 +60,8 @@ export default function FCGooglePlacesSearch(props) {
   };
   const handleLocationChange = (e) => {
     if (e[1]) {
-      console.log(e);
-      console.log("e[1].place_id: ", e[1].place_id);
+      //console.log(e);
+      //console.log("e[1].place_id: ", e[1].place_id);
       props.getPlaceDetails(e[1].place_id, e[1].description);
     }
     //console.log("e: ", e);
@@ -117,6 +117,8 @@ export default function FCGooglePlacesSearch(props) {
 
     if (!autocompleteService.current && window.google) {
       autocompleteService.current = new window.google.maps.places.AutocompleteService();
+      //autoCompleteFromFCGoogleMap
+      //autocompleteService.current=props.autoCompleteFromFCGoogleMap.AutocompleteService();
     }
     if (!autocompleteService.current) {
       return undefined;

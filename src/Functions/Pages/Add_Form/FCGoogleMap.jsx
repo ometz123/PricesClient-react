@@ -10,9 +10,7 @@ function FCGoogleMap(props) {
     const { search, setSearch } = useContext(SearchContext);
     const { user, setUserLocation/*, setUser*/ } = useContext(UserContext);
 
-    //const [positionByUserLocation, setPositionByUserLocation] = useState(true);
     let positionByUserLocation = true;
-    //let coords = null;
     const handleMapClick = (e) => {
         const { latLng } = e;
         setSearch({
@@ -23,7 +21,7 @@ function FCGoogleMap(props) {
         positionByUserLocation = !positionByUserLocation;
         //console.log("search: ", search);
     }
-    //
+
     function getLocation() {
         console.log('getLocation was called');
         navigator.permissions.query({
@@ -52,9 +50,6 @@ function FCGoogleMap(props) {
             console.log('Geolocation is not supported by this device')
         }
     }
-    // function revealPosition() { console.log("revealPosition"); };
-    // function positionDenied() { console.log("positionDenied"); };
-    // function geoSettings() { console.log("geoSettings"); };
     function positionError() {
         console.log('Geolocation is not enabled. Please enable to use this feature')
 
@@ -64,7 +59,7 @@ function FCGoogleMap(props) {
         console.log('position accepted')
         //allowGeoRecall = false
     }
-    //
+
     const handleResetLocation = () => {
         getLocation();
         setUserLocation();
@@ -91,8 +86,10 @@ function FCGoogleMap(props) {
 
     }
     useEffect(() => {
+        console.log("props: " ,props);
+        console.log("props2: " ,props.google.maps.places);
+        //props.setAutoCompleteFromFCGoogleMap(props.google.maps.places);
         const asyncuseEffect = async () => {
-            //console.log(12);
             await setUserLocation();
             console.log("user(googleMap): ", user);
             console.log("search(googleMap): ", search);
@@ -102,24 +99,18 @@ function FCGoogleMap(props) {
                     lat: user.userLocation ? user.userLocation.latitude : search.lat,
                     lng: user.userLocation ? user.userLocation.longitude : search.lng
                 });
-
             }
-
-            //latitude, longitude
-
-            //console.log(34);
-
         }
         asyncuseEffect();
     }, [positionByUserLocation/*,search, setSearch, setUserLocation, user*/])
     return (
-        <div>
+        <div >
             <GpsFixedIcon onClick={() => handleResetLocation()} />
             <Map
                 google={props.google}
                 zoom={12}
                 style={mapStyles}
-                //containerStyle={containerStyle}
+                containerStyle={containerStyle,{width: props.parent == "FCStoreDetails" ? "400px" : '100%'}}
                 initialCenter={{ lat: search.lat, lng: search.lng }}
                 center={{ lat: search.lat, lng: search.lng }}
                 onClick={(...e) => handleMapClick(e[2])}
@@ -135,18 +126,21 @@ function FCGoogleMap(props) {
 const mapStyles = {
     //maxWidth: '300px',
     maxHeight: '260px',
-    //position: 'relative',
+    position: 'relative',
     width: '100%',
     height: '100%'
 };
-// const containerStyle = {
-//     //position: 'relative',  
-//     //maxWidth: '300px',
-//     //maxHeight: '300px',
-// }
-
+const containerStyle = {
+    //maxHeight: '260px',
+    //width: ??? == "FCStoreDetails" ? "400px" : '100%',
+    //height: '100%',
+    //position: 'relative',  
+    //maxWidth: '301px',
+    //maxHeight: '300px',
+}
 //export default FCGoogleMapView;
-export default GoogleApiWrapper({
-    apiKey: googleApiKey,
-    language: "he"
-})(FCGoogleMap);
+export default GoogleApiWrapper(
+    {
+        apiKey: googleApiKey,
+        language: "he",
+    })(FCGoogleMap);
