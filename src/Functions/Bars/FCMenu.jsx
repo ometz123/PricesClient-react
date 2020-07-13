@@ -18,6 +18,8 @@ import LoyaltyTwoToneIcon from '@material-ui/icons/LoyaltyTwoTone';
 import Red from '@material-ui/core/colors/red';
 import green from '@material-ui/core/colors/green';
 import { useState } from 'react';
+import PersonOutlineTwoToneIcon from '@material-ui/icons/PersonOutlineTwoTone';
+import StarTwoToneIcon from '@material-ui/icons/StarTwoTone';
 
 const useStyles = makeStyles({
   list: {
@@ -30,11 +32,12 @@ const useStyles = makeStyles({
 
 export default function FCMenu() {
 
-  const { /*user,*/ SetUser } = useContext(UserContext);
+  const { user, SetUser } = useContext(UserContext);
   const classes = useStyles();
   const [chatOpen, setChatOpen] = useState(false);
   const [favoritesOpen, setFavoritesOpen] = useState(false)
-  const [state, setState] = React.useState({
+
+  const [state, setState] = useState({
     //top: false,
     left: false,
     //bottom: false,
@@ -68,11 +71,20 @@ export default function FCMenu() {
             <ListItemText primary={text} />
           </ListItem>
         ))} */}
-        <ListItem button >
+        <ListItem >
+          <ListItemIcon ><PersonOutlineTwoToneIcon color="primary" /></ListItemIcon>
+          <ListItemText
+            primary={<>{user.firstName}&nbsp;{user.lastName}</>}
+            secondary={<>{user.rank}<StarTwoToneIcon fontSize="small" htmlColor="#fcaf17" /></>}
+          />
+        </ListItem>
+        <Divider />
+
+        <ListItem button disabled>
           <ListItemIcon onClick={handleChat}><ChatTwoToneIcon htmlColor={green[700]} /></ListItemIcon>
           <ListItemText primary={"Chats"} />
         </ListItem>
-        <ListItem button>
+        <ListItem button disabled>
           <ListItemIcon onClick={handleFavorites}><LoyaltyTwoToneIcon htmlColor={Red['A700']} /></ListItemIcon>
           <ListItemText primary={"Favorites"} />
         </ListItem>
@@ -85,8 +97,8 @@ export default function FCMenu() {
             <ListItemText primary={text} />
           </ListItem>
         ))} */}
-        <ListItem button key={"logOut"} onClick={() => SetUser({ loggedIn: false })}>
-          <ListItemIcon><MeetingRoomIcon htmlColor={'#fcaf17'} /></ListItemIcon>
+        <ListItem button  onClick={() => SetUser({ loggedIn: false })}>
+          <ListItemIcon><MeetingRoomIcon htmlColor="black" /></ListItemIcon>
           <ListItemText primary={"Log Out"} />
         </ListItem>
       </List>

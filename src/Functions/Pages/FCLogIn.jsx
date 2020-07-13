@@ -20,6 +20,11 @@ const myStyles = {
 export default function FCLogIn(props) {
     const { user, SetUser } = useContext(UserContext);
     const emailPattern = "[a-z0-9._%+-]+@[a-z0-9.-]+.[a-z]{2,4}$";
+    let local = false;
+    let api = `http://proj.ruppin.ac.il/bgroup4/prod/server/api/Users/Login`;
+    if (local) {
+        api = `https://localhost:44377/api/Users/Login`;
+    }
     const [newUser, SetNewUser] = useState({
         userId: "John@Doe.com",
         firstName: "John",
@@ -80,7 +85,7 @@ export default function FCLogIn(props) {
             Password: user.password
         }
         //let api = `https://localhost:44377/api/Users/Login`
-        let api = `http://proj.ruppin.ac.il/bgroup4/prod/server/api/Users/Login`;
+        //let api = `http://proj.ruppin.ac.il/bgroup4/prod/server/api/Users/Login`;
         fetch(api, {
             method: 'POST',
             body: JSON.stringify(User),
@@ -94,7 +99,7 @@ export default function FCLogIn(props) {
             })
             .then(
                 (result) => {
-                    console.log("Explore fetch= ", result);
+                    console.log("logIn fetch= ", result);
                     logUserIn(result, User);
 
                 },
@@ -102,12 +107,13 @@ export default function FCLogIn(props) {
                     console.log("err post=", error);
                 });
     }
-    const logUserIn =async (result, User) => {
-        console.log(result.User_id == User.User_id && result.Password == User.Password);
+    const logUserIn = async (result, User) => {
+        //console.log(result.User_id == User.User_id && result.Password == User.Password);
         if (result.User_id == User.User_id && result.Password == User.Password) {
             await SetUser({
                 ...user,
-                userId: result.Userid,
+                //userId: result.Userid,//why is it like this suddenly?
+                userId: result.User_id,//correct way
                 firstName: result.First_name,
                 lastName: result.Last_name,
                 rank: result.User_rank,
@@ -122,7 +128,7 @@ export default function FCLogIn(props) {
             // let temp= localStorage.getItem('user');
             // console.log("local: ",localStorage.getItem('user').);
             //console.log(temp);
-            
+
 
         }
         else {
@@ -146,13 +152,13 @@ export default function FCLogIn(props) {
                         style={myStyles.logIn} required />
                     <br />
                     <input type="submit" value="Log In"
-                        //onClick={(e) => logIn(e)}
+                    //onClick={(e) => logIn(e)}
                     />
 
                 </fieldset>
             </form>
             <br />
-            <form  onSubmit={(e) => SignUpNewUser(e)}>
+            <form onSubmit={(e) => SignUpNewUser(e)}>
                 <fieldset>
                     <legend>Sign up!</legend>
                     <input type="text" placeholder="First Name" style={myStyles.name}
@@ -209,7 +215,7 @@ export default function FCLogIn(props) {
                     </fieldset>
                     <input type="submit"
                         //onClick={(e) => SignUpNewUser(e)}
-                         value="Sign Up!" />
+                        value="Sign Up!" />
 
                 </fieldset>
             </form>

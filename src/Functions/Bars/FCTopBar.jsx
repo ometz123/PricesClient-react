@@ -30,6 +30,8 @@ import FCAdd from '../Pages/FCAdd';
 import ExploreIcon from '@material-ui/icons/Explore';
 import { UserContext } from '../../Contexts/UserContext';
 import { SearchContext } from '../../Contexts/SearchContext';
+import { useEffect } from 'react';
+import FCUserProfile from '../Pages/FCUserProfile';
 
 //
 
@@ -189,11 +191,22 @@ function FCTopBar(props) {
     setTitle("Search");
     handleMobileMenuClose();
   }
+  const handleProfile = () => {
+    props.history.push({ pathname: "/profile" })
+    setTitle("Profile");
+    handleMobileMenuClose();
+  }
   const handleSearchText = (e) => {
     setSearch({
       ...search, text: e ? e : null
     })
   }
+  useEffect(() => { 
+    handleExplore();
+  //handleProfile()
+  //handleSearch()
+  }, []);
+
   const menuId = 'primary-search-account-menu';
   const renderMenu = (
     <Menu
@@ -233,7 +246,10 @@ function FCTopBar(props) {
         </IconButton>
         <p>Explore</p>
       </MenuItem>
-      <MenuItem onClick={handleProfileMenuOpen}>
+      <MenuItem
+        //onClick={handleProfileMenuOpen}
+        onClick={handleProfile}
+      >
         <IconButton
           aria-label="account of current user"
           aria-controls="primary-search-account-menu"
@@ -242,7 +258,7 @@ function FCTopBar(props) {
         >
           <AccountCircle />
         </IconButton>
-        <p>{user.firstName}'s Profile</p>
+        <p>{user.firstName}</p>
       </MenuItem>
     </Menu>
   );
@@ -277,9 +293,9 @@ function FCTopBar(props) {
             />
 
           </div>
-          <Typography className={classes.user} variant="h6" noWrap>
+          {/* <Typography className={classes.user} variant="h6" noWrap>
             Hello {user.firstName}
-          </Typography>
+          </Typography> */}
           <div className={classes.grow} />
           <div className={classes.sectionDesktop}>
             <IconButton
@@ -332,7 +348,8 @@ function FCTopBar(props) {
               aria-label="account of current user"
               aria-controls={menuId}
               aria-haspopup="true"
-              onClick={handleProfileMenuOpen}
+              //onClick={handleProfileMenuOpen}
+              onClick={handleProfile}
               color="inherit"
             >
               <AccountCircle />
@@ -353,17 +370,16 @@ function FCTopBar(props) {
       </AppBar>
       {renderMobileMenu}
       {renderMenu}
-      <div
-        style={{
-          paddingTop: "65px"
-        }}
-      >
+      <div style={{ paddingTop: "65px" }}>
         <Switch>
           <Route path="/add" >
             <FCAdd />
           </Route>
           <Route path="/search" >
             <FCSearch />
+          </Route>
+          <Route path="/profile" >
+            <FCUserProfile />
           </Route>
           <Route exact path="/">
             <FCExplore />

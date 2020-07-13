@@ -16,7 +16,8 @@ import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
 import FCCheckBox2Compare from './FCCheckBox2Compare'
 import { useState } from 'react';
-import { Chip, Checkbox, FormControlLabel } from '@material-ui/core';
+import { Chip, Checkbox, FormControlLabel, Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions, Button } from '@material-ui/core';
+import ReceiptIcon from '@material-ui/icons/Receipt';
 
 const useStyles = makeStyles(theme => ({
   card: {
@@ -26,6 +27,22 @@ const useStyles = makeStyles(theme => ({
   media: {
     height: 0,
     paddingTop: '56.25%', // 16:9
+    boxShadow: "0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)"
+
+  },
+  mediaReceipt: {
+    //height: 0,
+    //paddingTop: '56.25%', // 16:9
+    //boxShadow: "0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)",
+    //width: "100%",
+    //height: "auto"
+  },
+  receipt: {
+    //padding: "100% 0px",
+    //width:"100%",
+    //backgroundSize: "100% 100%",
+    //overflow: "unset",
+    //boxShadow: "0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)"
   },
   expand: {
     transform: 'rotate(0deg)',
@@ -56,6 +73,7 @@ export default function FCCard(props) {
   const [expanded, setExpanded] = useState(false);
   const [color, setColor] = useState(false);
   const [check, setCheck] = useState(false);
+  const [showReceipt, setShowReceipt] = useState(false);
 
   const handleExpandClick = () => {
     setExpanded(!expanded);
@@ -132,6 +150,41 @@ export default function FCCard(props) {
         >
           <FavoriteIcon />
         </IconButton>
+        <IconButton
+          onClick={() => setShowReceipt(true)}
+          aria-label="Show Receipt"
+          color={color ? 'secondary' : 'default'}
+        >
+          <ReceiptIcon />
+        </IconButton>
+        <Dialog
+          open={showReceipt}
+          className={classes.receipt}
+          onClose={() => setShowReceipt(false)}
+        >
+          <DialogTitle id="alert-dialog-title">{"Receipt"}</DialogTitle>
+          <img
+            style={{
+              //maxInlineSize: "-webkit-fill-available"
+              //maxWidth: "-webkit-fill-available",
+            }}
+            src={props.item.Receipt_image}
+            alt="receipt image" />
+          {/* <DialogContent style={{ overflow: "unset" }}>
+            <DialogContentText>{props.item.Receipt_description}</DialogContentText>
+            <CardMedia
+              className={classes.mediaReceipt}
+              image={props.item.Receipt_image}
+            />
+           
+          </DialogContent> */}
+          <DialogActions>
+            <Button onClick={() => setShowReceipt(false)} color="primary" autoFocus>
+              Close
+          </Button>
+          </DialogActions>
+
+        </Dialog>
         {/* <IconButton aria-label="share">
           <ShareIcon />
         </IconButton> */}

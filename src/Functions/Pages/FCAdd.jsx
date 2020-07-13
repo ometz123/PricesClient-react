@@ -41,7 +41,7 @@ function FCAdd(props) {
     const { receipt, SetReceipt } = useContext(ReceiptContext);
     const { user } = useContext(UserContext);
     const { search } = useContext(SearchContext);
-    let local = true;
+    let local = false;
     let http = `http://proj.ruppin.ac.il/bgroup4/prod/server/api/`;
     if (local) {
         http = `https://localhost:44377/api/`;

@@ -23,7 +23,7 @@ export default function FCExplore(props) {
     const [exploreItems, setExploreItems] = useState(<CircularProgress className={classes.circle} size={45} thickness={4} />);
     const { search } = useContext(SearchContext);
     const { user, setUserLocation } = useContext(UserContext);
-    let local = true;
+    let local = false;
     let http = `http://proj.ruppin.ac.il/bgroup4/prod/server/api/`;
     if (local) {
         http = `https://localhost:44377/api/`;

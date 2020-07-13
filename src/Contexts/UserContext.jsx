@@ -10,11 +10,11 @@ const UserContextProvider = (props) => {
         rank: 1000,
         loggedIn: true,
         userLocation: null,
-        birthDate:null,
+        birthDate:"1990-12-16T00:00:00Z",
         gender:null,
         state:null,
         city:null,
-        password:null
+        password:"JohnDoe"
 
     })
 

@@ -70,7 +70,7 @@ function FCSearch(props) {
     const [searchResults, setSearchResults] = useState([]);
 
     const myGoogleKey = `AIzaSyC47_J_bDoU4euesrr-ChlFjRpas0HzLQM`;
-    let local = true;
+    let local = false;
     let http = `http://proj.ruppin.ac.il/bgroup4/prod/server/api/`;
     if (local) {
         http = `https://localhost:44377/api/`;
