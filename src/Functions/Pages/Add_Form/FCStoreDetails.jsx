@@ -85,7 +85,7 @@ export default function FCStoreDetails() {
             <AnnouncementOutlinedIcon color="secondary" />
             {/* <StorefrontOutlinedIcon htmlColor="yellow" />Store <AnnouncementOutlinedIcon htmlColor="red" style={{ float: "none" }} /> */}
             {/* </Button> */}
-            <div style={{ textAlign: "-webkit-center", color:"black" }}>
+            <div style={{ textAlign: "-webkit-center", color: "black" }}>
                 <Dialog
                     fullScreen={fullScreen}
                     open={open}
@@ -96,18 +96,19 @@ export default function FCStoreDetails() {
 
                         <DialogTitle id="responsive-dialog-title">{"Store Details"}</DialogTitle>
                         <DialogContent>
-
                             <DialogContentText>Google Places</DialogContentText>
                             <FCGooglePlacesSearch getPlaceDetails={getPlaceDetails} />
                             <DialogContentText>or insert manually:</DialogContentText>
                             <TextField
+                            style={{width: "-webkit-fill-available"}}
                                 label="Store Name"
                                 value={receipt.store.name}
                                 onChange={e => handleStoreNameChange(e.target.value)}
                                 variant="outlined"
-                                InputProps={{ style: { width: "400px" } }} />
-                            <div style={{ width: "400px" }}>
-                                <FCGoogleMap parent={"FCStoreDetails"} />
+                                //InputProps={{ style: { width: "-webkit-fill-available" } }}
+                            />
+                            <div /*style={{ width: "90%" }}*/>
+                                {/* <FCGoogleMap parent={"FCStoreDetails"} /> */}
                             </div>
                             <div style={{
                                 //width: "300px",
@@ -115,6 +116,7 @@ export default function FCStoreDetails() {
                                 margin: "10px",
                             }}
                             >
+                                <FCGoogleMap parent={"FCStoreDetails"} />
                             </div>
                         </DialogContent>
                         <DialogActions>

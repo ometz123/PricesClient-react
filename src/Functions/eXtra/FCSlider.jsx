@@ -6,7 +6,8 @@ import { SearchContext } from '../../Contexts/SearchContext';
 
 const useStyles = makeStyles({
   root: {
-    width: 300,
+    //width: 300,
+    margin: "0px 10%",
   },
 });
 

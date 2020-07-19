@@ -1,21 +1,23 @@
 import React, { createContext, useState } from 'react';
+import { useEffect } from 'react';
 
 export const UserContext = createContext();
 
 const UserContextProvider = (props) => {
     const [user, setUser] = useState({
-        userId:"John@Doe.com",
+        userId: "John@Doe.com",
         firstName: "John",
         lastName: "Doe",
         rank: 1000,
         loggedIn: true,
         userLocation: null,
-        birthDate:"1990-12-16T00:00:00Z",
-        gender:null,
-        state:null,
-        city:null,
-        password:"JohnDoe"
-
+        birthDate: "1990-12-16T00:00:00Z",
+        gender: null,
+        state: null,
+        city: null,
+        password: "JohnDoe",
+        favorites: [],
+        //favoritesCards:[],
     })
 
     const setUserLocation = () => {
@@ -31,11 +33,25 @@ const UserContextProvider = (props) => {
         );
 
     }
+    const handleFavorites = (itemId, add) => {
+        let favorites = user.favorites;
+        if (add) {
+            favorites.push(itemId);
+        } else {
+            favorites = favorites.filter((item) => itemId !== item);
+        }
+        setUser({ ...user, favorites: favorites });
+        
+    }
+    // useEffect(() => {
+    //     console.log(user);
+    // }, [user]);
     return (
         <UserContext.Provider value={{
             user,
             SetUser: setUser,
-            setUserLocation: setUserLocation
+            setUserLocation: setUserLocation,
+            handleFavorites: handleFavorites
         }}>
             {props.children}
         </UserContext.Provider>

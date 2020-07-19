@@ -110,7 +110,7 @@ const useStyles = makeStyles(theme => ({
 }));
 
 function FCTopBar(props) {
-  const { user } = useContext(UserContext);
+  const { user, SetUser } = useContext(UserContext);
   const { search, setSearch } = useContext(SearchContext);
   //#region 
   // let filteredList = [
@@ -156,10 +156,9 @@ function FCTopBar(props) {
   const classes = useStyles();
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
-
   const isMenuOpen = Boolean(anchorEl);
   const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
-
+  
   const handleProfileMenuOpen = event => {
     setAnchorEl(event.currentTarget);
   };
@@ -201,10 +200,11 @@ function FCTopBar(props) {
       ...search, text: e ? e : null
     })
   }
-  useEffect(() => { 
-    handleExplore();
-  //handleProfile()
-  //handleSearch()
+  
+  useEffect(() => {
+    //handleExplore();
+    //handleProfile()
+    handleSearch()
   }, []);
 
   const menuId = 'primary-search-account-menu';

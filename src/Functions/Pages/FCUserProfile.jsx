@@ -49,7 +49,6 @@ export default function ControlledAccordions() {
     if (local) {
         httpUpdate = `https://localhost:44377/api/users/UpdateUser`;
         httpLogin = `https://localhost:44377/api/Users/Login`;
-
     }
     const handleChange = (panel) => (event, isExpanded) => {
         setExpanded(isExpanded ? panel : false);

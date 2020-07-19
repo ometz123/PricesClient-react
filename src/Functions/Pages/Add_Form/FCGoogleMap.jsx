@@ -81,18 +81,18 @@ function FCGoogleMap(props) {
     const fetchPlaces = (mapProps, map) => {
         const { google } = mapProps;
         //const service = new google.maps.places.PlacesService(map);
-        console.log("google: ", google);
-        console.log("google.maps.places: ", google.maps.places);
+        //console.log("google: ", google);
+        //console.log("google.maps.places: ", google.maps.places);
 
     }
     useEffect(() => {
-        console.log("props: " ,props);
-        console.log("props2: " ,props.google.maps.places);
+        //console.log("props: ", props);
+        //console.log("props2: ", props.google.maps.places);
         //props.setAutoCompleteFromFCGoogleMap(props.google.maps.places);
         const asyncuseEffect = async () => {
             await setUserLocation();
-            console.log("user(googleMap): ", user);
-            console.log("search(googleMap): ", search);
+            //console.log("user(googleMap): ", user);
+            //console.log("search(googleMap): ", search);
             if (positionByUserLocation) {
                 setSearch({
                     ...search,
@@ -109,8 +109,8 @@ function FCGoogleMap(props) {
             <Map
                 google={props.google}
                 zoom={12}
-                style={mapStyles}
-                containerStyle={containerStyle,{width: props.parent == "FCStoreDetails" ? "400px" : '100%'}}
+                style={props.parent === "FCStoreDetails" ? mapStylesStore : mapStylesSearch}
+                containerStyle={props.parent === "FCStoreDetails" ? containerStyleStore : containerStyleSearch}
                 initialCenter={{ lat: search.lat, lng: search.lng }}
                 center={{ lat: search.lat, lng: search.lng }}
                 onClick={(...e) => handleMapClick(e[2])}
@@ -120,19 +120,54 @@ function FCGoogleMap(props) {
                     position={{ lat: search.lat, lng: search.lng }}
                     animation={props.google.maps.Animation.DROP} />
             </Map>
-        </div>
+        </div >
     );
 }
-const mapStyles = {
+const mapStylesStore = {
+    //maxWidth: '300px',
+    //maxHeight: '260px',
+    //position: 'relative',
+    //width: '100%',
+    //height: '100%'
+    width: '90%',
+    height: '100%',
+    position: 'relative'
+};
+const containerStyleStore = {
+    //maxHeight: '260px',
+    //width: "-webkit-fill-available",
+    //height: '100%',
+    //position: 'relative',  
+    //maxWidth: '301px',
+    maxHeight: '250px',
+    //
+    //position: 'absolute',
+    //width: '100%',
+    //height: '100%'
+    //
+    overflow: "hidden",
+    paddingBottom: "56.25%",
+    position: "relative",
+    height: "0",
+    //
+    left: "0",
+    //top: "0",
+    height: "100%",
+    width: "100%",
+    position: "absolute",
+
+}
+const mapStylesSearch = {
     //maxWidth: '300px',
     maxHeight: '260px',
     position: 'relative',
     width: '100%',
     height: '100%'
 };
-const containerStyle = {
+const containerStyleSearch = {
     //maxHeight: '260px',
-    //width: ??? == "FCStoreDetails" ? "400px" : '100%',
+    width: '90%',
+    margin: "0px 5%",
     //height: '100%',
     //position: 'relative',  
     //maxWidth: '301px',

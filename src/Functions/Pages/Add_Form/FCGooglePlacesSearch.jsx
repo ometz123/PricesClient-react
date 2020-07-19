@@ -27,7 +27,7 @@ const useStyles = makeStyles((theme) => ({
   icon: {
     color: theme.palette.text.secondary,
     marginRight: theme.spacing(2),
-  },
+  }
 }));
 export default function FCGooglePlacesSearch(props) {
   const { receipt } = useContext(ReceiptContext)
@@ -145,14 +145,16 @@ export default function FCGooglePlacesSearch(props) {
     <Autocomplete
       id="google-map-demo"
       style={{
-        width: 300,
+        //width: 300,
         //border: 'solid white 1px',
+        color: "white"
       }}
       onChange={(...e) => handleLocationChange(e)}
       getOptionLabel={(option) => (typeof option === 'string' ? option : option.description)}
       filterOptions={(x) => x}
       options={options}
       autoComplete
+      className={classes.input}
       includeInputInList
       renderInput={(params) => (
         <TextField
@@ -160,12 +162,20 @@ export default function FCGooglePlacesSearch(props) {
           label="Search a store/address.."
           variant="outlined"
           InputLabelProps={{
-            style: { color: 'white', },
+            style: { color: props.color ? props.color : 'default', },
           }}
           style={{
-            color: 'white',
+            //color: 'blue',
             border: "solid white 1px",
           }}
+          InputProps={{ ...params.InputProps,/* ...classes.input*/style:{color:"white"} }}
+
+          //InputProps={{
+          //   style: {
+          //     color: props.color ? props.color : 'default',
+          //     border: "solid white 1px",
+          //   }
+          //}}
           fullWidth
           onChange={handleChange}
         />

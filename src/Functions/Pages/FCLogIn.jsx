@@ -20,11 +20,14 @@ const myStyles = {
 export default function FCLogIn(props) {
     const { user, SetUser } = useContext(UserContext);
     const emailPattern = "[a-z0-9._%+-]+@[a-z0-9.-]+.[a-z]{2,4}$";
-    let local = false;
+    let local = true;
     let api = `http://proj.ruppin.ac.il/bgroup4/prod/server/api/Users/Login`;
+    //let httpGetFavorites = `http://proj.ruppin.ac.il/bgroup4/prod/server/api/lists/GetUserFavoriteItems`;
     if (local) {
         api = `https://localhost:44377/api/Users/Login`;
+        //httpGetFavorites = `https://localhost:44377/api/lists/GetUserFavoriteItems`;
     }
+
     const [newUser, SetNewUser] = useState({
         userId: "John@Doe.com",
         firstName: "John",
@@ -122,7 +125,8 @@ export default function FCLogIn(props) {
                 gender: result.Gender,
                 state: result.State,
                 city: result.City,
-                password: result.Password
+                password: result.Password,
+                favorites: result.Favorites,
             });
             // localStorage.setItem('user', user);
             // let temp= localStorage.getItem('user');
@@ -135,6 +139,7 @@ export default function FCLogIn(props) {
             alert("שם משתמש או סיסמה שגויה");
         }
     }
+
     return (
         <div>
             <form onSubmit={(e) => logIn(e)}>

@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useContext, useState } from 'react';
 import { makeStyles, withStyles } from '@material-ui/core/styles';
 import clsx from 'clsx';
 import Card from '@material-ui/core/Card';
@@ -15,9 +15,9 @@ import ShareIcon from '@material-ui/icons/Share';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
 import FCCheckBox2Compare from './FCCheckBox2Compare'
-import { useState } from 'react';
 import { Chip, Checkbox, FormControlLabel, Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions, Button } from '@material-ui/core';
 import ReceiptIcon from '@material-ui/icons/Receipt';
+import { UserContext } from '../../Contexts/UserContext';
 
 const useStyles = makeStyles(theme => ({
   card: {
@@ -70,17 +70,75 @@ const MyCheckbox = withStyles({
 
 export default function FCCard(props) {
   const classes = useStyles();
+  const { user, SetUser, handleFavorites } = useContext(UserContext)
   const [expanded, setExpanded] = useState(false);
-  const [color, setColor] = useState(false);
+  const [favorite, setFavorite] = useState(false);
   const [check, setCheck] = useState(false);
   const [showReceipt, setShowReceipt] = useState(false);
-
+  let local = true;
+  let httpUpdate = `http://proj.ruppin.ac.il/bgroup4/prod/server/api/users/UpdateUser`;
+  let httpGetFavorites = `http://proj.ruppin.ac.il/bgroup4/prod/server/api/lists/GetUserFavoriteItems`;
+  if (local) {
+    httpUpdate = `https://localhost:44377/api/users/UpdateUser`;
+    httpGetFavorites = `https://localhost:44377/api/lists/GetUserFavoriteItems`;
+  }
   const handleExpandClick = () => {
     setExpanded(!expanded);
   };
   const handleLike = () => {
     console.log(props.item.Item_id);
-    setColor(!color);
+    setFavorite(!favorite);
+    handleFavorites(props.item.Item_id, !favorite)
+    let user2Update = {
+      User_id: user.userId,
+      Favorites: user.favorites,
+      Field2update: "favorites"
+    };
+    updateFavoritesInDB(user2Update);
+    //getFavoritesCards(user2Update);
+  }
+  const getFavoritesCards = (user2Update) => {
+    fetch(httpGetFavorites, {
+      method: 'POST',
+      body: JSON.stringify(user2Update),
+      headers: new Headers({
+        'Content-Type': 'application/json; charset=UTF-8',
+      })
+    })
+      .then(res => {
+        return res.json();
+      })
+      .then(
+        (result) => {
+          console.log("favorites cards fetch= ", result);
+          SetUser({ ...user, favoritesCards: result, });
+
+        },
+        (error) => {
+          console.log("err post=", error);
+          alert("sorry, somthing went wrong");
+        });
+  }
+  const updateFavoritesInDB = (user2Update) => {
+    fetch(httpUpdate, {
+      method: 'POST',
+      body: JSON.stringify(user2Update),
+      headers: new Headers({
+        'Content-Type': 'application/json; charset=UTF-8',
+      })
+    })
+      .then(res => {
+        return res.json();
+      })
+      .then(
+        (result) => {
+          console.log("Updated favorites fetch= ", result);
+          console.log("should be the same as= ", user.favorites);
+        },
+        (error) => {
+          console.log("err post=", error);
+          alert("sorry, somthing went wrong");
+        });
   }
   const handleCheck = (checked) => {
     props.hadleCompareList(checked, props.item)
@@ -97,6 +155,12 @@ export default function FCCard(props) {
       return defauldPrice;
     }
   }
+
+  useEffect(() => {
+    if (user.favorites.includes(props.item.Item_id)) {
+      setFavorite(!favorite);
+    }
+  }, [])
   return (
     <Card className={classes.card} >
       <CardHeader
@@ -146,14 +210,14 @@ export default function FCCard(props) {
         <IconButton
           onClick={handleLike}
           aria-label="add to favorites"
-          color={color ? 'secondary' : 'default'}
+          color={favorite ? 'secondary' : 'default'}
         >
           <FavoriteIcon />
         </IconButton>
         <IconButton
           onClick={() => setShowReceipt(true)}
           aria-label="Show Receipt"
-          color={color ? 'secondary' : 'default'}
+          color={/*color ? 'secondary' :*/ 'default'}
         >
           <ReceiptIcon />
         </IconButton>
@@ -163,8 +227,15 @@ export default function FCCard(props) {
           onClose={() => setShowReceipt(false)}
         >
           <DialogTitle id="alert-dialog-title">{"Receipt"}</DialogTitle>
+          <Typography
+            align={"center"}
+          >{props.item.Receipt_description}</Typography>
           <img
             style={{
+              maxBlockSize: "-webkit-fill-available",
+              overflow: "scroll",
+              minBlockSize: "-webkit-fill-available",
+              minInlineSize: "auto"
               //maxInlineSize: "-webkit-fill-available"
               //maxWidth: "-webkit-fill-available",
             }}
@@ -204,11 +275,15 @@ export default function FCCard(props) {
           <Typography paragraph>
             {props.item.Store_name}
           </Typography>
+          {props.parent!=="favorites"?
           <Typography>
             {Number((props.item.Distance).toFixed(2))} km
-          </Typography>
+          </Typography>:null
+          }
         </CardContent>
       </Collapse>
     </Card>
   );
+
+
 }

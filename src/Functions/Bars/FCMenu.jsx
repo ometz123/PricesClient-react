@@ -20,6 +20,8 @@ import green from '@material-ui/core/colors/green';
 import { useState } from 'react';
 import PersonOutlineTwoToneIcon from '@material-ui/icons/PersonOutlineTwoTone';
 import StarTwoToneIcon from '@material-ui/icons/StarTwoTone';
+import { Badge, Dialog, DialogTitle, DialogContentText, DialogContent, CircularProgress } from '@material-ui/core';
+import FCCard from '../eXtra/FCCard';
 
 const useStyles = makeStyles({
   list: {
@@ -36,7 +38,16 @@ export default function FCMenu() {
   const classes = useStyles();
   const [chatOpen, setChatOpen] = useState(false);
   const [favoritesOpen, setFavoritesOpen] = useState(false)
-
+  const [favorites, setFavorites] = useState(
+    <CircularProgress
+      style={{ color: '#fcaf17', animationDuration: '550ms', strokeLinecap: 'round', }}
+      size={45} thickness={4} />);
+  let favs = <Dialog open={favoritesOpen} onClose={() => handleClose("favorites")} >
+    <DialogTitle id="simple-dialog-title">{`${user.firstName}'s Favorites`}</DialogTitle>
+    <DialogContent style={{placeSelf: "center"}}>
+      {favorites}
+    </DialogContent>
+  </Dialog>;
   const [state, setState] = useState({
     //top: false,
     left: false,
@@ -44,6 +55,19 @@ export default function FCMenu() {
     //right: false,
   });
 
+  let local = true;
+  let httpGetFavorites = `http://proj.ruppin.ac.il/bgroup4/prod/server/api/lists/GetUserFavoriteItems`;
+  if (local) {
+    httpGetFavorites = `https://localhost:44377/api/lists/GetUserFavoriteItems`;
+  }
+  const handleClose = (dialog) => {
+    if (dialog === "favorites") {
+      setFavoritesOpen(false)
+      setFavorites(<CircularProgress
+        style={{ color: '#fcaf17', animationDuration: '550ms', strokeLinecap: 'round', }}
+        size={45} thickness={4} />)
+    }
+  }
   const toggleDrawer = (anchor, open) => event => {
     if (event && event.type === 'keydown' && (event.key === 'Tab' || event.key === 'Shift')) {
       return;
@@ -52,8 +76,37 @@ export default function FCMenu() {
   };
   const handleChat = () => {
   }
+  const getFavoritesCards = () => {
+    let user2getFavorites = {
+      User_id: user.userId,
+    };
+    fetch(httpGetFavorites, {
+      method: 'POST',
+      body: JSON.stringify(user2getFavorites),
+      headers: new Headers({
+        'Content-Type': 'application/json; charset=UTF-8',
+      })
+    })
+      .then(res => {
+        return res.json();
+      })
+      .then(
+        (result) => {
+          console.log("favorites cards fetch= ", result);
+          setFavorites(
+            <div>
+              {result.length > 0 ? result.map((item, i) => <FCCard item={item} key={i} parent={"favorites"} />) : "No Favorites"}
+            </div>
+          )
+        },
+        (error) => {
+          console.log("err post=", error);
+          alert("sorry, somthing went wrong");
+        });
+  }
   const handleFavorites = () => {
-
+    setFavoritesOpen(true);
+    getFavoritesCards();
   }
   const list = anchor => (
     <div
@@ -65,12 +118,6 @@ export default function FCMenu() {
       onKeyDown={toggleDrawer(anchor, false)}
     >
       <List>
-        {/* {['Inbox', 'Starred'].map((text, index) => (
-          <ListItem button key={text}>
-            <ListItemIcon>{index % 2 === 0 ? <InboxIcon /> : <MailIcon />}</ListItemIcon>
-            <ListItemText primary={text} />
-          </ListItem>
-        ))} */}
         <ListItem >
           <ListItemIcon ><PersonOutlineTwoToneIcon color="primary" /></ListItemIcon>
           <ListItemText
@@ -84,9 +131,14 @@ export default function FCMenu() {
           <ListItemIcon onClick={handleChat}><ChatTwoToneIcon htmlColor={green[700]} /></ListItemIcon>
           <ListItemText primary={"Chats"} />
         </ListItem>
-        <ListItem button disabled>
+        <ListItem button>
           <ListItemIcon onClick={handleFavorites}><LoyaltyTwoToneIcon htmlColor={Red['A700']} /></ListItemIcon>
-          <ListItemText primary={"Favorites"} />
+          <ListItemText onClick={handleFavorites} primary={"Favorites"} />
+          <Badge
+            badgeContent={user.favorites ? user.favorites.length : '0'}
+            showZero
+            color={"primary"}
+          />
         </ListItem>
       </List>
       <Divider />
@@ -97,13 +149,15 @@ export default function FCMenu() {
             <ListItemText primary={text} />
           </ListItem>
         ))} */}
-        <ListItem button  onClick={() => SetUser({ loggedIn: false })}>
+        <ListItem button onClick={() => SetUser({ loggedIn: false })}>
           <ListItemIcon><MeetingRoomIcon htmlColor="black" /></ListItemIcon>
           <ListItemText primary={"Log Out"} />
         </ListItem>
       </List>
     </div>
   );
+
+
 
   return (
     <div>
@@ -126,25 +180,7 @@ export default function FCMenu() {
           {list('left')}
         </SwipeableDrawer>
       </React.Fragment>
+      {favs}
     </div>
-
-
-
-
-    // <div>
-    //   {['left'].map(anchor => (
-    //     <React.Fragment key={anchor}>
-    //       <Button onClick={toggleDrawer(anchor, true)}><MenuIcon/></Button>
-    //       <SwipeableDrawer
-    //         anchor={anchor}
-    //         open={state[anchor]}
-    //         onClose={toggleDrawer(anchor, false)}
-    //         onOpen={toggleDrawer(anchor, true)}
-    //       >
-    //         {list(anchor)}
-    //       </SwipeableDrawer>
-    //     </React.Fragment>
-    //   ))}
-    // </div>
   );
 }
