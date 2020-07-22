@@ -70,8 +70,6 @@ const ListsContextProvider = (props) => {
                 });
     }
     const fetchStores = () => {
-        http = `https://localhost:44377/api/`;
-
         let api = http + `lists/GetStores`;
         fetch(api)
             .then(res => {

@@ -94,6 +94,7 @@ function FCSearch(props) {
             Distance_radius: search.distance,
             Max_price: search.maxPrice,
             Min_price: search.minPrice,
+            OverPriceRange: search.maxPrice === 'max',
             Title_Words: search.text,
             Tags: search.tags
         }
@@ -183,7 +184,7 @@ function FCSearch(props) {
         }
     }
     useEffect(() => { window.scrollTo(0, 0) }, []);
-    useEffect(()=>{ FetchTags() }, []);
+    useEffect(() => { FetchTags() }, []);
 
 
     return (
