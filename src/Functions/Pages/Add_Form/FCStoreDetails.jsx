@@ -1,30 +1,30 @@
-import React, { useState, useEffect, useContext } from 'react';
-import Button from '@material-ui/core/Button';
-import Dialog from '@material-ui/core/Dialog';
-import DialogActions from '@material-ui/core/DialogActions';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogContentText from '@material-ui/core/DialogContentText';
-import DialogTitle from '@material-ui/core/DialogTitle';
-import useMediaQuery from '@material-ui/core/useMediaQuery';
-import { useTheme } from '@material-ui/core/styles';
-import StorefrontOutlinedIcon from '@material-ui/icons/StorefrontOutlined';
-import AnnouncementOutlinedIcon from '@material-ui/icons/AnnouncementOutlined';
+import React, { useState, /*useEffect,*/ useContext } from 'react';
+//import { GoogleApiWrapper } from 'google-maps-react';
 import FCGooglePlacesSearch from './FCGooglePlacesSearch';
-import TextField from '@material-ui/core/TextField';
-import { ReceiptContext } from '../../../Contexts/ReceiptContext';
 import FCGoogleMap from './FCGoogleMap';
+import { useTheme } from '@material-ui/core/styles';
+import useMediaQuery from '@material-ui/core/useMediaQuery';
+import { ReceiptContext } from '../../../Contexts/ReceiptContext';
 import { SearchContext } from '../../../Contexts/SearchContext';
-import { Chip, Avatar } from '@material-ui/core';
-import { green, yellow } from '@material-ui/core/colors';
-import StorefrontTwoToneIcon from '@material-ui/icons/StorefrontTwoTone';
+import { Button, Dialog, Chip, Avatar, DialogActions, TextField, DialogContent, DialogContentText, DialogTitle } from '@material-ui/core';
+import { yellow } from '@material-ui/core/colors';
+import AnnouncementOutlinedIcon from '@material-ui/icons/AnnouncementOutlined';
 import StorefrontIcon from '@material-ui/icons/Storefront';
-import { GoogleApiWrapper } from 'google-maps-react';
+//import Button from '@material-ui/core/Button';
+//import Dialog from '@material-ui/core/Dialog';
+//import DialogActions from '@material-ui/core/DialogActions';
+//import DialogContent from '@material-ui/core/DialogContent';
+//import DialogContentText from '@material-ui/core/DialogContentText';
+//import DialogTitle from '@material-ui/core/DialogTitle';
+//import TextField from '@material-ui/core/TextField';
+//import { Chip, Avatar } from '@material-ui/core';
+//import StorefrontTwoToneIcon from '@material-ui/icons/StorefrontTwoTone';
 //import { SearchContext } from '../../../Contexts/SearchContext';
 
 export default function FCStoreDetails() {
     const [open, setOpen] = useState(false);
     const theme = useTheme();
-    const [latLon, setLatLon] = useState(null);
+    //const [latLon, setLatLon] = useState(null);
     const myGoogleKey = `AIzaSyC47_J_bDoU4euesrr-ChlFjRpas0HzLQM`;
     const fullScreen = useMediaQuery(theme.breakpoints.down('sm'));
     const { receipt, SetReceipt } = useContext(ReceiptContext);
@@ -100,24 +100,25 @@ export default function FCStoreDetails() {
                             <FCGooglePlacesSearch getPlaceDetails={getPlaceDetails} />
                             <DialogContentText>or insert manually:</DialogContentText>
                             <TextField
-                            style={{width: "-webkit-fill-available"}}
+                                style={{ width: "-webkit-fill-available" }}
                                 label="Store Name"
                                 value={receipt.store.name}
                                 onChange={e => handleStoreNameChange(e.target.value)}
                                 variant="outlined"
-                                //InputProps={{ style: { width: "-webkit-fill-available" } }}
+                            //InputProps={{ style: { width: "-webkit-fill-available" } }}
                             />
                             <div /*style={{ width: "90%" }}*/>
                                 {/* <FCGoogleMap parent={"FCStoreDetails"} /> */}
                             </div>
-                            <div style={{
+                            {/* <div style={{
                                 //width: "300px",
                                 height: "250px",
                                 margin: "10px",
                             }}
                             >
+                            </div> */}
                                 <FCGoogleMap parent={"FCStoreDetails"} />
-                            </div>
+                                <br/>
                         </DialogContent>
                         <DialogActions>
                             {/* <Button autoFocus onClick={handleClose} color="primary">

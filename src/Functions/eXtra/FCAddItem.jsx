@@ -1,29 +1,29 @@
-import React, { useContext, useState/*,useEffect*/ } from 'react';
-import Button from '@material-ui/core/Button';
-import Dialog from '@material-ui/core/Dialog';
-import DialogActions from '@material-ui/core/DialogActions';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogContentText from '@material-ui/core/DialogContentText';
-import DialogTitle from '@material-ui/core/DialogTitle';
+import React, { useContext, useState,useEffect } from 'react';
+import { ReceiptContext } from '../../Contexts/ReceiptContext';
+import { ListsContext } from '../../Contexts/ListsContext';
+import FCImage from '../Pages/Add_Form/FCImage';
+import FCApiCard from './FCApiCard';
+import FCBarcode from './FCBarcode';
+import {Button,Dialog,Chip,TextField,DialogActions, Avatar,DialogTitle,DialogContent,DialogContentText} from '@material-ui/core';
+import Autocomplete, { createFilterOptions } from '@material-ui/lab/Autocomplete';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
 import { useTheme } from '@material-ui/core/styles';
 import AddCircleOutlineRounded from '@material-ui/icons/AddCircleOutlineRounded';
-import TextField from '@material-ui/core/TextField';
-import Autocomplete, { createFilterOptions } from '@material-ui/lab/Autocomplete';
+import { green } from '@material-ui/core/colors';
+//import { IconButton, InputAdornment, OutlinedInput, InputLabel } from '@material-ui/core';
+//import SearchTwoToneIcon from '@material-ui/icons/SearchTwoTone';
+//import FCCard from './FCCard';
+//import Button from '@material-ui/core/Button';
+//import Dialog from '@material-ui/core/Dialog';
+//import DialogActions from '@material-ui/core/DialogActions';
+//import DialogContent from '@material-ui/core/DialogContent';
+//import DialogContentText from '@material-ui/core/DialogContentText';
+//import DialogTitle from '@material-ui/core/DialogTitle';
+//import TextField from '@material-ui/core/TextField';
 //import AnnouncementOutlinedIcon from '@material-ui/icons/AnnouncementOutlined';
 //import FCTags from '../Pages/Add_Form/FCTags';
-import Chip from '@material-ui/core/Chip';
+//import Chip from '@material-ui/core/Chip';
 //import FCDescriptions from '../Pages/Add_Form/FCDescriptions';
-import { ReceiptContext } from '../../Contexts/ReceiptContext';
-import FCImage from '../Pages/Add_Form/FCImage';
-import { ListsContext } from '../../Contexts/ListsContext';
-import { useEffect } from 'react';
-import FCCard from './FCCard';
-import FCApiCard from './FCApiCard';
-import { IconButton, InputAdornment, OutlinedInput, InputLabel, Avatar } from '@material-ui/core';
-import SearchTwoToneIcon from '@material-ui/icons/SearchTwoTone';
-import FCBarcode from './FCBarcode';
-import { green, white } from '@material-ui/core/colors';
 
 export default function FCAddItem(props) {
     const [open, setOpen] = useState(false);
@@ -37,7 +37,7 @@ export default function FCAddItem(props) {
     const [selectedItemFromApi, setSelectedItemFromApi] = useState(null);
     const [apiMenu, SetApiMenu] = useState(false);
     const [useApiData, setUseApiData] = useState(false);
-    const [url, setUrl] = useState("");
+    //const [url, setUrl] = useState("");
     const [tempItem, setTempItem] = useState({
         id: "",
         category: { id: 0, title: "" },
@@ -149,30 +149,8 @@ export default function FCAddItem(props) {
             }
         })
         //base64 === "src" ? setUseApiData(true) : setUseApiData(false)
-        setUrl(imageSrc);
-        if (false) {
-
-            if (base64 !== "src") {
-                setUseApiData(false)
-                setTempItem({
-                    ...tempItem, image: {
-                        preview: URL.createObjectURL(imageSrc),
-                        raw: imageSrc,
-                        base64: base64
-                    }
-                });
-            } else {//image is src
-                setUseApiData(true);
-                setTempItem({
-                    ...tempItem, image: {
-                        preview: imageSrc,
-                        raw: imageSrc,
-                        base64: base64
-                    }
-                })
-                setUrl(imageSrc);
-            }
-        }
+        //setUrl(imageSrc);
+        
 
     }
     const handleItemNameChange = (itemName) => {
@@ -574,7 +552,7 @@ export default function FCAddItem(props) {
         FetchTags();
         FetchCategories();
         FetchSubCategories();
-    }, [])
+    }, []);
     useEffect(() => {
         console.log(tempItem);
     }, [tempItem])
@@ -629,7 +607,7 @@ export default function FCAddItem(props) {
                                 <img
                                     src={tempItem.image.preview}
                                     style={{ maxWidth: 250, maxHeight: 250 }}
-                                    alt={"Item Image"}
+                                    alt={"Item"}
                                 /> :
                                 <FCImage
                                     parent={"Item"}

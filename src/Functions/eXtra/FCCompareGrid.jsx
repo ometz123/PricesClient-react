@@ -1,17 +1,14 @@
-import React from 'react';
+import React,{ useState,useEffect } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import GridList from '@material-ui/core/GridList';
 import GridListTile from '@material-ui/core/GridListTile';
 import GridListTileBar from '@material-ui/core/GridListTileBar';
-import IconButton from '@material-ui/core/IconButton';
-import StarBorderIcon from '@material-ui/icons/StarBorder';
-import { Radio, colors, Fab, Grid } from '@material-ui/core';
-import FavoriteTwoToneIcon from '@material-ui/icons/FavoriteTwoTone';
-import { useState } from 'react';
-import FavoriteIcon from '@material-ui/icons/Favorite';
-import { useEffect } from 'react';
-import { GiScales } from 'react-icons/gi';
-
+// import IconButton from '@material-ui/core/IconButton';
+// import StarBorderIcon from '@material-ui/icons/StarBorder';
+// import { Radio, colors, Fab, Grid } from '@material-ui/core';
+// import FavoriteTwoToneIcon from '@material-ui/icons/FavoriteTwoTone';
+//import FavoriteIcon from '@material-ui/icons/Favorite';
+//import { GiScales } from 'react-icons/gi';
 //import tileData from './tileData';
 
 const useStyles = makeStyles((theme) => ({

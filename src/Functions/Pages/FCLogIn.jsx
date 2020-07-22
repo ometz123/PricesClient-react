@@ -1,4 +1,4 @@
-import React, { useState, useContext } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import { UserContext } from '../../Contexts/UserContext';
 import FCDatePicker from './Add_Form/FCDatePicker';
 //import { Input, TextField } from '@material-ui/core';
@@ -20,7 +20,7 @@ const myStyles = {
 export default function FCLogIn(props) {
     const { user, SetUser } = useContext(UserContext);
     const emailPattern = "[a-z0-9._%+-]+@[a-z0-9.-]+.[a-z]{2,4}$";
-    let local = true;
+    let local = false;
     let api = `http://proj.ruppin.ac.il/bgroup4/prod/server/api/Users/Login`;
     //let httpGetFavorites = `http://proj.ruppin.ac.il/bgroup4/prod/server/api/lists/GetUserFavoriteItems`;
     if (local) {
@@ -63,11 +63,8 @@ export default function FCLogIn(props) {
             headers: new Headers({
                 'Content-Type': 'application/json; charset=UTF-8',
             })
-        }
-        )
-            .then(res => {
-                return res.json();
-            })
+        })
+            .then(res => { return res.json(); })
             .then(
                 (result) => {
                     console.log("Explore fetch= ", result);
@@ -112,7 +109,7 @@ export default function FCLogIn(props) {
     }
     const logUserIn = async (result, User) => {
         //console.log(result.User_id == User.User_id && result.Password == User.Password);
-        if (result.User_id == User.User_id && result.Password == User.Password) {
+        if (result.User_id === User.User_id && result.Password === User.Password) {
             await SetUser({
                 ...user,
                 //userId: result.Userid,//why is it like this suddenly?
@@ -120,7 +117,7 @@ export default function FCLogIn(props) {
                 firstName: result.First_name,
                 lastName: result.Last_name,
                 rank: result.User_rank,
-                loggedIn: result.User_id == User.User_id && result.Password == User.Password,
+                loggedIn: result.User_id === User.User_id && result.Password === User.Password,
                 birthDate: result.Birthdate,
                 gender: result.Gender,
                 state: result.State,
@@ -128,18 +125,30 @@ export default function FCLogIn(props) {
                 password: result.Password,
                 favorites: result.Favorites,
             });
-            // localStorage.setItem('user', user);
-            // let temp= localStorage.getItem('user');
-            // console.log("local: ",localStorage.getItem('user').);
-            //console.log(temp);
-
+            //localStorage.setItem('userContext', JSON.stringify(user));
+            //console.log(JSON.parse(localStorage.getItem('userContext')));
 
         }
         else {
             alert("שם משתמש או סיסמה שגויה");
         }
     }
+    //need to return!! very important
 
+    // useEffect(() => {
+    //     if (user.loggedIn === true) {
+    //         localStorage.setItem('userContext', JSON.stringify(user));
+    //         console.log("localStorage (userContext): ", JSON.parse(localStorage.getItem('userContext')));
+    //     }
+    // }, [user.loggedIn]);
+    useEffect(() => {
+        // console.log("in login: " + new Date().getSeconds());
+        let userFromStorage = JSON.parse(localStorage.getItem('userContext'));
+        if (userFromStorage) {
+            console.log("local storage login");
+            SetUser(userFromStorage);
+        }
+    }, []);
     return (
         <div>
             <form onSubmit={(e) => logIn(e)}>
@@ -159,7 +168,8 @@ export default function FCLogIn(props) {
                     <input type="submit" value="Log In"
                     //onClick={(e) => logIn(e)}
                     />
-
+                    <br />
+                    {/* <input type="checkbox" name="localStorage" id="" style={{ float: "left" }} /> */}
                 </fieldset>
             </form>
             <br />

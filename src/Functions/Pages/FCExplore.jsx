@@ -1,10 +1,9 @@
-import React, { useContext, useEffect } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import FCCard from '../eXtra/FCCard';
-import { SearchContext } from '../../Contexts/SearchContext';
 import { UserContext } from '../../Contexts/UserContext';
-import { useState } from 'react';
-import CircularProgress from '@material-ui/core/CircularProgress';
 import { makeStyles } from '@material-ui/core/styles';
+import CircularProgress from '@material-ui/core/CircularProgress';
+//import { SearchContext } from '../../Contexts/SearchContext';
 
 // Inspired by the former Facebook spinners.
 const progressCircle = makeStyles((theme) => ({
@@ -21,7 +20,7 @@ export default function FCExplore(props) {
     const classes = progressCircle();
 
     const [exploreItems, setExploreItems] = useState(<CircularProgress className={classes.circle} size={45} thickness={4} />);
-    const { search } = useContext(SearchContext);
+    //const { search } = useContext(SearchContext);
     const { user, setUserLocation } = useContext(UserContext);
     let local = false;
     let http = `http://proj.ruppin.ac.il/bgroup4/prod/server/api/`;
@@ -57,10 +56,14 @@ export default function FCExplore(props) {
             .then(
                 (result) => {
                     console.log("Explore fetch= ", result);
-                    setExploreItems(result.map(item => {
-                        return <FCCard item={item} key={item.Item_id} />
+                    if (result.length !== 0) {
+                        setExploreItems(result.map(item => {
+                            return <FCCard item={item} key={item.Item_id} />
 
-                    }))
+                        }));
+                    } else {
+                        setExploreItems("Nothing to see around you, try Search for a wider range");
+                    }
                 },
                 (error) => {
                     console.log("err post=", error);
@@ -70,12 +73,11 @@ export default function FCExplore(props) {
 
     useEffect(() => {
         const a = async () => { await setUserLocation(); };
-        a().
-            then(() => {
-                if (user.userLocation) {
-                    getItems();
-                }
-            });
+        a().then(() => {
+            if (user.userLocation) {
+                getItems();
+            }
+        });
 
     }, [user.userLocation ? user.userLocation.latitude : []])
     if (user.userLocation) {

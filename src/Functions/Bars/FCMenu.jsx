@@ -1,27 +1,29 @@
-import React, { useContext } from 'react';
+import React, { useContext, useState } from 'react';
 import { UserContext } from '../../Contexts/UserContext';
+import FCCard from '../eXtra/FCCard';
+import {
+  Badge, Dialog, DialogTitle, /*DialogContentText,*/
+  DialogContent, CircularProgress, SwipeableDrawer,
+  List, Divider, ListItem, ListItemIcon, ListItemText,
+  IconButton
+} from '@material-ui/core';
 import clsx from 'clsx';
 import { makeStyles } from '@material-ui/core/styles';
-import SwipeableDrawer from '@material-ui/core/SwipeableDrawer';
-import List from '@material-ui/core/List';
-import Divider from '@material-ui/core/Divider';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemIcon from '@material-ui/core/ListItemIcon';
-import ListItemText from '@material-ui/core/ListItemText';
-import InboxIcon from '@material-ui/icons/MoveToInbox';
-import MailIcon from '@material-ui/icons/Mail';
+import StarTwoToneIcon from '@material-ui/icons/StarTwoTone';
 import MenuIcon from '@material-ui/icons/Menu';
-import IconButton from '@material-ui/core/IconButton';
 import MeetingRoomIcon from '@material-ui/icons/MeetingRoom';
 import ChatTwoToneIcon from '@material-ui/icons/ChatTwoTone';
 import LoyaltyTwoToneIcon from '@material-ui/icons/LoyaltyTwoTone';
+import PersonOutlineTwoToneIcon from '@material-ui/icons/PersonOutlineTwoTone';
 import Red from '@material-ui/core/colors/red';
 import green from '@material-ui/core/colors/green';
-import { useState } from 'react';
-import PersonOutlineTwoToneIcon from '@material-ui/icons/PersonOutlineTwoTone';
-import StarTwoToneIcon from '@material-ui/icons/StarTwoTone';
-import { Badge, Dialog, DialogTitle, DialogContentText, DialogContent, CircularProgress } from '@material-ui/core';
-import FCCard from '../eXtra/FCCard';
+//import SwipeableDrawer from '@material-ui/core/SwipeableDrawer';
+//import List from '@material-ui/core/List';
+//import Divider from '@material-ui/core/Divider';
+//import ListItem from '@material-ui/core/ListItem';
+//import ListItemIcon from '@material-ui/core/ListItemIcon';
+//import ListItemText from '@material-ui/core/ListItemText';
+//import IconButton from '@material-ui/core/IconButton';
 
 const useStyles = makeStyles({
   list: {
@@ -42,12 +44,17 @@ export default function FCMenu() {
     <CircularProgress
       style={{ color: '#fcaf17', animationDuration: '550ms', strokeLinecap: 'round', }}
       size={45} thickness={4} />);
-  let favs = <Dialog open={favoritesOpen} onClose={() => handleClose("favorites")} >
-    <DialogTitle id="simple-dialog-title">{`${user.firstName}'s Favorites`}</DialogTitle>
-    <DialogContent style={{placeSelf: "center"}}>
-      {favorites}
-    </DialogContent>
-  </Dialog>;
+  let favs =
+    <Dialog
+      open={favoritesOpen}
+      onClose={() => handleClose("favorites")}
+      style={{ textAlign: "-webkit-center" }}
+    >
+      <DialogTitle id="simple-dialog-title">{`${user.firstName}'s Favorites`}</DialogTitle>
+      <DialogContent /*style={{placeSelf: "center"}}*/>
+        {favorites}
+      </DialogContent>
+    </Dialog>;
   const [state, setState] = useState({
     //top: false,
     left: false,
@@ -55,7 +62,7 @@ export default function FCMenu() {
     //right: false,
   });
 
-  let local = true;
+  let local = false;
   let httpGetFavorites = `http://proj.ruppin.ac.il/bgroup4/prod/server/api/lists/GetUserFavoriteItems`;
   if (local) {
     httpGetFavorites = `https://localhost:44377/api/lists/GetUserFavoriteItems`;
@@ -108,6 +115,12 @@ export default function FCMenu() {
     setFavoritesOpen(true);
     getFavoritesCards();
   }
+  const logOut = () => {
+    SetUser({ loggedIn: false })
+    //localStorage.removeItem('userContext');
+    localStorage.clear();
+
+  }
   const list = anchor => (
     <div
       className={clsx(classes.list, {
@@ -149,7 +162,7 @@ export default function FCMenu() {
             <ListItemText primary={text} />
           </ListItem>
         ))} */}
-        <ListItem button onClick={() => SetUser({ loggedIn: false })}>
+        <ListItem button onClick={() => logOut()}>
           <ListItemIcon><MeetingRoomIcon htmlColor="black" /></ListItemIcon>
           <ListItemText primary={"Log Out"} />
         </ListItem>

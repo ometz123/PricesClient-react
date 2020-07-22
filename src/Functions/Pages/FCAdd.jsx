@@ -90,7 +90,7 @@ function FCAdd(props) {
                     Id_type: receipt.items[i].Id_type//to check where details are from: upcitemdb or original
                 }
                 for (let j = 0; j < receipt.items[i].tags.length; j++) {
-                    if (receipt.items[i].tags[j].id == undefined) {
+                    if (receipt.items[i].tags[j].id === undefined) {
                         Receipt.Items[i].tags[j] = {
                             //Tag_id: receipt.items[i].tags[j].id,
                             Tag_title: receipt.items[i].tags[j].title

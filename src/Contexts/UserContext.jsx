@@ -9,7 +9,7 @@ const UserContextProvider = (props) => {
         firstName: "John",
         lastName: "Doe",
         rank: 1000,
-        loggedIn: true,
+        loggedIn: false,
         userLocation: null,
         birthDate: "1990-12-16T00:00:00Z",
         gender: null,
@@ -41,11 +41,10 @@ const UserContextProvider = (props) => {
             favorites = favorites.filter((item) => itemId !== item);
         }
         setUser({ ...user, favorites: favorites });
-        
+
     }
-    // useEffect(() => {
-    //     console.log(user);
-    // }, [user]);
+
+    useEffect(() => { setUserLocation() }, [])
     return (
         <UserContext.Provider value={{
             user,

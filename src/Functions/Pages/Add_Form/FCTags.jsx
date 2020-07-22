@@ -43,6 +43,8 @@ export default function FCTags(props) {
             color: 'white',
             border: "solid white 1px",
           }}
+          InputProps={{ ...params.InputProps,/* ...classes.input*/style:{color:props.color?props.color:"default"} }}
+
           //inputProps={{style:{color: 'white'}}}
           // InputProps={{
           //   style: {

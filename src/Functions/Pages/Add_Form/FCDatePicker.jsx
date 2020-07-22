@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react";
+import React, { useState/*, useContext*/ } from "react";
 import { DatePicker } from "@material-ui/pickers";
 //import lightBlue from "@material-ui/core/colors/lightBlue";
 import { createMuiTheme } from "@material-ui/core";
@@ -6,7 +6,7 @@ import { ThemeProvider } from "@material-ui/styles";
 import { purple } from '@material-ui/core/colors';
 import DateFnsUtils from '@date-io/date-fns';
 import { MuiPickersUtilsProvider } from '@material-ui/pickers';
-import { ReceiptContext } from "../../../Contexts/ReceiptContext";
+//import { ReceiptContext } from "../../../Contexts/ReceiptContext";
 
 
 const theme = createMuiTheme({

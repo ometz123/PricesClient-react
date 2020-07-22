@@ -1,22 +1,27 @@
 import React, { useContext } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import List from '@material-ui/core/List';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemAvatar from '@material-ui/core/ListItemAvatar';
+import {
+  List, ListItem, Typography, Grid, IconButton,
+  Avatar, ListItemAvatar, ListItemSecondaryAction, ListItemText
+} from '@material-ui/core';
+import { ReceiptContext } from '../../Contexts/ReceiptContext';
+import DeleteForeverTwoToneIcon from '@material-ui/icons/DeleteForeverTwoTone';
+import FolderIcon from '@material-ui/icons/Folder';
+//import List from '@material-ui/core/List';
+//import ListItem from '@material-ui/core/ListItem';
+//import ListItemAvatar from '@material-ui/core/ListItemAvatar';
 //import ListItemIcon from '@material-ui/core/ListItemIcon';
-import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
-import ListItemText from '@material-ui/core/ListItemText';
-import Avatar from '@material-ui/core/Avatar';
-import IconButton from '@material-ui/core/IconButton';
+//import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
+//import ListItemText from '@material-ui/core/ListItemText';
+//import Avatar from '@material-ui/core/Avatar';
+//import IconButton from '@material-ui/core/IconButton';
 //import FormGroup from '@material-ui/core/FormGroup';
 //import FormControlLabel from '@material-ui/core/FormControlLabel';
 //import Checkbox from '@material-ui/core/Checkbox';
-import Grid from '@material-ui/core/Grid';
-import Typography from '@material-ui/core/Typography';
-import FolderIcon from '@material-ui/icons/Folder';
-import DeleteOutlineIcon from '@material-ui/icons/DeleteOutline';
-import { ReceiptContext } from '../../Contexts/ReceiptContext';
-import DeleteForeverTwoToneIcon from '@material-ui/icons/DeleteForeverTwoTone';
+// import Grid from '@material-ui/core/Grid';
+// import Typography from '@material-ui/core/Typography';
+//import DeleteOutlineIcon from '@material-ui/icons/DeleteOutline';
+
 const useStyles = makeStyles((theme) => ({
   root: {
     flexGrow: 1,
@@ -65,16 +70,16 @@ export default function InteractiveList(props) {
   }
   let list = receipt.items.map((item, i) => {
     return (
-      <div key={i} style={{ backgroundColor: "#fcaf17", borderRadius: "50px",margin:"2px" }}>
+      <div key={i} style={{ backgroundColor: "#fcaf17", borderRadius: "50px", margin: "2px" }}>
         <ListItem>
           <ListItemAvatar >
-            <Avatar style={{border:"solid black 1px"}}>
-              {item.image.preview ? <img src={item.image.preview} style={{ maxHeight: 50, maxWidth: 50 }} /> : <FolderIcon />}
+            <Avatar style={{ border: "solid black 1px" }}>
+              {item.image.preview ? <img src={item.image.preview} style={{ maxHeight: 50, maxWidth: 50 }} alt="preview" /> : <FolderIcon />}
             </Avatar>
           </ListItemAvatar>
-          <ListItemText style={{color:"black"}}
+          <ListItemText style={{ color: "black" }}
             primary={item.itemName ? item.itemName : "Error Name"}
-            secondary={<span style={{ color: "white",backgroundColor:"black",borderRadius:"5px",padding:"3px" }}>{item.price}$</span>}
+            secondary={<span style={{ color: "white", backgroundColor: "black", borderRadius: "5px", padding: "3px" }}>{item.price}$</span>}
           />
           <ListItemSecondaryAction
             onClick={(e) => { removeItem(e, i) }}>

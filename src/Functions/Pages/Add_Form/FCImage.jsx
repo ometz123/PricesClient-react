@@ -3,17 +3,17 @@ import { ReceiptContext } from '../../../Contexts/ReceiptContext';
 import ReceiptOutlinedIcon from '@material-ui/icons/ReceiptOutlined';
 import PhotoCameraIcon from '@material-ui/icons/PhotoCamera';
 import AnnouncementOutlinedIcon from '@material-ui/icons/AnnouncementOutlined';
-import { Paper, Chip, Avatar } from '@material-ui/core';
+import {/* Paper,*/ Chip, Avatar } from '@material-ui/core';
 
 export default function FCImage(props) {
   //const [image, setImage] = useState({ preview: '', raw: '' })
-  const { receipt, SetReceipt, item, SetItem } = useContext(ReceiptContext);
+  const { receipt, SetReceipt/*, item, SetItem */} = useContext(ReceiptContext);
   const [icon, setIcon] = useState();
   const [image, setImage] = useState({ image: { preview: null, raw: null } });
 
   const handleChange = (e) => {
     let image = e.target.files[0];
-    if (image != undefined) {
+    if (image !== undefined) {
       let preview = URL.createObjectURL(image);
       setImage({
         preview: preview,

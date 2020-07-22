@@ -1,23 +1,26 @@
 import React, { useEffect, useContext, useState } from 'react';
+import { UserContext } from '../../Contexts/UserContext';
 import { makeStyles, withStyles } from '@material-ui/core/styles';
 import clsx from 'clsx';
-import Card from '@material-ui/core/Card';
-import CardHeader from '@material-ui/core/CardHeader';
-import CardMedia from '@material-ui/core/CardMedia';
-import CardContent from '@material-ui/core/CardContent';
-import CardActions from '@material-ui/core/CardActions';
-import Collapse from '@material-ui/core/Collapse';
-import IconButton from '@material-ui/core/IconButton';
-import Typography from '@material-ui/core/Typography';
+import {
+  Typography, IconButton, Collapse,
+  CardActions, CardContent, Card, CardHeader,
+  CardMedia, Chip, Checkbox, FormControlLabel,
+  Dialog, DialogTitle,/* DialogContent,
+  DialogContentText,*/ DialogActions, Button
+} from '@material-ui/core';
 import { red } from '@material-ui/core/colors';
 import FavoriteIcon from '@material-ui/icons/Favorite';
-import ShareIcon from '@material-ui/icons/Share';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-import MoreVertIcon from '@material-ui/icons/MoreVert';
-import FCCheckBox2Compare from './FCCheckBox2Compare'
-import { Chip, Checkbox, FormControlLabel, Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions, Button } from '@material-ui/core';
 import ReceiptIcon from '@material-ui/icons/Receipt';
-import { UserContext } from '../../Contexts/UserContext';
+//import Card from '@material-ui/core/Card';
+//import CardHeader from '@material-ui/core/CardHeader';
+//import CardMedia from '@material-ui/core/CardMedia';
+//import CardContent from '@material-ui/core/CardContent';
+//import CardActions from '@material-ui/core/CardActions';
+//import Collapse from '@material-ui/core/Collapse';
+//import IconButton from '@material-ui/core/IconButton';
+//import Typography from '@material-ui/core/Typography';
 
 const useStyles = makeStyles(theme => ({
   card: {
@@ -70,17 +73,17 @@ const MyCheckbox = withStyles({
 
 export default function FCCard(props) {
   const classes = useStyles();
-  const { user, SetUser, handleFavorites } = useContext(UserContext)
+  const { user, /*SetUser, */handleFavorites } = useContext(UserContext)
   const [expanded, setExpanded] = useState(false);
   const [favorite, setFavorite] = useState(false);
   const [check, setCheck] = useState(false);
   const [showReceipt, setShowReceipt] = useState(false);
-  let local = true;
+  let local = false;
   let httpUpdate = `http://proj.ruppin.ac.il/bgroup4/prod/server/api/users/UpdateUser`;
-  let httpGetFavorites = `http://proj.ruppin.ac.il/bgroup4/prod/server/api/lists/GetUserFavoriteItems`;
+  //let httpGetFavorites = `http://proj.ruppin.ac.il/bgroup4/prod/server/api/lists/GetUserFavoriteItems`;
   if (local) {
     httpUpdate = `https://localhost:44377/api/users/UpdateUser`;
-    httpGetFavorites = `https://localhost:44377/api/lists/GetUserFavoriteItems`;
+    //httpGetFavorites = `https://localhost:44377/api/lists/GetUserFavoriteItems`;
   }
   const handleExpandClick = () => {
     setExpanded(!expanded);
@@ -96,28 +99,6 @@ export default function FCCard(props) {
     };
     updateFavoritesInDB(user2Update);
     //getFavoritesCards(user2Update);
-  }
-  const getFavoritesCards = (user2Update) => {
-    fetch(httpGetFavorites, {
-      method: 'POST',
-      body: JSON.stringify(user2Update),
-      headers: new Headers({
-        'Content-Type': 'application/json; charset=UTF-8',
-      })
-    })
-      .then(res => {
-        return res.json();
-      })
-      .then(
-        (result) => {
-          console.log("favorites cards fetch= ", result);
-          SetUser({ ...user, favoritesCards: result, });
-
-        },
-        (error) => {
-          console.log("err post=", error);
-          alert("sorry, somthing went wrong");
-        });
   }
   const updateFavoritesInDB = (user2Update) => {
     fetch(httpUpdate, {
@@ -144,9 +125,6 @@ export default function FCCard(props) {
     props.hadleCompareList(checked, props.item)
     setCheck(!check);
   }
-  //useEffect(() => {
-  //console.log(props.item);
-  //}, [props.check])
   let priceTitle = () => {
     let defauldPrice = props.item.Price + "$";
     if (props.item.Discount_dollar > 0 || props.item.Discount_percent > 0) {
@@ -155,12 +133,19 @@ export default function FCCard(props) {
       return defauldPrice;
     }
   }
-
   useEffect(() => {
     if (user.favorites.includes(props.item.Item_id)) {
       setFavorite(!favorite);
     }
-  }, [])
+  }, []);
+  useEffect(() => {//when changing in favorites
+    if (!user.favorites.includes(props.item.Item_id)) {
+      setFavorite(false);
+    } else {
+      setFavorite(true);
+
+    }
+  }, [user.favorites.length])
   return (
     <Card className={classes.card} >
       <CardHeader
@@ -219,7 +204,7 @@ export default function FCCard(props) {
           aria-label="Show Receipt"
           color={/*color ? 'secondary' :*/ 'default'}
         >
-          <ReceiptIcon />
+          <ReceiptIcon htmlColor="#fcaf17" />
         </IconButton>
         <Dialog
           open={showReceipt}
@@ -240,7 +225,7 @@ export default function FCCard(props) {
               //maxWidth: "-webkit-fill-available",
             }}
             src={props.item.Receipt_image}
-            alt="receipt image" />
+            alt="receipt" />
           {/* <DialogContent style={{ overflow: "unset" }}>
             <DialogContentText>{props.item.Receipt_description}</DialogContentText>
             <CardMedia
@@ -275,10 +260,10 @@ export default function FCCard(props) {
           <Typography paragraph>
             {props.item.Store_name}
           </Typography>
-          {props.parent!=="favorites"?
-          <Typography>
-            {Number((props.item.Distance).toFixed(2))} km
-          </Typography>:null
+          {props.parent !== "favorites" ?
+            <Typography>
+              {Number((props.item.Distance).toFixed(2))} km
+          </Typography> : null
           }
         </CardContent>
       </Collapse>

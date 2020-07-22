@@ -1,14 +1,14 @@
-import React from 'react';
+import React,{useState,useRef} from 'react';
 import TextField from '@material-ui/core/TextField';
-import Autocomplete, { createFilterOptions } from '@material-ui/lab/Autocomplete';
+import Autocomplete/*, { createFilterOptions }*/from '@material-ui/lab/Autocomplete';
 import LocationOnIcon from '@material-ui/icons/LocationOn';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import parse from 'autosuggest-highlight/parse';
 import throttle from 'lodash/throttle';
-import { useContext } from 'react';
-import { ReceiptContext } from '../../../Contexts/ReceiptContext';
+//import { useContext } from 'react';
+//import { ReceiptContext } from '../../../Contexts/ReceiptContext';
 
 function loadScript(src, position, id) {
   if (!position) {
@@ -30,13 +30,13 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 export default function FCGooglePlacesSearch(props) {
-  const { receipt } = useContext(ReceiptContext)
+  //const { receipt } = useContext(ReceiptContext)
   const classes = useStyles();
-  const filter = createFilterOptions();
-  const [inputValue, setInputValue] = React.useState('');
-  const [latLon, setLatLon] = React.useState(null)
-  const [options, setOptions] = React.useState([]);
-  const loaded = React.useRef(false);
+  //const filter = createFilterOptions();
+  const [inputValue, setInputValue] = useState('');
+  //const [latLon, setLatLon] = React.useState(null)
+  const [options, setOptions] = useState([]);
+  const loaded = useRef(false);
   const myGoogleKey = `AIzaSyC47_J_bDoU4euesrr-ChlFjRpas0HzLQM`;
 
   if (typeof window !== 'undefined' && !loaded.current) {
@@ -168,7 +168,7 @@ export default function FCGooglePlacesSearch(props) {
             //color: 'blue',
             border: "solid white 1px",
           }}
-          InputProps={{ ...params.InputProps,/* ...classes.input*/style:{color:"white"} }}
+          InputProps={{ ...params.InputProps,/* ...classes.input*/style:{color:props.color?props.color:"default"} }}
 
           //InputProps={{
           //   style: {

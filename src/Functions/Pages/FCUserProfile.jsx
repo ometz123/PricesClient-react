@@ -7,17 +7,17 @@ import Typography from '@material-ui/core/Typography';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import { UserContext } from '../../Contexts/UserContext';
 import { GiUnicorn, GiModernCity, GiSkeletonKey, GiMale, GiFemale } from 'react-icons/gi';
-import { FaMale, FaFemale, FaBirthdayCake, FaUserTie, } from 'react-icons/fa';
+import { FaBirthdayCake } from 'react-icons/fa';
 import { FcBusinessman, FcBusinesswoman } from 'react-icons/fc';
 import {
     ListItemIcon, ListItem, TextField,
-    Button, FormControl, FormGroup, RadioGroup, Radio,
+    Button, RadioGroup, Radio,
     Dialog, DialogTitle, DialogContent, FormControlLabel,
-    DialogContentText, DialogActions, Chip, FormLabel
+    DialogContentText, DialogActions, Chip
 } from '@material-ui/core';
 import PublicTwoToneIcon from '@material-ui/icons/PublicTwoTone';
 import SaveIcon from '@material-ui/icons/Save';
-import { DatePicker, MuiPickersUtilsProvider, TimePicker, DateTimePicker } from '@material-ui/pickers';
+import { DatePicker, MuiPickersUtilsProvider/*, TimePicker, DateTimePicker*/ } from '@material-ui/pickers';
 import DateFnsUtils from '@date-io/date-fns'; // choose your lib
 
 const useStyles = makeStyles((theme) => ({
@@ -98,8 +98,8 @@ export default function ControlledAccordions() {
         if (form.password1 === form.password2) {
             setField2Update("password");
             setDialogTitle("Change password?")
-            setNoticeMessege("Notice! after password change you will have to login again")
-                        setPasswordAdditionalDialogContent("old ")
+            setNoticeMessege("Notice! after password change you will be logout")
+            setPasswordAdditionalDialogContent("old ")
             setOpen(true);
         } else {
 
@@ -168,23 +168,33 @@ export default function ControlledAccordions() {
         setOpen(false);
         setPasswordAdditionalDialogContent("");
         setNoticeMessege("")
-        setForm({ ...form, ["password"]: '' })
+        setForm({ ...form, password: '' })
 
     }
 
     const handleUpdate = () => {
         if (form.password === user.password) {
+            let fixedDate = new Date(form.birthDate);
+            fixedDate.setHours(fixedDate.getHours() - fixedDate.getTimezoneOffset() / 60);
+            fixedDate.setMinutes((fixedDate.getHours() - fixedDate.getTimezoneOffset()) % 60);
+            // console.log("x: ", fixedDate);
+
             let user2Update = {
                 User_id: user.userId,
                 First_name: form.firstName,
                 Last_name: form.lastName,
                 Password: form.password2,
-                Birthdate: form.birthDate,
+                //Birthdate: form.birthDate,
+                Birthdate: fixedDate,
                 Gender: form.gender == 1 ? true : false,
                 State: form.state,
                 City: form.city,
                 Field2update: field2Update
             };
+            // console.log("user2Update.Birthdate: ", user2Update.Birthdate);
+            // console.log("form.birthDate: ", form.birthDate);
+            // console.log("json user2Update: ", JSON.stringify(user2Update.Birthdate));
+            // console.log("json form: ", JSON.stringify(new Date(form.birthDate)));
             fetch(httpUpdate, {
                 method: 'POST',
                 body: JSON.stringify(user2Update),
@@ -198,11 +208,13 @@ export default function ControlledAccordions() {
                 .then(
                     (result) => {
                         console.log("Update fetch= ", result);
-                        if (field2Update == "password") {
+                        if (field2Update === "password") {
                             SetUser({
                                 ...user,
                                 loggedIn: false
                             });
+                        } else if (result.Message) {
+                            alert(result.Message)
                         } else {
                             logIn(result);
                         }
@@ -221,7 +233,7 @@ export default function ControlledAccordions() {
     const logIn = (password) => {
         let User = {
             User_id: user.userId,
-            Password: password != '' ? password : user.password
+            Password: password !== '' ? password : user.password
         }
         fetch(httpLogin, {
             method: 'POST',
@@ -254,7 +266,8 @@ export default function ControlledAccordions() {
                 });
     }
 
-    useEffect(() => {
+    useEffect(() => {//name
+        console.log(form.firstName, form.lastName);
         if (form.firstName.length > 1 || form.lastName.length > 1) {
             setNameButton(true)
         } else {
@@ -262,8 +275,8 @@ export default function ControlledAccordions() {
         }
     }, [form.firstName, form.lastName])
 
-    useEffect(() => {
-        if (form.password2.length != 0) {
+    useEffect(() => {//password
+        if (form.password2.length > 0) {
             if (form.password1 === form.password2) {
                 setPasswordButton(true);
                 setPasswordMassege(<Typography color="primary">Passwords match</Typography>);
@@ -275,9 +288,8 @@ export default function ControlledAccordions() {
             setPasswordMassege("");
             setPasswordButton(false);
         }
-
-
     }, [form.password1, form.password2]);
+
     useEffect(() => {
         setForm({
             firstName: user.firstName,
@@ -418,7 +430,7 @@ export default function ControlledAccordions() {
                                         size="small"
                                         clearable
                                         disableFuture
-                                        value={form.birthDate == '' ? new Date() : form.birthDate}
+                                        value={form.birthDate === '' ? new Date() : form.birthDate}
                                         inputVariant="outlined"
                                         label="Birthday"
                                         onChange={handlebirthDayChange("birthDate")}
@@ -467,6 +479,7 @@ export default function ControlledAccordions() {
                                 control={<Radio />}
                                 label="Female"
                                 labelPlacement={'bottom'}
+                                checked={form.gender == 0}
                             />
 
                             <FormControlLabel
@@ -474,6 +487,7 @@ export default function ControlledAccordions() {
                                 control={<Radio color="primary" />}
                                 label="Male"
                                 labelPlacement={'bottom'}
+                                checked={form.gender == 1}
                             />
                         </RadioGroup>
 
@@ -594,7 +608,9 @@ export default function ControlledAccordions() {
                         label="Password"
                         onChange={handleProfileChange("password")}
                     />
-                    {noticeMessege}
+                    <Typography color="secondary">
+                        {noticeMessege}
+                    </Typography>
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={handleClose} color="primary">

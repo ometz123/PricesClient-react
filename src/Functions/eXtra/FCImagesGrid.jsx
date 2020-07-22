@@ -1,17 +1,15 @@
-import React from 'react';
+import React,{ useState,useEffect } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import GridList from '@material-ui/core/GridList';
 import GridListTile from '@material-ui/core/GridListTile';
 import GridListTileBar from '@material-ui/core/GridListTileBar';
 import IconButton from '@material-ui/core/IconButton';
-import StarBorderIcon from '@material-ui/icons/StarBorder';
-import { Radio, colors } from '@material-ui/core';
-import FavoriteTwoToneIcon from '@material-ui/icons/FavoriteTwoTone';
-import { useState } from 'react';
 import FavoriteIcon from '@material-ui/icons/Favorite';
-import { useEffect } from 'react';
-
+// import StarBorderIcon from '@material-ui/icons/StarBorder';
+// import { Radio, colors } from '@material-ui/core';
+// import FavoriteTwoToneIcon from '@material-ui/icons/FavoriteTwoTone';
 //import tileData from './tileData';
+
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -39,12 +37,12 @@ export default function FCImagesGrid(props) {
   const classes = useStyles();
   //const [color, setColor] = useState(false);
   const [sorce, setSorce] = useState("");
-  const corsAnywhere = `https://cors-anywhere.herokuapp.com/`;
+  //const corsAnywhere = `https://cors-anywhere.herokuapp.com/`;
 
   const handleLike = (src) => {
     console.log("src: ", src);
     //setColor(!color);
-    src != sorce ? setSorce(src) : setSorce("");
+    src !== sorce ? setSorce(src) : setSorce("");
     //props.setSrc(src);
   }
   useEffect(() => {
@@ -58,7 +56,7 @@ export default function FCImagesGrid(props) {
       <GridList className={classes.gridList} cols={2.5}>
         {props.images.map((src) => (
           <GridListTile key={src}>
-            <img src={src} />
+            <img src={src} alt="item" />
             {/* <input type="radio" name="best-image"style={{position: "absolute", top: "10px"}} onClick={() => handleLike(src)} /> */}
 
             <GridListTileBar
@@ -71,7 +69,7 @@ export default function FCImagesGrid(props) {
                   onClick={() => handleLike(src)}
                   //className={classes.title}
                   //aria-label="best image"
-                  color={sorce == src ? 'secondary' : 'primary'}
+                  color={sorce === src ? 'secondary' : 'primary'}
                   style={{ position: "absolute", top: "10px" }}
                 >
                   <FavoriteIcon />

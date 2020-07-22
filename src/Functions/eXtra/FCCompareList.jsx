@@ -1,22 +1,26 @@
 import React, { useEffect, useState } from 'react';
+import FCTableCompare from './FCTableCompare';
 import { makeStyles } from '@material-ui/core/styles';
-import List from '@material-ui/core/List';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemAvatar from '@material-ui/core/ListItemAvatar';
-import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
-import ListItemText from '@material-ui/core/ListItemText';
-import Avatar from '@material-ui/core/Avatar';
-import IconButton from '@material-ui/core/IconButton';
-import Grid from '@material-ui/core/Grid';
-import Typography from '@material-ui/core/Typography';
+import { useTheme } from '@material-ui/core/styles';
+import {
+    Fab, Badge, Button, Dialog, useMediaQuery,
+    DialogContent, DialogActions, List, ListItem,
+    ListItemAvatar, ListItemText, Avatar, Grid
+} from '@material-ui/core';
 import FolderIcon from '@material-ui/icons/Folder';
-//import DeleteForeverTwoToneIcon from '@material-ui/icons/DeleteForeverTwoTone';
-import { Fab, Badge, Button, Dialog, useMediaQuery, DialogTitle, DialogContent, DialogActions } from '@material-ui/core';
 import { GiScales } from 'react-icons/gi';
 import CompareTwoToneIcon from '@material-ui/icons/CompareTwoTone';
-import FCImagesGrid from './FCCompareGrid';
-import { useTheme } from '@material-ui/core/styles';
-import FCTableCompare from './FCTableCompare';
+//import FCImagesGrid from './FCCompareGrid';
+//import List from '@material-ui/core/List';
+//import ListItem from '@material-ui/core/ListItem';
+//import ListItemAvatar from '@material-ui/core/ListItemAvatar';
+//import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
+//import ListItemText from '@material-ui/core/ListItemText';
+//import Avatar from '@material-ui/core/Avatar';
+//import IconButton from '@material-ui/core/IconButton';
+//import Grid from '@material-ui/core/Grid';
+//import Typography from '@material-ui/core/Typography';
+//import DeleteForeverTwoToneIcon from '@material-ui/icons/DeleteForeverTwoTone';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -70,31 +74,31 @@ export default function FCCompareList(props) {
     const [open, setOpen] = useState(false);
     const themeCompare = useTheme();
     const fullScreen = useMediaQuery(themeCompare.breakpoints.down('sm'));
-    const removeItem = (item) => {
-        props.hadleCompareList(false, item)
-    }
+    // const removeItem = (item) => {
+    //     props.hadleCompareList(false, item)
+    // }
 
     const handleCompare = () => {
         console.log(list2Compare);
         //compare2jsons(list2Compare[0], list2Compare[1])
         setOpen(true);
     }
-    const compare2jsons = (myObj1, myObj2) => {
-        let keys = Object.keys(myObj1);
-        let dontShow = ["Item_id", "Receipt_id", "User_id", "Id_type", "Item_image", "Store_lat", "Store_lon", "User_rank"];
-        for (let key of keys) {
-            if (!dontShow.includes(key)) {
-                if (myObj1[key] != null && myObj2[key] != null) {
+    // const compare2jsons = (myObj1, myObj2) => {
+    //     let keys = Object.keys(myObj1);
+    //     let dontShow = ["Item_id", "Receipt_id", "User_id", "Id_type", "Item_image", "Store_lat", "Store_lon", "User_rank"];
+    //     for (let key of keys) {
+    //         if (!dontShow.includes(key)) {
+    //             if (myObj1[key] != null && myObj2[key] != null) {
 
-                    if (myObj1[key] == myObj2[key]) {
-                        console.log(`equal (${key}):\n1. ${myObj1[key]} \n2. ${myObj2[key]}`);
-                    } else {
-                        console.log(`diff (${key}):\n1. ${myObj1[key]} \n2. ${myObj2[key]}`);
-                    }
-                }
-            }
-        }
-    }
+    //                 if (myObj1[key] == myObj2[key]) {
+    //                     console.log(`equal (${key}):\n1. ${myObj1[key]} \n2. ${myObj2[key]}`);
+    //                 } else {
+    //                     console.log(`diff (${key}):\n1. ${myObj1[key]} \n2. ${myObj2[key]}`);
+    //                 }
+    //             }
+    //         }
+    //     }
+    // }
     const handleCloseCompare = () => {
         setOpen(false);
     }
@@ -141,7 +145,7 @@ FCCompareList.jsx:84 equal (Distance):
                 <ListItem>
                     <ListItemAvatar >
                         <Avatar style={{ border: "solid black 1px" }}>
-                            {item.Item_image ? <img src={item.Item_image} style={{ maxHeight: 50, maxWidth: 50 }} /> : <FolderIcon />}
+                            {item.Item_image ? <img src={item.Item_image} style={{ maxHeight: 50, maxWidth: 50 }} alt="item" /> : <FolderIcon />}
                         </Avatar>
                     </ListItemAvatar>
                     <ListItemText style={{ color: "black" }}
@@ -232,7 +236,7 @@ FCCompareList.jsx:84 equal (Distance):
                         }}
                         startIcon={<CompareTwoToneIcon lable="123" size={"2em"} style={{ float: "center", color: "saddlebrown" }} />}
                     >Compare</Button>
-                    
+
                     {/* <FCImagesGrid items={props.items} /> */}
 
                     <Dialog
@@ -243,7 +247,7 @@ FCCompareList.jsx:84 equal (Distance):
                         {/* <DialogTitle id="compare">{"Items Compare"}</DialogTitle> */}
                         <DialogContent>
                             {/* <FCImagesGrid items={props.items} /> */}
-                            <FCTableCompare items={props.items}/>
+                            <FCTableCompare items={props.items} />
                         </DialogContent>
                         <DialogActions>
                             <Button autoFocus onClick={() => setOpen(false)} color="primary">

@@ -16,10 +16,10 @@ const ListsContextProvider = (props) => {
     )
     const [categories, setCategories] = useState([]);
     const [subCategories, setSubCategories] = useState([]);
-
+    const [stores, setStores] = useState([]);
     const fetchTags = () => {
         //console.log("start fetch tags!");
-        let api = http+`lists/GetTags`;
+        let api = http + `lists/GetTags`;
 
         fetch(api)
             .then(res => {
@@ -36,7 +36,7 @@ const ListsContextProvider = (props) => {
     }
     const fetchCategories = () => {
         //console.log("start fetch tags!");
-        let api = http+`lists/GetCategories`;
+        let api = http + `lists/GetCategories`;
 
         fetch(api)
             .then(res => {
@@ -54,7 +54,7 @@ const ListsContextProvider = (props) => {
     const fetchSubCategories = () => {
         //console.log("start fetch tags!");
         //let api = `https://localhost:44377/api/lists/GetSubCategories`;
-        let api = http+`lists/GetSubCategories`;
+        let api = http + `lists/GetSubCategories`;
 
         fetch(api)
             .then(res => {
@@ -64,6 +64,23 @@ const ListsContextProvider = (props) => {
                 (result) => {
                     //console.log("SubCategories fetch= ", result);
                     setSubCategories(result);
+                },
+                (error) => {
+                    console.log("err post=", error);
+                });
+    }
+    const fetchStores = () => {
+        http = `https://localhost:44377/api/`;
+
+        let api = http + `lists/GetStores`;
+        fetch(api)
+            .then(res => {
+                return res.json();
+            })
+            .then(
+                (result) => {
+                    //console.log("stores fetch= ", result);
+                    setStores(result);
                 },
                 (error) => {
                     console.log("err post=", error);
@@ -79,7 +96,9 @@ const ListsContextProvider = (props) => {
             FetchCategories: fetchCategories,
             subCategories,
             SetSubCategories: setSubCategories,
-            FetchSubCategories: fetchSubCategories
+            FetchSubCategories: fetchSubCategories,
+            stores,
+            FetchStores: fetchStores
         }}>
             {props.children}
         </ListsContext.Provider>
