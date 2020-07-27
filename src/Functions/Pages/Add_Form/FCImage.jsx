@@ -7,7 +7,7 @@ import {/* Paper,*/ Chip, Avatar } from '@material-ui/core';
 
 export default function FCImage(props) {
   //const [image, setImage] = useState({ preview: '', raw: '' })
-  const { receipt, SetReceipt/*, item, SetItem */} = useContext(ReceiptContext);
+  const { receipt, SetReceipt/*, item, SetItem */ } = useContext(ReceiptContext);
   const [icon, setIcon] = useState();
   const [image, setImage] = useState({ image: { preview: null, raw: null } });
 
@@ -47,7 +47,11 @@ export default function FCImage(props) {
     if (props.parent === "Item") { setIcon(<PhotoCameraIcon color="primary" />) }
     else if (props.parent === "Receipt") { setIcon(<ReceiptOutlinedIcon />) }
   }, [image])
-
+  useEffect(() => {
+    if (props.image) {
+      setImage(props.image);
+    }
+  }, [])
 
   return (
     <div>
@@ -73,7 +77,7 @@ export default function FCImage(props) {
                 variant="outlined"
                 color="primary"
                 //deleteIcon={<AnnouncementOutlinedIcon color="action" />}
-                avatar={<Avatar style={{backgroundColor:"inherit"}}>{icon}</Avatar>}
+                avatar={<Avatar style={{ backgroundColor: "inherit" }}>{icon}</Avatar>}
               /><AnnouncementOutlinedIcon color="secondary" />
             </div>
 

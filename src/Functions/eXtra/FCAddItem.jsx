@@ -1,10 +1,10 @@
-import React, { useContext, useState,useEffect } from 'react';
+import React, { useContext, useState, useEffect } from 'react';
 import { ReceiptContext } from '../../Contexts/ReceiptContext';
 import { ListsContext } from '../../Contexts/ListsContext';
 import FCImage from '../Pages/Add_Form/FCImage';
 import FCApiCard from './FCApiCard';
 import FCBarcode from './FCBarcode';
-import {Button,Dialog,Chip,TextField,DialogActions, Avatar,DialogTitle,DialogContent,DialogContentText} from '@material-ui/core';
+import { Button, Dialog, Chip, TextField, DialogActions, Avatar, DialogTitle, DialogContent, DialogContentText } from '@material-ui/core';
 import Autocomplete, { createFilterOptions } from '@material-ui/lab/Autocomplete';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
 import { useTheme } from '@material-ui/core/styles';
@@ -37,7 +37,11 @@ export default function FCAddItem(props) {
     const [selectedItemFromApi, setSelectedItemFromApi] = useState(null);
     const [apiMenu, SetApiMenu] = useState(false);
     const [useApiData, setUseApiData] = useState(false);
-    //const [url, setUrl] = useState("");
+    const [fetching, setFetching] = useState(false);
+    //const [useItem2Edit, setUseItem2Edit] = useState(false);
+    //const [defaultCategory, setDefaultCategory] = useState({ Category_id: "", Category_title: "" });
+    //const [defaultSubCategory, setDefaultSubCategory] = useState({ Category_id: "", Category_title: "" });
+
     const [tempItem, setTempItem] = useState({
         id: "",
         category: { id: 0, title: "" },
@@ -45,12 +49,12 @@ export default function FCAddItem(props) {
         itemName: "",
         barcode: "",
         image: { preview: "", raw: "", base64: "" },
-        discoundDollar: 0,
-        discountPercent: 0,
+        discoundDollar: "",
+        discountPercent: "",
         tags: [],
         itemDescription: "",
         price: "",
-        Id_type:"UserUser"
+        Id_type: "UserUser"
     })
     const handleClickOpen = () => {
         setOpen(true);
@@ -61,86 +65,95 @@ export default function FCAddItem(props) {
             itemName: "",
             barcode: "",
             image: { preview: "", raw: "", base64: "" },
-            discoundDollar: 0,
-            discountPercent: 0,
+            discoundDollar: "",
+            discountPercent: "",
             tags: [],
             itemDescription: "",
             price: "",
-            Id_type:"UserUser"
+            Id_type: "UserUser"
         });
 
     };
     const handleClose = () => {
-        console.log(tempItem);
-
-        if (tempItem.price !== '') {
-            for (let i = 0; i < tempItem.tags.length; i++) {
-                if (tempItem.tags[i].inputValue !== undefined) {
-                    tempItem.tags[i] = { title: tempItem.tags[i].inputValue }
+        console.log("tempItem: ", tempItem);
+        if (window.confirm("Are you sure all the fields are correct?")) {
+            if (tempItem.price !== '') {
+                for (let i = 0; i < tempItem.tags.length; i++) {
+                    if (tempItem.tags[i].inputValue !== undefined) {
+                        tempItem.tags[i] = { title: tempItem.tags[i].inputValue }
+                    }
                 }
+                SetReceipt({ ...receipt, items: [...receipt.items, tempItem] });
             }
-            SetReceipt({ ...receipt, items: [...receipt.items, tempItem] });
+            setOpen(false);
+            //setUseApiData(false);
+            setTempItem({
+                id: "",
+                category: { id: 0, title: "" },
+                subCategory: { id: 0, title: "" },
+                itemName: "",
+                barcode: "",
+                image: { preview: "", raw: "", base64: "" },
+                discoundDollar: "",
+                discountPercent: "",
+                tags: [],
+                itemDescription: "",
+                price: ""
+            })
+            SetApiMenu(false);
+            //setFetching(false);
+            //setUseItem2Edit(false);
         }
-        setOpen(false);
-        setUseApiData(false);
-        setTempItem({
-            id: "",
-            category: { id: 0, title: "" },
-            subCategory: { id: 0, title: "" },
-            itemName: "",
-            barcode: "",
-            image: { preview: "", raw: "", base64: "" },
-            discoundDollar: 0,
-            discountPercent: 0,
-            tags: [],
-            itemDescription: "",
-            price: ""
-        })
-        SetApiMenu(false);
     };
     const handleCancel = () => {
+        //setFetching(false);
         setOpen(false);
         setUseApiData(false);
     }
     //#region  handleItemEvents
-    useEffect(() => {
-        console.log("From useEffect: ", tempItem.category)
-    }, [tempItem])
-    const handleCategoryChange = (category) => {
-        console.log(1, category);
 
+    const handleCategoryChange = (category) => {
+        //console.log(1, category);
+        //setDefaultCategory(category);
         if (category) {
             if (category.Category_id) {
-                console.log("old: ", category);
                 setTempItem({ ...tempItem, category: category });
             } else if (category.inputValue) {
-                console.log("new: ", category);
-                //let newCategory = { title: "" };
-                //newCategory = { title: category.inputValue };
-                //setTempItem({ ...tempItem, category: newCategory });
                 setTempItem({ ...tempItem, category: { title: category.inputValue.trim() } });
             } else if (typeof category === "string") {
-                console.log("new from api: ", category.trim());
+                //console.log("new from api: ", category.trim());
                 //let newCategory = { title: "" };
                 let newCategory = { title: category.trim() };
                 setTempItem({ ...tempItem, category: newCategory });
             }
         } else {
-            console.log("clear: ", category);
+            //console.log("clear: ", category);
+            //setUseItem2Edit(false);
             setTempItem({ ...tempItem, category: category });
         }
     }
     const handleSubCategoryChange = (subCategory) => {
+        console.log(1, subCategory);
         if (subCategory) {
-            let newSubCategory = { title: "" };
-            newSubCategory = { title: subCategory.inputValue };
-            setTempItem({ ...tempItem, subCategory: newSubCategory });
+            if (subCategory.Sub_category_id) {
+                setTempItem({ ...tempItem, subCategory: subCategory });
+            } else if (subCategory.inputValue) {
+                setTempItem({ ...tempItem, subCategory: { title: subCategory.inputValue.trim() } });
+            } else if (typeof subCategory === "string") {
+                //console.log("new from api: ", subCategory.trim());
+                let newSubCategory = { title: subCategory.trim() };
+                setTempItem({ ...tempItem, subCategory: newSubCategory });
+            }
+            //let newSubCategory = { title: "" };
+            //newSubCategory = { title: subCategory.inputValue };
+            //setTempItem({ ...tempItem, subCategory: newSubCategory });
         } else {
+            //console.log("clear: ", subCategory);
             setTempItem({ ...tempItem, subCategory: subCategory });
         }
     }
     const handleItemImage = (imageSrc, base64) => {
-        console.log(imageSrc);
+        //console.log(imageSrc);
         setTempItem({
             ...tempItem, image: {
                 preview: tempItem.Id_type === "src" ? imageSrc : URL.createObjectURL(imageSrc),
@@ -150,7 +163,7 @@ export default function FCAddItem(props) {
         })
         //base64 === "src" ? setUseApiData(true) : setUseApiData(false)
         //setUrl(imageSrc);
-        
+
 
     }
     const handleItemNameChange = (itemName) => {
@@ -170,315 +183,11 @@ export default function FCAddItem(props) {
         setSelectedItemFromApi({ ...selectedItemFromApi, description: description })
     }
     const handleTagsChange = (tags) => {
-        console.log("tags: ", tags);
+        //console.log("tags: ", tags);
         setTempItem({ ...tempItem, tags: tags });
     }
     const handleBarcode = (barcode) => {
-        //let bamba = `7290000066318`;
-        //setUseApiData(false)
-        //#region baltoro
-        // const baltoro = {
-        //     "code": "OK",
-        //     "total": 1,
-        //     "offset": 0,
-        //     "items": [
-        //         {
-        //             "ean": "0844930088659",
-        //             "title": "Gregory Mountain Products Men's Baltoro 75 Backpack, Shadow Black, Large",
-        //             "description": "Know that feeling when it starts to get cold, you reach into your pack to pull out a puffy, and then you remember you left it at home because it didn't fit? No fun. Gregory's Baltoro 75 Backpack has over 4,500 cubic inches of gear-toting capacity to fit all the puffies, fleeces, and longjohns you need, so you can be seriously prepared on weekend backpacking trips or pack more efficiently for three or four-day excursions. Even when the pack is fully loaded, the hyper-adjustable Response AFS suspension provi...",
-        //             "upc": "844930088659",
-        //             "brand": "Gregory",
-        //             "model": "GM75106",
-        //             "color": "Shadow Black",
-        //             "size": "Large",
-        //             "dimension": "30.7 X 16.9 X 11.8 inches",
-        //             "weight": "5.1 Pounds",
-        //             "category": "Sporting Goods > Outdoor Recreation > Camping & Hiking > Tent Accessories",
-        //             "lowest_recorded_price": 59.99,
-        //             "highest_recorded_price": 319.95,
-        //             "images": [
-        //                 "https://s7ondemand1.scene7.com/is/image/MoosejawMB/10271395x1064295_zm?$product1000$",
-        //                 "http://summitsports.scene7.com/is/image/SummitSports/422078_422078?$MAX$",
-        //                 "http://images10.newegg.com/ProductImageCompressAll200/A04V_1_20150129182925241.jpg",
-        //                 "http://www.sunnysports.com/image/product/large/GRGB75NLRBK.jpg",
-        //                 "https://static.campmor.com/wcsstore/Campmor/static/images/items/main/P1269shw.jpg",
-        //                 "http://www.ems.com/dw/image/v2/AAQU_PRD/on/demandware.static/-/Sites-vestis-master-catalog/default/dw0cffb4bc/product/images/1304/269/1304269/1304269_001_main.jpg",
-        //                 "http://cdn1.ebags.com/is/image/im9/287679_5_1?resmode=4&op_usm=1,1,1,&qlt=95,1&hei=1000&wid=1000",
-        //                 "http://images.jet.com/md5/49672992a9bc3ab2ccad1bc964388aa0.500"
-        //             ],
-        //             "offers": [
-        //                 {
-        //                     "merchant": "Moosejaw",
-        //                     "domain": "moosejaw.com",
-        //                     "title": "Gregory Men's Baltoro 75L Pack",
-        //                     "currency": "",
-        //                     "list_price": 319.95,
-        //                     "price": 239.99,
-        //                     "shipping": "",
-        //                     "condition": "New",
-        //                     "availability": "",
-        //                     "link": "https://www.upcitemdb.com/norob/alink/?id=w2v233x2w213b4b4w2&tid=1&seq=1592656618&plt=956443576ffa0419c326cf1460aea23d",
-        //                     "updated_t": 1573350121
-        //                 },
-        //                 {
-        //                     "merchant": "Skis.com",
-        //                     "domain": "skis.com",
-        //                     "title": "Gregory Baltoro 75 Backpack 2016",
-        //                     "currency": "",
-        //                     "list_price": 319,
-        //                     "price": 249.97,
-        //                     "shipping": "4.95",
-        //                     "condition": "New",
-        //                     "availability": "",
-        //                     "link": "https://www.upcitemdb.com/norob/alink/?id=u2t223x2z203a494z2&tid=1&seq=1592656618&plt=9468d224e24460cac370d6dbfeaf77e7",
-        //                     "updated_t": 1545980956
-        //                 },
-        //                 {
-        //                     "merchant": "Newegg.com",
-        //                     "domain": "newegg.com",
-        //                     "title": "Gregory Men's Baltoro 75 Large Pack",
-        //                     "currency": "",
-        //                     "list_price": "",
-        //                     "price": 319,
-        //                     "shipping": "Free Shipping",
-        //                     "condition": "New",
-        //                     "availability": "Out of Stock",
-        //                     "link": "https://www.upcitemdb.com/norob/alink/?id=v2p2z2w23343f4a4r2&tid=1&seq=1592656618&plt=b39a1430d3fef09f4aee946c21a8f6e1",
-        //                     "updated_t": 1479145912
-        //                 },
-        //                 {
-        //                     "merchant": "Sunny Sports",
-        //                     "domain": "sunnysports.com",
-        //                     "title": "Gregory Baltoro 75 Pack - 2015 Model Shadow Black Large",
-        //                     "currency": "",
-        //                     "list_price": "",
-        //                     "price": 319,
-        //                     "shipping": "",
-        //                     "condition": "New",
-        //                     "availability": "",
-        //                     "link": "https://www.upcitemdb.com/norob/alink/?id=u2q243y2v2z274c4r2&tid=1&seq=1592656618&plt=e01d886acd82871d4a9f826a6bdfe47f",
-        //                     "updated_t": 1449653939
-        //                 },
-        //                 {
-        //                     "merchant": "Campmor",
-        //                     "domain": "campmor.com",
-        //                     "title": "Gregory Baltoro 75 Pack",
-        //                     "currency": "",
-        //                     "list_price": 319,
-        //                     "price": 199.96,
-        //                     "shipping": "Free Shipping",
-        //                     "condition": "New",
-        //                     "availability": "",
-        //                     "link": "https://www.upcitemdb.com/norob/alink/?id=u2q2y2t20363a444q2&tid=1&seq=1592656618&plt=6d2ff4dd3ab27838578ce029d231d33a",
-        //                     "updated_t": 1521172867
-        //                 },
-        //                 {
-        //                     "merchant": "Eastern Mountain Sports",
-        //                     "domain": "ems.com",
-        //                     "title": "Gregory Baltoro 75 Backpack",
-        //                     "currency": "",
-        //                     "list_price": "",
-        //                     "price": 319.95,
-        //                     "shipping": "",
-        //                     "condition": "New",
-        //                     "availability": "",
-        //                     "link": "https://www.upcitemdb.com/norob/alink/?id=u2u223v2v223b474w2&tid=1&seq=1592656618&plt=9ad97d2014840ca4ac46c976778ec78a",
-        //                     "updated_t": 1503176026
-        //                 },
-        //                 {
-        //                     "merchant": "eBags",
-        //                     "domain": "ebags.com",
-        //                     "title": "Gregory Men's Baltoro 75 Large Pack Shadow Black - Gregory Backpacking Packs",
-        //                     "currency": "",
-        //                     "list_price": 319.95,
-        //                     "price": 238.99,
-        //                     "shipping": "Free Shipping",
-        //                     "condition": "New",
-        //                     "availability": "",
-        //                     "link": "https://www.upcitemdb.com/norob/alink/?id=u2s253y243y274c4t2&tid=1&seq=1592656618&plt=25053eb3ede6137ee5e9f94a56015e55",
-        //                     "updated_t": 1523073424
-        //                 },
-        //                 {
-        //                     "merchant": "Summit Sports Sites",
-        //                     "domain": "summitsports.com",
-        //                     "title": "Gregory Baltoro 75 Backpack 2017",
-        //                     "currency": "",
-        //                     "list_price": 319,
-        //                     "price": 249.97,
-        //                     "shipping": "4.95",
-        //                     "condition": "New",
-        //                     "availability": "",
-        //                     "link": "https://www.upcitemdb.com/norob/alink/?id=v2w243t22363f444q2&tid=1&seq=1592656618&plt=28fa2187f4094f000505eca2f99aefae",
-        //                     "updated_t": 1539340904
-        //                 },
-        //                 {
-        //                     "merchant": "Jet.com",
-        //                     "domain": "jet.com",
-        //                     "title": "Gregory Men's Baltoro 75L Pack",
-        //                     "currency": "",
-        //                     "list_price": "",
-        //                     "price": 219.97,
-        //                     "shipping": "",
-        //                     "condition": "New",
-        //                     "availability": "",
-        //                     "link": "https://www.upcitemdb.com/norob/alink/?id=w2s233y2y253c454r2&tid=1&seq=1592656618&plt=815803dd5373f2a2039015b797751550",
-        //                     "updated_t": 1536545388
-        //                 }
-        //             ],
-        //             "asin": "B00N5ADV94",
-        //             "elid": "163672093452"
-        //         },
-        //         {
-        //             "ean": "0844930088650",
-        //             "title": "Gregory Mountain Products Men's Baltoro 75 Backpack, Shadow Black, Large",
-        //             "description": "Know that feeling when it starts to get cold, you reach into your pack to pull out a puffy, and then you remember you left it at home because it didn't fit? No fun. Gregory's Baltoro 75 Backpack has over 4,500 cubic inches of gear-toting capacity to fit all the puffies, fleeces, and longjohns you need, so you can be seriously prepared on weekend backpacking trips or pack more efficiently for three or four-day excursions. Even when the pack is fully loaded, the hyper-adjustable Response AFS suspension provi...",
-        //             "upc": "844930088659",
-        //             "brand": "Gregory",
-        //             "model": "GM75106",
-        //             "color": "Shadow Black",
-        //             "size": "Large",
-        //             "dimension": "30.7 X 16.9 X 11.8 inches",
-        //             "weight": "5.1 Pounds",
-        //             "category": "Sporting Goods > Outdoor Recreation > Camping & Hiking > Tent Accessories",
-        //             "lowest_recorded_price": 59.99,
-        //             "highest_recorded_price": 319.95,
-        //             "images": [
-        //                 "https://s7ondemand1.scene7.com/is/image/MoosejawMB/10271395x1064295_zm?$product1000$",
-        //                 "http://summitsports.scene7.com/is/image/SummitSports/422078_422078?$MAX$",
-        //                 "http://images10.newegg.com/ProductImageCompressAll200/A04V_1_20150129182925241.jpg",
-        //                 "http://www.sunnysports.com/image/product/large/GRGB75NLRBK.jpg",
-        //                 "https://static.campmor.com/wcsstore/Campmor/static/images/items/main/P1269shw.jpg",
-        //                 "http://www.ems.com/dw/image/v2/AAQU_PRD/on/demandware.static/-/Sites-vestis-master-catalog/default/dw0cffb4bc/product/images/1304/269/1304269/1304269_001_main.jpg",
-        //                 "http://cdn1.ebags.com/is/image/im9/287679_5_1?resmode=4&op_usm=1,1,1,&qlt=95,1&hei=1000&wid=1000",
-        //                 "http://images.jet.com/md5/49672992a9bc3ab2ccad1bc964388aa0.500"
-        //             ],
-        //             "offers": [
-        //                 {
-        //                     "merchant": "Moosejaw",
-        //                     "domain": "moosejaw.com",
-        //                     "title": "Gregory Men's Baltoro 75L Pack",
-        //                     "currency": "",
-        //                     "list_price": 319.95,
-        //                     "price": 239.99,
-        //                     "shipping": "",
-        //                     "condition": "New",
-        //                     "availability": "",
-        //                     "link": "https://www.upcitemdb.com/norob/alink/?id=w2v233x2w213b4b4w2&tid=1&seq=1592656618&plt=956443576ffa0419c326cf1460aea23d",
-        //                     "updated_t": 1573350121
-        //                 },
-        //                 {
-        //                     "merchant": "Skis.com",
-        //                     "domain": "skis.com",
-        //                     "title": "Gregory Baltoro 75 Backpack 2016",
-        //                     "currency": "",
-        //                     "list_price": 319,
-        //                     "price": 249.97,
-        //                     "shipping": "4.95",
-        //                     "condition": "New",
-        //                     "availability": "",
-        //                     "link": "https://www.upcitemdb.com/norob/alink/?id=u2t223x2z203a494z2&tid=1&seq=1592656618&plt=9468d224e24460cac370d6dbfeaf77e7",
-        //                     "updated_t": 1545980956
-        //                 },
-        //                 {
-        //                     "merchant": "Newegg.com",
-        //                     "domain": "newegg.com",
-        //                     "title": "Gregory Men's Baltoro 75 Large Pack",
-        //                     "currency": "",
-        //                     "list_price": "",
-        //                     "price": 319,
-        //                     "shipping": "Free Shipping",
-        //                     "condition": "New",
-        //                     "availability": "Out of Stock",
-        //                     "link": "https://www.upcitemdb.com/norob/alink/?id=v2p2z2w23343f4a4r2&tid=1&seq=1592656618&plt=b39a1430d3fef09f4aee946c21a8f6e1",
-        //                     "updated_t": 1479145912
-        //                 },
-        //                 {
-        //                     "merchant": "Sunny Sports",
-        //                     "domain": "sunnysports.com",
-        //                     "title": "Gregory Baltoro 75 Pack - 2015 Model Shadow Black Large",
-        //                     "currency": "",
-        //                     "list_price": "",
-        //                     "price": 319,
-        //                     "shipping": "",
-        //                     "condition": "New",
-        //                     "availability": "",
-        //                     "link": "https://www.upcitemdb.com/norob/alink/?id=u2q243y2v2z274c4r2&tid=1&seq=1592656618&plt=e01d886acd82871d4a9f826a6bdfe47f",
-        //                     "updated_t": 1449653939
-        //                 },
-        //                 {
-        //                     "merchant": "Campmor",
-        //                     "domain": "campmor.com",
-        //                     "title": "Gregory Baltoro 75 Pack",
-        //                     "currency": "",
-        //                     "list_price": 319,
-        //                     "price": 199.96,
-        //                     "shipping": "Free Shipping",
-        //                     "condition": "New",
-        //                     "availability": "",
-        //                     "link": "https://www.upcitemdb.com/norob/alink/?id=u2q2y2t20363a444q2&tid=1&seq=1592656618&plt=6d2ff4dd3ab27838578ce029d231d33a",
-        //                     "updated_t": 1521172867
-        //                 },
-        //                 {
-        //                     "merchant": "Eastern Mountain Sports",
-        //                     "domain": "ems.com",
-        //                     "title": "Gregory Baltoro 75 Backpack",
-        //                     "currency": "",
-        //                     "list_price": "",
-        //                     "price": 319.95,
-        //                     "shipping": "",
-        //                     "condition": "New",
-        //                     "availability": "",
-        //                     "link": "https://www.upcitemdb.com/norob/alink/?id=u2u223v2v223b474w2&tid=1&seq=1592656618&plt=9ad97d2014840ca4ac46c976778ec78a",
-        //                     "updated_t": 1503176026
-        //                 },
-        //                 {
-        //                     "merchant": "eBags",
-        //                     "domain": "ebags.com",
-        //                     "title": "Gregory Men's Baltoro 75 Large Pack Shadow Black - Gregory Backpacking Packs",
-        //                     "currency": "",
-        //                     "list_price": 319.95,
-        //                     "price": 238.99,
-        //                     "shipping": "Free Shipping",
-        //                     "condition": "New",
-        //                     "availability": "",
-        //                     "link": "https://www.upcitemdb.com/norob/alink/?id=u2s253y243y274c4t2&tid=1&seq=1592656618&plt=25053eb3ede6137ee5e9f94a56015e55",
-        //                     "updated_t": 1523073424
-        //                 },
-        //                 {
-        //                     "merchant": "Summit Sports Sites",
-        //                     "domain": "summitsports.com",
-        //                     "title": "Gregory Baltoro 75 Backpack 2017",
-        //                     "currency": "",
-        //                     "list_price": 319,
-        //                     "price": 249.97,
-        //                     "shipping": "4.95",
-        //                     "condition": "New",
-        //                     "availability": "",
-        //                     "link": "https://www.upcitemdb.com/norob/alink/?id=v2w243t22363f444q2&tid=1&seq=1592656618&plt=28fa2187f4094f000505eca2f99aefae",
-        //                     "updated_t": 1539340904
-        //                 },
-        //                 {
-        //                     "merchant": "Jet.com",
-        //                     "domain": "jet.com",
-        //                     "title": "Gregory Men's Baltoro 75L Pack",
-        //                     "currency": "",
-        //                     "list_price": "",
-        //                     "price": 219.97,
-        //                     "shipping": "",
-        //                     "condition": "New",
-        //                     "availability": "",
-        //                     "link": "https://www.upcitemdb.com/norob/alink/?id=w2s233y2y253c454r2&tid=1&seq=1592656618&plt=815803dd5373f2a2039015b797751550",
-        //                     "updated_t": 1536545388
-        //                 }
-        //             ],
-        //             "asin": "B00N5ADV94",
-        //             "elid": "163672093452"
-        //         }
-        //     ]
-        // }
-        //#endregion
-        //console.log(baltoro);
-        console.log(barcode);
+        //console.log(barcode);
 
         //SetApiMenu(true)
         // SetItemsFromApi(baltoro.items.map(item => {
@@ -490,9 +199,9 @@ export default function FCAddItem(props) {
         //let request = new Request('https://api.upcitemdb.com/prod/trial/lookup?upc=7290000066318');
         //let randomUser = new Request(`https://api.randomuser.me/?results=5`);
         //let params = [`UPC`, `ISBN`, `EAN`];
-        console.log("Start fetch");
+        //console.log("Start fetch");
         setTempItem({ ...tempItem, barcode: barcode });
-
+        setFetching(true);
         //#region 
         fetch(corsAnywhere + api + barcode, {
             method: 'GET',
@@ -501,14 +210,15 @@ export default function FCAddItem(props) {
             })
         })
             .then(res => {
-                console.log('res=', res);
-                console.log('res.status', res.status);
-                console.log('res.ok', res.ok);
+                //console.log('res=', res);
+                //console.log('res.status', res.status);
+                //console.log('res.ok', res.ok);
                 return res.json()
             })
             .then(
                 (result) => {
                     console.log("fetch FetchGet= ", result);
+                    setFetching(false)
                     if (result.code === "OK") {
                         if (result.total > 0) {
                             SetApiMenu(true);
@@ -521,17 +231,38 @@ export default function FCAddItem(props) {
                 },
                 (error) => {
                     console.log("err post=", error);
+                    setFetching(false)
                 });
-
         //#endregion
-        console.log("End fetch");
+        //console.log("End fetch");
     }
     //#endregion
 
-
+    const editItem = (i) => {
+        //console.log("editItem", i);
+        console.log("editItem: ",receipt.items[i]);
+        setOpen(true);
+        setTempItem({
+            ...tempItem,
+            id: receipt.items[i].id,
+            itemName: receipt.items[i].itemName,
+            image: receipt.items[i].image,
+            barcode: receipt.items[i].barcode,
+            price: receipt.items[i].price,
+            discoundDollar: receipt.items[i].discoundDollar,
+            discountPercent: receipt.items[i].discountPercent,
+            category: receipt.items[i].category,
+            subCategory: receipt.items[i].subCategory,
+            itemDescription: receipt.items[i].itemDescription,
+            Id_type: receipt.items[i].Id_type,
+            tags: receipt.items[i].tags,
+        });
+        props.setItem2Edit(null);
+    }
     const useItemFromApi = (item, src) => {
-        console.log(item,src);
-        
+        setFetching(false);
+        //console.log(item, src);
+
         setUseApiData(true);
         SetApiMenu(false);
         setSelectedItemFromApi(item);
@@ -540,11 +271,11 @@ export default function FCAddItem(props) {
         setTempItem({
             ...tempItem,
             itemName: item.title,
-            image: {...tempItem.image, preview: src },
+            image: { ...tempItem.image, preview: src },
             category: category ? category : { title: item.category.split(">")[0].trim() },
             subCategory: subCategory ? subCategory : { title: item.category.split(">")[1].trim() },
             itemDescription: item.description,
-            Id_type:"src"
+            Id_type: "src"
         })
     }
     useEffect(() => {
@@ -554,8 +285,16 @@ export default function FCAddItem(props) {
         FetchSubCategories();
     }, []);
     useEffect(() => {
-        console.log(tempItem);
-    }, [tempItem])
+        setTempItem({ ...tempItem, barcode: tempBarcode });
+    }, [tempBarcode]);
+    useEffect(() => {
+        if (props.item2Edit !== null) {
+            editItem(props.item2Edit);//index of item in receipt
+            setUseApiData(receipt.items[props.item2Edit].Id_type === "src");
+            //setUseItem2Edit(true);
+            //setDefaultCategory(receipt.items[props.item2Edit].category);
+        }
+    }, [props.item2Edit]);
     return (
         <div>
             <Chip
@@ -582,6 +321,8 @@ export default function FCAddItem(props) {
                             <FCBarcode
                                 onBarcodeChange={e => SetTempBarcode(e.target.value)}
                                 onIconClick={() => { handleBarcode(tempBarcode) }}
+                                val={tempItem.barcode}
+                                fetching={fetching}
                             />
                             <Dialog
                                 fullScreen={fullScreen}
@@ -602,6 +343,7 @@ export default function FCAddItem(props) {
                                 </div>
                             </Dialog>
                         </div>
+                        <br style={{ clear: "both" }} /><br style={{ clear: "both" }} />
                         <div style={{ float: "left" }} >
                             {useApiData ?
                                 <img
@@ -612,8 +354,10 @@ export default function FCAddItem(props) {
                                 <FCImage
                                     parent={"Item"}
                                     onItemImageChange={(image, base64) => handleItemImage(image, base64)}
+                                    image={tempItem.image}
                                 />}
                         </div>
+                        <br style={{ clear: "both" }} /><br style={{ clear: "both" }} />
                         <div style={{ float: "left", width: "300px" /*maxWidth: 300*/ }}>
                             <Autocomplete
                                 id="combo-box-category"
@@ -627,22 +371,29 @@ export default function FCAddItem(props) {
                                             Category_title: `New Category: "${params.inputValue}"`,
                                         });
                                     }
-                                    console.log("filteredC: ", filtered);
+                                    //console.log("filteredC: ", filtered);
                                     return filtered;
                                 }}
+                                //defaultValue={defaultCategory}
+                                //value={tempItem.category}
+                                //inputValue={useItem2Edit ? tempItem.category.Category_title : null}
+                                //defaultValue={tempItem.category.id!=0?{id:tempItem.category.id,title:tempItem.category.title}:null}
+                                //defaultValue={!useItem2Edit ? { Category_id: tempItem.category.id, Category_title: tempItem.category.title } : null}
                                 disabled={useApiData}
-                                //value={useApiData ? selectedItemFromApi.category.split(">")[0].trim(): ""}
+                                placeholder={"שדג"}
                                 onChange={(e, category) => handleCategoryChange(category)}
                                 getOptionLabel={(option) => option.Category_title}
-                                //getOptionLabel={(option) => useApiData ? selectedItemFromApi.category.split(">")[0].trim() : option.Category_title}
-                                renderInput={(params) => <TextField {...params} label={useApiData ? selectedItemFromApi.category.split(">")[0] : "Category"} variant="outlined" />}
+                                renderInput={(params) => <TextField {...params}
+                                    label={useApiData ? selectedItemFromApi.category.split(">")[0] : "Category"}
+                                    variant="outlined" />}
                             />
                         </div>
+                        <br style={{ clear: "both" }} /><br style={{ clear: "both" }} />
                         <div style={{ float: "left", width: "300px" /*maxWidth: 300*/ }}>
                             <Autocomplete
                                 id="combo-box-sub-category"
                                 options={subCategories}
-                                onChange={(e, category) => handleSubCategoryChange(category)}
+                                onChange={(e, subCategory) => handleSubCategoryChange(subCategory)}
                                 filterOptions={(options, params) => {
                                     const filtered = filter(options, params);
                                     // Suggest the creation of a new value
@@ -653,28 +404,35 @@ export default function FCAddItem(props) {
                                         });
                                     }
                                     //console.log("filteredSC: ", filtered);
-
                                     return filtered;
                                 }}
                                 disabled={useApiData}
                                 getOptionLabel={(option) => option.Sub_category_title}
-                                renderInput={(list) => <TextField {...list} label={useApiData ? selectedItemFromApi.category.split(">")[1] : "Sub Category"} variant="outlined" />}
+                                renderInput={(list) => <TextField {...list}
+                                    label={useApiData ? selectedItemFromApi.category.split(">")[1] : "Sub Category"}
+                                    //value={tempItem.subCategory}
+                                    variant="outlined" />}
                             />
                         </div>
                         <br style={{ clear: "both" }} /><br style={{ clear: "both" }} />
                         <div style={{ float: "left" }}>
                             <TextField
-                                label={useApiData ? selectedItemFromApi.title : "Item Name"}
+                                label={"Item Name"}
                                 //value={useApiData ? selectedItemFromApi.title : ""}
                                 disabled={useApiData}
                                 onChange={e => handleItemNameChange(e.target.value)}
                                 variant="outlined"
-                                InputProps={{ style: { width: "400px" } }} />
+                                value={tempItem.itemName}
+                            //InputProps={{ style: { width: "400px" } }}
+                            />
+                            <br style={{ clear: "both" }} /><br style={{ clear: "both" }} />
+
                             <TextField
                                 label="Item Price"
                                 onChange={e => handleItemPriceChange(e.target.value)}
                                 variant="outlined"
-                                InputProps={{ style: { width: "400px" } }}
+                                value={tempItem.price}
+                                //InputProps={{ style: { width: "400px" } }}
                                 type="number" />
                         </div>
                         <br style={{ clear: "both" }} /><br style={{ clear: "both" }} />
@@ -682,39 +440,33 @@ export default function FCAddItem(props) {
                             <TextField
                                 id="standard-basic-Dollar"
                                 label="$ Discount"
+                                value={tempItem.discoundDollar}
                                 onChange={(e) => handleItemDollarDiscountChange(e.target.value)}
                                 variant="outlined"
-                                InputLabelProps={{
-                                    style: { color: props.color ? props.color : null },
-                                }}
-                                InputProps={{
-                                    style: {
-                                        color: props.color ? props.color : null
-                                    },
-                                    //disableUnderline: "true",
-                                    minimum: "0", max: "10", step: "1"
-                                }}
+                                //InputLabelProps={{ style: { color: props.color ? props.color : null }, }}
+                                //InputProps={{
+                                //style: { color: props.color ? props.color : null },
+                                //disableUnderline: "true",
+                                //minimum: 0,max:tempItem.price
+                                //}}
                                 type="number"
                             />
-                            <br />
+                            <br style={{ clear: "both" }} /><br style={{ clear: "both" }} />
                             <TextField
                                 id="standard-basic-percent"
                                 label="% Discount"
                                 variant="outlined"
-                                //value={receipt.discountPercent}
+                                value={tempItem.discountPercent}
                                 onChange={(e) => handleItemPercentDiscountChange(e.target.value)}
                                 color="primary"
-                                InputLabelProps={{
-                                    style: { color: props.color ? props.color : null }
-                                }}
-                                InputProps={{
-                                    style: {
-                                        color: props.color ? props.color : null
-                                    },
-                                }}
+                                //InputLabelProps={{ style: { color: props.color ? props.color : null } }}
+                                //InputProps={{
+                                //style: { color: props.color ? props.color : null },
+                                //}}
                                 type="number"
                             />
                         </div>
+                        <br style={{ clear: "both" }} /><br style={{ clear: "both" }} />
                         <div>
                             <Autocomplete
                                 multiple
@@ -749,6 +501,8 @@ export default function FCAddItem(props) {
                                     <TextField {...params} label="Tags" variant="outlined" placeholder="Tags" />
                                 )}
                             />
+                            <br style={{ clear: "both" }} />
+
                             <TextField
                                 id="outlined-multiline-static"
                                 label="Description:"
@@ -758,12 +512,11 @@ export default function FCAddItem(props) {
                                 onChange={e => handleItemDescriptionChange(e.target.value)}
                                 //defaultValue="Default Value"
                                 variant="outlined"
-                                value={useApiData ? selectedItemFromApi.description : undefined}
+                                value={useApiData ? selectedItemFromApi.description : tempItem.itemDescription}
                                 //color="white"
                                 inputProps={{
                                     style: { color: props.color ? props.color : null }
                                 }
-
                                 }
                                 InputLabelProps={{
                                     style: { color: props.color ? props.color : null }

@@ -50,7 +50,7 @@ export default function FCTableCompare(props) {
             );
 
         }
-        console.log(tempRows, props.items);
+        //console.log(tempRows, props.items);
         setRows(tempRows)
     }, [props.items])
     return (

@@ -89,7 +89,7 @@ function FCGoogleMap(props) {
             lat: user.userLocation ? user.userLocation.latitude : search.lat,
             lng: user.userLocation ? user.userLocation.longitude : search.lng
         })
-        console.log("search: ", search);
+        //console.log("search: ", search);
         setPositionByUserLocation(true);
     }
     const handleMarkerClick = (props2, marker, e) => {
@@ -113,9 +113,9 @@ function FCGoogleMap(props) {
         //props.setAutoCompleteFromFCGoogleMap(props.google.maps.places);
         const asyncuseEffect = async () => {
             await setUserLocation();
-            console.log("user(googleMap): ", user);
+            //console.log("user(googleMap): ", user);
             //console.log("search(googleMap): ", search);
-            console.log(positionByUserLocation);
+            //console.log(positionByUserLocation);
             if (positionByUserLocation) {
                 await setSearch({
                     ...search,

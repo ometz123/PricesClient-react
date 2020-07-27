@@ -79,7 +79,8 @@ export default function FCExplore(props) {
             }
         });
 
-    }, [user.userLocation ? user.userLocation.latitude : []])
+    }, [user.userLocation ? user.userLocation.latitude : []]);
+    
     if (user.userLocation) {
         return (
             <div>

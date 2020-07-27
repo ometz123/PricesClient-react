@@ -8,7 +8,8 @@ import InputAdornment from "@material-ui/core/InputAdornment";
 import FormControl from "@material-ui/core/FormControl";
 import SearchTwoToneIcon from "@material-ui/icons/SearchTwoTone";
 import { useState } from "react";
-import { FormHelperText } from "@material-ui/core";
+import { FormHelperText, CircularProgress } from "@material-ui/core";
+import { useEffect } from "react";
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -41,12 +42,24 @@ export default function FCBarcode(props) {
     //weightRange: "",
     //showPassword: false
   });
+  let loading = <CircularProgress
+    style={{
+      color: '#fcaf17',
+      animationDuration: '550ms',
+      strokeLinecap: 'round',
+    }} size={35} thickness={4} />
 
   const handleChange = prop => event => {//prop is sent threw the onclick, event is default
     setValues({ ...values, [prop]: event.target.value });//values[prop]=event.target.value
     props.onBarcodeChange(event);
   };
+  const handleBarcodeClick = () => {
+    props.onIconClick(values.barcode);
 
+  }
+  useEffect(() => {
+    setValues({ ...values, ['barcode']: props.val });
+  }, [props.val])
   return (
     <div className={classes.root}>
       <FormControl
@@ -59,22 +72,21 @@ export default function FCBarcode(props) {
         <OutlinedInput
           id="outlined-adornment-barcode"
           type={"number"}
-
           value={values.barcode}
           onChange={handleChange("barcode")}
           endAdornment={
             <InputAdornment position="end" variant="filled">
-              <IconButton
+
+              {props.fetching ? loading : <IconButton
                 className={values.barcode ? classes.iconButtonText : classes.iconButton}
                 disabled={!values.barcode}
                 //aria-label="toggle password visibility"
-                onClick={() => props.onIconClick(values.barcode)}
+                onClick={() => handleBarcodeClick()}
                 edge="end"
                 style={{ marginRight: "-10px" }}
-              //color="primary"
               >
                 <SearchTwoToneIcon />
-              </IconButton>
+              </IconButton>}
             </InputAdornment>
           }
           label={"Barcode"}

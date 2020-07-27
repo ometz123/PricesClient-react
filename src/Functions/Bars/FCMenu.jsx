@@ -5,7 +5,11 @@ import {
   Badge, Dialog, DialogTitle, /*DialogContentText,*/
   DialogContent, CircularProgress, SwipeableDrawer,
   List, Divider, ListItem, ListItemIcon, ListItemText,
-  IconButton
+  IconButton,
+  Typography,
+  DialogActions,
+  Button,
+  FormHelperText
 } from '@material-ui/core';
 import clsx from 'clsx';
 import { makeStyles } from '@material-ui/core/styles';
@@ -17,6 +21,9 @@ import LoyaltyTwoToneIcon from '@material-ui/icons/LoyaltyTwoTone';
 import PersonOutlineTwoToneIcon from '@material-ui/icons/PersonOutlineTwoTone';
 import Red from '@material-ui/core/colors/red';
 import green from '@material-ui/core/colors/green';
+import VerifiedUserIcon from '@material-ui/icons/VerifiedUser';
+import CloseIcon from '@material-ui/icons/Close';
+import ThumbDownAltTwoToneIcon from '@material-ui/icons/ThumbDownAltTwoTone';
 //import SwipeableDrawer from '@material-ui/core/SwipeableDrawer';
 //import List from '@material-ui/core/List';
 //import Divider from '@material-ui/core/Divider';
@@ -39,40 +46,89 @@ export default function FCMenu() {
   const { user, SetUser } = useContext(UserContext);
   const classes = useStyles();
   const [chatOpen, setChatOpen] = useState(false);
-  const [favoritesOpen, setFavoritesOpen] = useState(false)
-  const [favorites, setFavorites] = useState(
-    <CircularProgress
-      style={{ color: '#fcaf17', animationDuration: '550ms', strokeLinecap: 'round', }}
-      size={45} thickness={4} />);
-  let favs =
+  const [favoritesOpen, setFavoritesOpen] = useState(false);
+  const [verifyReceiptsOpen, setVerifyReceiptsOpen] = useState(false);
+  const [receipt4Update, setReceipt4Update] = useState();
+  const [state, setState] = useState({    //top: false,
+    left: false,    //bottom: false,    //right: false,
+  });
+
+  let local = false;
+  let http = `http://proj.ruppin.ac.il/bgroup4/prod/server/api/`;
+  let getFavorites = `lists/GetUserFavoriteItems`;
+  let setReceiptStatus = `users/SetReceiptStatus`;
+  let getreceipts2verify = `users/GetReceipts2verify`;
+  if (local) {
+    http = `https://localhost:44377/api/`;
+  }
+  const loading = <CircularProgress
+    style={{ color: '#fcaf17', animationDuration: '550ms', strokeLinecap: 'round', }}
+    size={45} thickness={4} />
+  const [favorites, setFavorites] = useState(loading);
+  const [verifyReceipts, setVerifyReceipts] = useState(loading);
+  const favs =
     <Dialog
       open={favoritesOpen}
       onClose={() => handleClose("favorites")}
       style={{ textAlign: "-webkit-center" }}
     >
-      <DialogTitle id="simple-dialog-title">{`${user.firstName}'s Favorites`}</DialogTitle>
+      <DialogTitle id="simple-dialog-title">
+        <Typography >
+          {`${user.firstName}'s Favorites`}
+          <IconButton aria-label="close" /*className={classes.closeButton}*/ onClick={() => handleClose("favorites")}>
+            <CloseIcon />
+          </IconButton>
+        </Typography>
+        <Divider />
+      </DialogTitle>
       <DialogContent /*style={{placeSelf: "center"}}*/>
         {favorites}
       </DialogContent>
     </Dialog>;
-  const [state, setState] = useState({
-    //top: false,
-    left: false,
-    //bottom: false,
-    //right: false,
-  });
 
-  let local = false;
-  let httpGetFavorites = `http://proj.ruppin.ac.il/bgroup4/prod/server/api/lists/GetUserFavoriteItems`;
-  if (local) {
-    httpGetFavorites = `https://localhost:44377/api/lists/GetUserFavoriteItems`;
-  }
+  const newReceiptsToApprove =
+    <Dialog
+      open={verifyReceiptsOpen}
+      onClose={() => handleClose("newReceipts")}
+      style={{ textAlign: "-webkit-center" }}
+    >
+      <DialogTitle id="simple-dialog-title">
+        <Typography >
+          {`verify Receipt`}
+          <IconButton aria-label="close" /*className={classes.closeButton}*/ onClick={() => handleClose("verifyReceipts")}>
+            <CloseIcon />
+          </IconButton>
+        </Typography>
+        <Divider />
+      </DialogTitle>
+      <DialogContent /*style={{placeSelf: "center"}}*/>
+        {verifyReceipts}
+      </DialogContent>
+      <div style={{ placeSelf: "center", textAlignLast: "center" }}>
+        <DialogActions>
+          <Button variant="outlined"
+            onClick={() => SetReceiptStatus(false)} color="secondary">
+            Reject {<ThumbDownAltTwoToneIcon />}
+          </Button>
+          <Button variant="outlined"
+            onClick={() => SetReceiptStatus(true)} style={{ color: "#47761E" }} autoFocus>
+            Verify {<VerifiedUserIcon />}
+          </Button>
+        </DialogActions>
+        <FormHelperText>*If you are not sure- just Exit</FormHelperText>
+      </div>
+    </Dialog>;
+
+
+
   const handleClose = (dialog) => {
     if (dialog === "favorites") {
       setFavoritesOpen(false)
-      setFavorites(<CircularProgress
-        style={{ color: '#fcaf17', animationDuration: '550ms', strokeLinecap: 'round', }}
-        size={45} thickness={4} />)
+      setFavorites(loading)
+    }
+    if (dialog === "verifyReceipts") {
+      setVerifyReceiptsOpen(false)
+      setVerifyReceipts(loading)
     }
   }
   const toggleDrawer = (anchor, open) => event => {
@@ -83,11 +139,81 @@ export default function FCMenu() {
   };
   const handleChat = () => {
   }
+  const handleVerifyReceipts = () => {
+    setVerifyReceiptsOpen(true);
+    getReceipts2Verify();
+  }
+  const getReceipts2Verify = () => {
+    let adminUser = {
+      User_id: user.userId,
+    };
+    fetch(http + getreceipts2verify/*httpGetReceipts2verify*/, {
+      method: 'POST',
+      body: JSON.stringify(adminUser),
+      headers: new Headers({
+        'Content-Type': 'application/json; charset=UTF-8',
+      })
+    })
+      .then(res => {
+        return res.json();
+      })
+      .then(
+        (result) => {
+          console.log("Receipts to verify cards fetch= ", result);
+          if (result.length > 0) {
+            setReceipt4Update(result[0])
+            setVerifyReceipts(
+              <div>
+                {result.map((item, i) => <FCCard item={item} key={i} parent={"receipts2verify"} />)}
+              </div>
+            )
+          } else {
+            setVerifyReceipts(
+              <div>
+                No Receipts to verify
+              </div>
+            )
+          }
+        },
+        (error) => {
+          console.log("err post=", error);
+          alert("sorry, somthing went wrong");
+        });
+  }
+  const SetReceiptStatus = (status) => {
+    if (window.confirm(`Are you sure the receipt is ${status ? 'Correct' : 'Wrong'}?`)) {
+      let receipt2Verify = {
+        receipt_id: receipt4Update.Receipt_id,
+        User_id:receipt4Update.User_id,
+        status: status
+      }
+      fetch(http + setReceiptStatus/*httpSetReceiptStatus */ /*+ `?receipt_id=${receiptId}&status=${status}`*/, {
+        method: 'POST',
+        body: JSON.stringify(receipt2Verify),
+        headers: new Headers({
+          'Content-Type': 'application/json; charset=UTF-8',
+        })
+      })
+        .then(res => {
+          return res.json();
+        })
+        .then(
+          (result) => {
+            //console.log("receipt status fetch= ", result);
+            alert(`Thank you for check the receipt and ${result ? 'Verify' : 'Reject'} it.`)
+          },
+          (error) => {
+            console.log("err post=", error);
+            alert("sorry, somthing went wrong");
+          });
+      handleClose("verifyReceipts");
+    }
+  }
   const getFavoritesCards = () => {
     let user2getFavorites = {
       User_id: user.userId,
     };
-    fetch(httpGetFavorites, {
+    fetch(http + getFavorites/*httpGetFavorites*/, {
       method: 'POST',
       body: JSON.stringify(user2getFavorites),
       headers: new Headers({
@@ -153,6 +279,11 @@ export default function FCMenu() {
             color={"primary"}
           />
         </ListItem>
+        {user.rank > 2000 &&
+          <ListItem button >
+            <ListItemIcon onClick={handleVerifyReceipts}><VerifiedUserIcon htmlColor='#fcaf17' /></ListItemIcon>
+            <ListItemText onClick={handleVerifyReceipts} primary={"verify Receipts"} />
+          </ListItem>}
       </List>
       <Divider />
       <List>
@@ -194,6 +325,7 @@ export default function FCMenu() {
         </SwipeableDrawer>
       </React.Fragment>
       {favs}
+      {newReceiptsToApprove}
     </div>
   );
 }

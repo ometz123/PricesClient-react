@@ -44,11 +44,15 @@ export default function ControlledAccordions() {
     const [expanded, setExpanded] = useState(false);
     const [open, setOpen] = useState(false);
     let local = false;
-    let httpUpdate = `http://proj.ruppin.ac.il/bgroup4/prod/server/api/users/UpdateUser`;
-    let httpLogin = `http://proj.ruppin.ac.il/bgroup4/prod/server/api/Users/Login`;
+    let http = `http://proj.ruppin.ac.il/bgroup4/prod/server/api/`;
+    let updateURL = `users/UpdateUser`;
+    let loginURL = `Users/Login`;
+    //let httpUpdate = `http://proj.ruppin.ac.il/bgroup4/prod/server/api/users/UpdateUser`;
+    //let httpLogin = `http://proj.ruppin.ac.il/bgroup4/prod/server/api/Users/Login`;
     if (local) {
-        httpUpdate = `https://localhost:44377/api/users/UpdateUser`;
-        httpLogin = `https://localhost:44377/api/Users/Login`;
+        //httpUpdate = `https://localhost:44377/api/users/UpdateUser`;
+        //httpLogin = `https://localhost:44377/api/Users/Login`;
+        http = `https://localhost:44377/api/`;
     }
     const handleChange = (panel) => (event, isExpanded) => {
         setExpanded(isExpanded ? panel : false);
@@ -110,7 +114,7 @@ export default function ControlledAccordions() {
         e.preventDefault();
         setField2Update("birthdate");
         setDialogTitle("Change birthdate?");
-        console.log(form.birthDate, new Date(form.birthDate).toLocaleDateString());
+        //console.log(form.birthDate, new Date(form.birthDate).toLocaleDateString());
         setDialogContent(
             <>
                 old: <Chip label={new Date(user.birthDate && user.birthDate.split("T")[0]).toLocaleDateString()} />
@@ -195,7 +199,7 @@ export default function ControlledAccordions() {
             // console.log("form.birthDate: ", form.birthDate);
             // console.log("json user2Update: ", JSON.stringify(user2Update.Birthdate));
             // console.log("json form: ", JSON.stringify(new Date(form.birthDate)));
-            fetch(httpUpdate, {
+            fetch(http + updateURL, {
                 method: 'POST',
                 body: JSON.stringify(user2Update),
                 headers: new Headers({
@@ -209,6 +213,7 @@ export default function ControlledAccordions() {
                     (result) => {
                         console.log("Update fetch= ", result);
                         if (field2Update === "password") {
+                            localStorage.removeItem('userContext');
                             SetUser({
                                 ...user,
                                 loggedIn: false
@@ -235,7 +240,7 @@ export default function ControlledAccordions() {
             User_id: user.userId,
             Password: password !== '' ? password : user.password
         }
-        fetch(httpLogin, {
+        fetch(http + loginURL, {
             method: 'POST',
             body: JSON.stringify(User),
             headers: new Headers({
@@ -267,7 +272,7 @@ export default function ControlledAccordions() {
     }
 
     useEffect(() => {//name
-        console.log(form.firstName, form.lastName);
+        //console.log(form.firstName, form.lastName);
         if (form.firstName.length > 1 || form.lastName.length > 1) {
             setNameButton(true)
         } else {

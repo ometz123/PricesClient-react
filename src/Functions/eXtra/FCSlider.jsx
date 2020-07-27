@@ -46,7 +46,9 @@ export default function FCSlider(props) {
       maxPrice: over100 ? 100 : "max"
     });
   }
-  useEffect(()=>{console.log(over100, search.maxPrice);},[over100,search.maxPrice])
+  // useEffect(() => {
+  //   console.log(over100, search.maxPrice);
+  // }, [over100, search.maxPrice]);
   return (
     <div className={classes.root}>
       <Typography id="range-slider" gutterBottom>

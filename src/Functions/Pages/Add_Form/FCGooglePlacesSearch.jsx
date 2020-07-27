@@ -69,39 +69,39 @@ export default function FCGooglePlacesSearch(props) {
     // const lat = latLng.lat();
     // const lng = latLng.lng();
 
-    if (false) {
-      let place_id = e[1].place_id;
-      console.log("start fetch from google, place id=", place_id);
-      let api = `https://maps.googleapis.com/maps/api/geocode/json?place_id=${place_id}&key=${myGoogleKey}`;
-      //let corsAnywhere = `https://cors-anywhere.herokuapp.com/`;
-      console.log("api: ", api);
-      api = `https://localhost:44377/api/items`;
-      fetch(api, {
-        method: 'GET',
-        headers: new Headers({
-          'Content-Type': 'application/json; charset=UTF-8',
-          // 'Accept':'*/*',
-          // 'Accept-Encoding':'gzip, deflate, br',
-          // 'Connection':'keep-alive',
-        })
-        //, mode: `no-cors`,
-      })
-        .then(res => {
-          console.log('res=', res);
-          console.log('res.status', res.status);
-          console.log('res.ok', res.ok);
-          return res.json()
-        })
-        .then(
-          (result) => {
-            console.log("fetch FetchGet= ", result);
-          },
-          (error) => {
-            console.log("err post=", error);
-          });
-      console.log("end fetch");
+    // if (false) {
+    //   let place_id = e[1].place_id;
+    //   console.log("start fetch from google, place id=", place_id);
+    //   let api = `https://maps.googleapis.com/maps/api/geocode/json?place_id=${place_id}&key=${myGoogleKey}`;
+    //   //let corsAnywhere = `https://cors-anywhere.herokuapp.com/`;
+    //   console.log("api: ", api);
+    //   api = `https://localhost:44377/api/items`;
+    //   fetch(api, {
+    //     method: 'GET',
+    //     headers: new Headers({
+    //       'Content-Type': 'application/json; charset=UTF-8',
+    //       // 'Accept':'*/*',
+    //       // 'Accept-Encoding':'gzip, deflate, br',
+    //       // 'Connection':'keep-alive',
+    //     })
+    //     //, mode: `no-cors`,
+    //   })
+    //     .then(res => {
+    //       console.log('res=', res);
+    //       console.log('res.status', res.status);
+    //       console.log('res.ok', res.ok);
+    //       return res.json()
+    //     })
+    //     .then(
+    //       (result) => {
+    //         console.log("fetch FetchGet= ", result);
+    //       },
+    //       (error) => {
+    //         console.log("err post=", error);
+    //       });
+    //   console.log("end fetch");
 
-    }
+    // }
   }
 
   const fetch = React.useMemo(

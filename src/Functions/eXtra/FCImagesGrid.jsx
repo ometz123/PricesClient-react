@@ -40,14 +40,14 @@ export default function FCImagesGrid(props) {
   //const corsAnywhere = `https://cors-anywhere.herokuapp.com/`;
 
   const handleLike = (src) => {
-    console.log("src: ", src);
+    //console.log("src: ", src);
     //setColor(!color);
     src !== sorce ? setSorce(src) : setSorce("");
     //props.setSrc(src);
   }
   useEffect(() => {
     props.setSrc(sorce);
-    console.log(props);
+    //console.log(props);
   }, [sorce])//???
 
   return (

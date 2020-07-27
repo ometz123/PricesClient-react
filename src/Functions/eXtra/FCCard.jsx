@@ -89,7 +89,7 @@ export default function FCCard(props) {
     setExpanded(!expanded);
   };
   const handleLike = () => {
-    console.log(props.item.Item_id);
+    //console.log(props.item.Item_id);
     setFavorite(!favorite);
     handleFavorites(props.item.Item_id, !favorite)
     let user2Update = {
@@ -113,8 +113,8 @@ export default function FCCard(props) {
       })
       .then(
         (result) => {
-          console.log("Updated favorites fetch= ", result);
-          console.log("should be the same as= ", user.favorites);
+          //console.log("Updated favorites fetch= ", result);
+          //console.log("should be the same as= ", user.favorites);
         },
         (error) => {
           console.log("err post=", error);
@@ -192,13 +192,13 @@ export default function FCCard(props) {
         {props.item.Item_Description}
       </Typography>
       <CardActions disableSpacing>
-        <IconButton
+        {props.parent !== "receipts2verify" && <IconButton
           onClick={handleLike}
           aria-label="add to favorites"
           color={favorite ? 'secondary' : 'default'}
         >
           <FavoriteIcon />
-        </IconButton>
+        </IconButton>}
         <IconButton
           onClick={() => setShowReceipt(true)}
           aria-label="Show Receipt"
@@ -260,7 +260,7 @@ export default function FCCard(props) {
           <Typography paragraph>
             {props.item.Store_name}
           </Typography>
-          {props.parent !== "favorites" ?
+          {props.parent !== "favorites" && props.parent !== "receipts2verify" ?
             <Typography>
               {Number((props.item.Distance).toFixed(2))} km
           </Typography> : null

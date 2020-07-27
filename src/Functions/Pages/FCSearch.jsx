@@ -82,9 +82,9 @@ function FCSearch(props) {
 
     const handleSubmit = (e) => {
         let api = http + `items/GetItemsForSearch`;
-        console.log("search(FCSearch): ", search);
+        //console.log("search(FCSearch): ", search);
         setResultItems(<CircularProgress className={classes.circle} size={45} thickness={4} />);
-        console.log('fetch items: ');
+        //console.log('fetch items: ');
         let Search = {
             User: {
                 User_rank: user.rank,
@@ -98,7 +98,7 @@ function FCSearch(props) {
             Title_Words: search.text,
             Tags: search.tags
         }
-        console.log(Search);
+        //console.log(Search);
 
         fetch(api, {
             method: 'POST',
@@ -148,7 +148,7 @@ function FCSearch(props) {
             .then((result) => {
                 console.log("fetch FetchGet= ", result);
                 let storeLatLon = result.results[0].geometry.location;
-                console.log(storeLatLon);
+                //console.log(storeLatLon);
                 //setLatLon(storeLatLon)
                 setSearch({
                     ...search,

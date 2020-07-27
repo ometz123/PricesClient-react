@@ -43,7 +43,7 @@ export default function FCLogIn(props) {
     });
     const SignUpNewUser = (e) => {
         e.preventDefault();
-        console.log(newUser);
+        //console.log(newUser);
         let NewUser = {
             User_id: newUser.userId,
             First_name: newUser.firstName,
@@ -79,7 +79,7 @@ export default function FCLogIn(props) {
         if (e) {
             e.preventDefault();
         }
-        console.log("user: ", user);
+        //console.log("user: ", user);
         let User = {
             User_id: user.userId,
             Password: user.password
@@ -145,7 +145,7 @@ export default function FCLogIn(props) {
         // console.log("in login: " + new Date().getSeconds());
         let userFromStorage = JSON.parse(localStorage.getItem('userContext'));
         if (userFromStorage) {
-            console.log("local storage login");
+            //console.log("local storage login");
             SetUser(userFromStorage);
         }
     }, []);

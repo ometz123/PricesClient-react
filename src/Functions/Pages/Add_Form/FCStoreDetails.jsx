@@ -44,7 +44,7 @@ export default function FCStoreDetails() {
             .then((result) => {
                 console.log("fetch FetchGet= ", result);
                 let storeLatLon = result.results[0].geometry.location;
-                console.log(storeLatLon);
+                //console.log(storeLatLon);
                 //setLatLon(storeLatLon)
                 setSearch({
                     ...search,

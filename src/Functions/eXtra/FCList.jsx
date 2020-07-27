@@ -50,29 +50,39 @@ export default function InteractiveList(props) {
   const { receipt, SetReceipt } = useContext(ReceiptContext);
 
   const removeItem = (e, i) => {
-    let items = receipt.items;
-    //let pos = items.map((item) => { return item.id; }).indexOf(itemId);
-    console.log(i);
-    items.splice(i, 1);
+    if (window.confirm(`Are you sure you want to delete "${receipt.items[i].itemName}"?`)) {
 
-    SetReceipt({ ...receipt, items: items });
+      let items = receipt.items;
+      //let pos = items.map((item) => { return item.id; }).indexOf(itemId);
+      //console.log(i);
+      items.splice(i, 1);
 
-    // for (let i = 0; i < items.length; i++) {
-    //   if (items[i].id === itemId) {
-    //     items.splice(i, 1);
-    //     SetReceipt({ ...receipt, items: items });
-    //     break;
-    //   }
-    // }
+      SetReceipt({ ...receipt, items: items });
 
-    //SetReceipt({ ...receipt, items: receipt.items.splice(itemId, 1) });
+      // for (let i = 0; i < items.length; i++) {
+      //   if (items[i].id === itemId) {
+      //     items.splice(i, 1);
+      //     SetReceipt({ ...receipt, items: items });
+      //     break;
+      //   }
+      // }
 
+      //SetReceipt({ ...receipt, items: receipt.items.splice(itemId, 1) });
+
+    }
+  }
+  const editItem = (i) => {
+    //console.log("edit");
+    //console.log(receipt.items[i]);
+    props.setItem2Edit(i);
   }
   let list = receipt.items.map((item, i) => {
     return (
       <div key={i} style={{ backgroundColor: "#fcaf17", borderRadius: "50px", margin: "2px" }}>
-        <ListItem>
-          <ListItemAvatar >
+        <ListItem
+          button
+          onClick={() => editItem(i)}>
+          <ListItemAvatar  >
             <Avatar style={{ border: "solid black 1px" }}>
               {item.image.preview ? <img src={item.image.preview} style={{ maxHeight: 50, maxWidth: 50 }} alt="preview" /> : <FolderIcon />}
             </Avatar>
@@ -81,9 +91,8 @@ export default function InteractiveList(props) {
             primary={item.itemName ? item.itemName : "Error Name"}
             secondary={<span style={{ color: "white", backgroundColor: "black", borderRadius: "5px", padding: "3px" }}>{item.price}$</span>}
           />
-          <ListItemSecondaryAction
-            onClick={(e) => { removeItem(e, i) }}>
-            <IconButton edge="end" aria-label="delete">
+          <ListItemSecondaryAction >
+            <IconButton onClick={(e) => { removeItem(e, i) }} edge="end" aria-label="delete" >
               <DeleteForeverTwoToneIcon htmlColor="red" />
             </IconButton>
           </ListItemSecondaryAction>
@@ -96,9 +105,9 @@ export default function InteractiveList(props) {
     <div className={classes.root}>
       <Grid container spacing={0}>
         <Grid item xl={12} >
-          <Typography variant="h6" className={classes.title}>
-            Items Added
-          </Typography>
+          {/* <Typography variant="h6" className={classes.title}>
+            Items List
+          </Typography> */}
           <div className={classes.demo}>
             <List dense>
               {list}

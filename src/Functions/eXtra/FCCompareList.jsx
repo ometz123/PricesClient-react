@@ -79,7 +79,7 @@ export default function FCCompareList(props) {
     // }
 
     const handleCompare = () => {
-        console.log(list2Compare);
+        //console.log(list2Compare);
         //compare2jsons(list2Compare[0], list2Compare[1])
         setOpen(true);
     }

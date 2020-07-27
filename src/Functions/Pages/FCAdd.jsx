@@ -18,6 +18,7 @@ import { ReceiptContext } from '../../Contexts/ReceiptContext';
 import { UserContext } from '../../Contexts/UserContext';
 import { SearchContext } from '../../Contexts/SearchContext';
 import { useEffect } from 'react';
+import { useState } from 'react';
 
 //import FCGooglePlacesSearch from './Add_Form/FCGooglePlacesSearch';
 
@@ -41,17 +42,18 @@ function FCAdd(props) {
     const { receipt, SetReceipt } = useContext(ReceiptContext);
     const { user } = useContext(UserContext);
     const { search } = useContext(SearchContext);
-    let local = false;
+    const [item2Edit, setItem2Edit] = useState(null);
+    let local = true;
     let http = `http://proj.ruppin.ac.il/bgroup4/prod/server/api/`;
     if (local) {
         http = `https://localhost:44377/api/`;
     }
 
     const handleSubmit = (event) => {
-        console.log("receipt: ", receipt);
+        console.log("receipt before fetch: ", receipt);
 
         if (window.confirm("ready to share your prices?")) {
-            console.log("receipt: ", receipt);
+            //console.log("receipt: ", receipt);
             //let api = `https://localhost:44377/api/receipts`
             let api = http + `receipts`;
             let Receipt = {
@@ -85,26 +87,26 @@ function FCAdd(props) {
                     Item_Description: receipt.items[i].itemDescription,
                     tags: [],
                     //Item_image: receipt.items[i].image.base64==="src"?receipt.items[i].image.preview:receipt.items[i].image.base64,
-                    Item_image: receipt.items[i].Id_type==="src"?receipt.items[i].image.preview:receipt.items[i].image.base64,
+                    Item_image: receipt.items[i].Id_type === "src" ? receipt.items[i].image.preview : receipt.items[i].image.base64,
                     Barcode: receipt.items[i].barcode,
                     Id_type: receipt.items[i].Id_type//to check where details are from: upcitemdb or original
                 }
                 for (let j = 0; j < receipt.items[i].tags.length; j++) {
-                    if (receipt.items[i].tags[j].id === undefined) {
+                    if (receipt.items[i].tags[j].Tag_id === undefined) {
                         Receipt.Items[i].tags[j] = {
                             //Tag_id: receipt.items[i].tags[j].id,
                             Tag_title: receipt.items[i].tags[j].title
                         }
                     } else {
                         Receipt.Items[i].tags[j] = {
-                            Tag_id: receipt.items[i].tags[j].id,
+                            Tag_id: receipt.items[i].tags[j].Tag_id,
                             //Tag_title: receipt.items[i].tags[j].title
                         }
                     }
                 }
 
             }
-            console.log(Receipt);
+            console.log("Receipt to fetch: ",Receipt);
 
             if (true) {
                 fetch(api, {
@@ -129,6 +131,7 @@ function FCAdd(props) {
         }
 
     }
+
     useEffect(() => { window.scrollTo(0, 0) }, [])
 
     return (
@@ -159,8 +162,8 @@ function FCAdd(props) {
 
                     </div>
                     <div style={{ float: 'right' }}>
-                        <FCAddItem />
-                        <FCList />
+                        <FCAddItem item2Edit={item2Edit} setItem2Edit={setItem2Edit} />
+                        <FCList setItem2Edit={setItem2Edit} />
                     </div>
                 </div>
                 <br style={{ clear: "both" }} />
@@ -185,7 +188,7 @@ function FCAdd(props) {
                     </div>
 
                 </div>
-                
+
             </div>
         </div >
     );
