@@ -19,7 +19,7 @@ export default function FCExplore(props) {
     // })
     const classes = progressCircle();
 
-    const [exploreItems, setExploreItems] = useState(<CircularProgress className={classes.circle} size={45} thickness={4} />);
+    const [exploreItems, setExploreItems] = useState(null);
     //const { search } = useContext(SearchContext);
     const { user, setUserLocation } = useContext(UserContext);
     let local = false;
@@ -33,8 +33,8 @@ export default function FCExplore(props) {
             Lon: null,
             Lat: null,
         },
-        Distance_radius: 20,
-        Max_price: 1000,
+        Distance_radius: 100,
+        Max_price: -1,//set Max_price search to max 
 
     }
     const getItems = () => {
@@ -66,21 +66,28 @@ export default function FCExplore(props) {
                     }
                 },
                 (error) => {
+                    setExploreItems(<p style={{ color: "#fcaf17" }}>Sorry, there was a problem <br />Please try again later </p>);
                     console.log("err post=", error);
                 });
 
     }
 
     useEffect(() => {
-        const a = async () => { await setUserLocation(); };
-        a().then(() => {
-            if (user.userLocation) {
-                getItems();
-            }
-        });
+        let unmounted = false;
+        if (!unmounted) {
+            const a = async () => { await setUserLocation(); };
+            a().then(() => {
+                if (user.userLocation) {
+                    getItems();
+                }
+            });
+        }
+        return () => {
+            unmounted = true;
+        }
 
     }, [user.userLocation ? user.userLocation.latitude : []]);
-    
+
     if (user.userLocation) {
         return (
             <div>
@@ -90,7 +97,8 @@ export default function FCExplore(props) {
     } else {
         return (
             <div>
-                in order to use this feature, you have to enable location access
+                <p style={{ color: "#fcaf17" }}>In order to use this feature you must enable location access</p>
+
             </div>
         );
     }

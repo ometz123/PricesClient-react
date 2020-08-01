@@ -70,6 +70,7 @@ function FCSearch(props) {
     const { receipt, SetReceipt } = useContext(ReceiptContext);
     //const [searchResults, setSearchResults] = useState([]);
     const { /*tags,*/ FetchTags } = useContext(ListsContext);
+    const [searching, setSearching] = useState(false);
 
     const myGoogleKey = `AIzaSyC47_J_bDoU4euesrr-ChlFjRpas0HzLQM`;
     let local = false;
@@ -83,7 +84,8 @@ function FCSearch(props) {
     const handleSubmit = (e) => {
         let api = http + `items/GetItemsForSearch`;
         //console.log("search(FCSearch): ", search);
-        setResultItems(<CircularProgress className={classes.circle} size={45} thickness={4} />);
+        setSearching(true);
+        //setResultItems(<CircularProgress className={classes.circle} size={45} thickness={4} />);
         //console.log('fetch items: ');
         let Search = {
             User: {
@@ -112,17 +114,19 @@ function FCSearch(props) {
             })
             .then(
                 (result) => {
+                    setSearching(false);
                     console.log("fetch FetchGet= ", result);
                     if (result.length !== 0) {
                         updateResultItems(result);
                     }
                     else {
-                        setResultItems("No match for this search")
+                        setResultItems("No match for this search");
                     }
-
                 },
                 (error) => {
                     console.log("err post=", error);
+                    setSearching(false);
+                    setResultItems(<p style={{ color: "#fcaf17" }}>Sorry, there was a problem <br />Please try again later </p>);
                 });
     }
     const updateResultItems = (result) => {
@@ -184,7 +188,15 @@ function FCSearch(props) {
         }
     }
     useEffect(() => { window.scrollTo(0, 0) }, []);
-    useEffect(() => { FetchTags() }, []);
+    useEffect(() => {
+        let unmounted = false;
+        if (!unmounted) {
+            FetchTags();
+        }
+        return () => {
+            unmounted = true;
+        }
+    }, []);
 
 
     return (
@@ -218,15 +230,20 @@ function FCSearch(props) {
                     onClick={() => { console.log(search) }}
                     value="Search"
                 /> */}
-                <Button
-                    type="submit"
-                    variant="contained"
-                    color="primary"
-                    onClick={() => { handleSubmit() }}
-                    ref={myRef}
-                >
-                    Search
-                </Button>
+                {searching ?
+                    <CircularProgress className={classes.circle} size={45} thickness={4} /> :
+                    <p>
+                        <Button
+                            type="submit"
+                            variant="contained"
+                            color="primary"
+                            onClick={() => { handleSubmit() }}
+                            ref={myRef}
+                        >
+                            Search
+                        </Button>
+                    </p>
+                }
             </div>
             {/* {items2Compare.length > 0 ? <FCCompareGrid items={items2Compare} /> : null} */}
             {/* <Stam /> */}

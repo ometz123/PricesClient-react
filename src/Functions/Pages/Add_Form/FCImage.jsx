@@ -46,12 +46,12 @@ export default function FCImage(props) {
   useEffect(() => {
     if (props.parent === "Item") { setIcon(<PhotoCameraIcon color="primary" />) }
     else if (props.parent === "Receipt") { setIcon(<ReceiptOutlinedIcon />) }
-  }, [image])
+  }, [image]);
   useEffect(() => {
     if (props.image) {
       setImage(props.image);
     }
-  }, [])
+  }, []);
 
   return (
     <div>

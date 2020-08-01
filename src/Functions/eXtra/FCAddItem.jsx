@@ -38,6 +38,7 @@ export default function FCAddItem(props) {
     const [apiMenu, SetApiMenu] = useState(false);
     const [useApiData, setUseApiData] = useState(false);
     const [fetching, setFetching] = useState(false);
+    const [valid, setValid] = useState(false);
     //const [useItem2Edit, setUseItem2Edit] = useState(false);
     //const [defaultCategory, setDefaultCategory] = useState({ Category_id: "", Category_title: "" });
     //const [defaultSubCategory, setDefaultSubCategory] = useState({ Category_id: "", Category_title: "" });
@@ -77,6 +78,14 @@ export default function FCAddItem(props) {
     const handleClose = () => {
         console.log("tempItem: ", tempItem);
         if (window.confirm("Are you sure all the fields are correct?")) {
+            console.log(props.item2Edit);
+            if (props.item2Edit != null) {
+                console.log(props.item2Edit);
+                let items = receipt.items;
+                items.splice(props.item2Edit, 1);
+                SetReceipt({ ...receipt, items: items });
+                props.setItem2Edit(null);
+            }
             if (tempItem.price !== '') {
                 for (let i = 0; i < tempItem.tags.length; i++) {
                     if (tempItem.tags[i].inputValue !== undefined) {
@@ -101,6 +110,7 @@ export default function FCAddItem(props) {
                 price: ""
             })
             SetApiMenu(false);
+            setUseApiData(false);
             //setFetching(false);
             //setUseItem2Edit(false);
         }
@@ -109,6 +119,7 @@ export default function FCAddItem(props) {
         //setFetching(false);
         setOpen(false);
         setUseApiData(false);
+        props.setItem2Edit(null);
     }
     //#region  handleItemEvents
 
@@ -240,7 +251,7 @@ export default function FCAddItem(props) {
 
     const editItem = (i) => {
         //console.log("editItem", i);
-        console.log("editItem: ",receipt.items[i]);
+        console.log("editItem: ", receipt.items[i]);
         setOpen(true);
         setTempItem({
             ...tempItem,
@@ -257,7 +268,6 @@ export default function FCAddItem(props) {
             Id_type: receipt.items[i].Id_type,
             tags: receipt.items[i].tags,
         });
-        props.setItem2Edit(null);
     }
     const useItemFromApi = (item, src) => {
         setFetching(false);
@@ -266,8 +276,15 @@ export default function FCAddItem(props) {
         setUseApiData(true);
         SetApiMenu(false);
         setSelectedItemFromApi(item);
-        let category = categories.find(o => o.Category_title === item.category.split(">")[0].trim());
-        let subCategory = subCategories.find(o => o.SubCategory_title === item.category.split(">")[1].trim());
+        let category = { title: "" };
+        let subCategory = { title: "" };
+        if (item.category.split(">")[0]) {
+            category = categories.find(o => o.Category_title === item.category.split(">")[0].trim());
+            if (item.category.split(">")[1]) {
+                console.log(item.category.split(">")[1]);
+                subCategory = subCategories.find(o => o.SubCategory_title === item.category.split(">")[1].trim());
+            }
+        }
         setTempItem({
             ...tempItem,
             itemName: item.title,
@@ -295,6 +312,13 @@ export default function FCAddItem(props) {
             //setDefaultCategory(receipt.items[props.item2Edit].category);
         }
     }, [props.item2Edit]);
+    useEffect(() => {
+        if (tempItem.itemName && tempItem.price) {
+            setValid(true);
+        } else {
+            setValid(false);
+        }
+    }, [tempItem])
     return (
         <div>
             <Chip
@@ -336,7 +360,7 @@ export default function FCAddItem(props) {
                                         {itemsFromApi}
                                     </DialogContent>
                                     <DialogActions>
-                                        <Button autoFocus onClick={handleClose} color="primary">
+                                        <Button autoFocus onClick={() => SetApiMenu(false)} color="primary">
                                             Exit
                                     </Button>
                                     </DialogActions>
@@ -379,8 +403,8 @@ export default function FCAddItem(props) {
                                 //inputValue={useItem2Edit ? tempItem.category.Category_title : null}
                                 //defaultValue={tempItem.category.id!=0?{id:tempItem.category.id,title:tempItem.category.title}:null}
                                 //defaultValue={!useItem2Edit ? { Category_id: tempItem.category.id, Category_title: tempItem.category.title } : null}
+                                //placeholder={"שדג"}
                                 disabled={useApiData}
-                                placeholder={"שדג"}
                                 onChange={(e, category) => handleCategoryChange(category)}
                                 getOptionLabel={(option) => option.Category_title}
                                 renderInput={(params) => <TextField {...params}
@@ -529,7 +553,8 @@ export default function FCAddItem(props) {
                         <Button autoFocus onClick={handleCancel} color="primary">
                             Cancel
                          </Button>
-                        <Button onClick={handleClose} color="primary" autoFocus>
+                        <Button onClick={handleClose} color="primary" autoFocus
+                            disabled={!valid}>
                             Add
                         </Button>
                     </DialogActions>

@@ -72,7 +72,14 @@ export default function FCStoreDetails() {
         })
 
     }
-
+    const required = () => {
+        console.log(typeof receipt.store.lat);
+        if (typeof receipt.store.lat === "number" && typeof receipt.store.lon === "number" && receipt.store.name != "") {
+            return (null);
+        } else {
+            return (<AnnouncementOutlinedIcon color="secondary" />);
+        }
+    }
     return (
         <div >
             <Chip
@@ -82,7 +89,7 @@ export default function FCStoreDetails() {
                 onClick={handleClickOpen}
                 avatar={<Avatar style={{ backgroundColor: "inherit" }}><StorefrontIcon style={{ color: yellow[500], float: "none" }} /></Avatar>}
             />
-            <AnnouncementOutlinedIcon color="secondary" />
+            {required()}
             {/* <StorefrontOutlinedIcon htmlColor="yellow" />Store <AnnouncementOutlinedIcon htmlColor="red" style={{ float: "none" }} /> */}
             {/* </Button> */}
             <div style={{ textAlign: "-webkit-center", color: "black" }}>
@@ -117,8 +124,8 @@ export default function FCStoreDetails() {
                             }}
                             >
                             </div> */}
-                                <FCGoogleMap parent={"FCStoreDetails"} />
-                                <br/>
+                            <FCGoogleMap parent={"FCStoreDetails"} />
+                            <br />
                         </DialogContent>
                         <DialogActions>
                             {/* <Button autoFocus onClick={handleClose} color="primary">

@@ -15,6 +15,7 @@ import {
     Dialog, DialogTitle, DialogContent, FormControlLabel,
     DialogContentText, DialogActions, Chip
 } from '@material-ui/core';
+import PricesLogo from '../../Images/PricesLogo.png'
 import PublicTwoToneIcon from '@material-ui/icons/PublicTwoTone';
 import SaveIcon from '@material-ui/icons/Save';
 import { DatePicker, MuiPickersUtilsProvider/*, TimePicker, DateTimePicker*/ } from '@material-ui/pickers';
@@ -54,6 +55,14 @@ export default function ControlledAccordions() {
         //httpLogin = `https://localhost:44377/api/Users/Login`;
         http = `https://localhost:44377/api/`;
     }
+    const [passwordMassege, setPasswordMassege] = useState("")
+    const [dialogTitle, setDialogTitle] = useState("")
+    const [dialogContent, setDialogContent] = useState("")
+    const [passwordAdditionalDialogContent, setPasswordAdditionalDialogContent] = useState("")
+    const [passwordButton, setPasswordButton] = useState(false);
+    const [nameButton, setNameButton] = useState(false);
+    const [field2Update, setField2Update] = useState('');
+    const [noticeMessege, setNoticeMessege] = useState('');
     const handleChange = (panel) => (event, isExpanded) => {
         setExpanded(isExpanded ? panel : false);
     };
@@ -68,14 +77,6 @@ export default function ControlledAccordions() {
         state: user.state,
         city: user.city
     });
-    const [passwordMassege, setPasswordMassege] = useState("")
-    const [dialogTitle, setDialogTitle] = useState("")
-    const [dialogContent, setDialogContent] = useState("")
-    const [passwordAdditionalDialogContent, setPasswordAdditionalDialogContent] = useState("")
-    const [passwordButton, setPasswordButton] = useState(false);
-    const [nameButton, setNameButton] = useState(false);
-    const [field2Update, setField2Update] = useState('');
-    const [noticeMessege, setNoticeMessege] = useState('');
 
     const handleProfileChange = val => e => {
         setForm({ ...form, [val]: e.target.value })
@@ -310,6 +311,7 @@ export default function ControlledAccordions() {
     }, [user])
     return (
         <div className={classes.root}>
+            <img src={PricesLogo} alt="Prices" style={{ height: "160px" }} />
             <Accordion expanded={expanded === 'panelName'} onChange={handleChange('panelName')}>
                 <AccordionSummary
                     expandIcon={<ExpandMoreIcon />}

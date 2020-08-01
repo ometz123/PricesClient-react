@@ -15,6 +15,7 @@ import clsx from 'clsx';
 import { makeStyles } from '@material-ui/core/styles';
 import StarTwoToneIcon from '@material-ui/icons/StarTwoTone';
 import MenuIcon from '@material-ui/icons/Menu';
+import PricesLogo from '../../Images/PricesLogo.png'
 import MeetingRoomIcon from '@material-ui/icons/MeetingRoom';
 import ChatTwoToneIcon from '@material-ui/icons/ChatTwoTone';
 import LoyaltyTwoToneIcon from '@material-ui/icons/LoyaltyTwoTone';
@@ -24,6 +25,7 @@ import green from '@material-ui/core/colors/green';
 import VerifiedUserIcon from '@material-ui/icons/VerifiedUser';
 import CloseIcon from '@material-ui/icons/Close';
 import ThumbDownAltTwoToneIcon from '@material-ui/icons/ThumbDownAltTwoTone';
+import { set } from 'date-fns/esm';
 //import SwipeableDrawer from '@material-ui/core/SwipeableDrawer';
 //import List from '@material-ui/core/List';
 //import Divider from '@material-ui/core/Divider';
@@ -65,6 +67,7 @@ export default function FCMenu() {
     style={{ color: '#fcaf17', animationDuration: '550ms', strokeLinecap: 'round', }}
     size={45} thickness={4} />
   const [favorites, setFavorites] = useState(loading);
+  const [valid, setValid] = useState(false);
   const [verifyReceipts, setVerifyReceipts] = useState(loading);
   const favs =
     <Dialog
@@ -106,16 +109,16 @@ export default function FCMenu() {
       </DialogContent>
       <div style={{ placeSelf: "center", textAlignLast: "center" }}>
         <DialogActions>
-          <Button variant="outlined"
+          <Button variant="outlined" disabled={!valid}
             onClick={() => SetReceiptStatus(false)} color="secondary">
             Reject {<ThumbDownAltTwoToneIcon />}
           </Button>
-          <Button variant="outlined"
-            onClick={() => SetReceiptStatus(true)} style={{ color: "#47761E" }} autoFocus>
+          <Button variant="outlined" disabled={!valid}
+            onClick={() => SetReceiptStatus(true)} style={valid ? { color: "#47761E" } : null} autoFocus>
             Verify {<VerifiedUserIcon />}
           </Button>
         </DialogActions>
-        <FormHelperText>*If you are not sure- just Exit</FormHelperText>
+        <FormHelperText>* If you are not sure, Just Exit</FormHelperText>
       </div>
     </Dialog>;
 
@@ -123,12 +126,13 @@ export default function FCMenu() {
 
   const handleClose = (dialog) => {
     if (dialog === "favorites") {
-      setFavoritesOpen(false)
-      setFavorites(loading)
+      setFavoritesOpen(false);
+      setFavorites(loading);
     }
     if (dialog === "verifyReceipts") {
-      setVerifyReceiptsOpen(false)
-      setVerifyReceipts(loading)
+      setVerifyReceiptsOpen(false);
+      setVerifyReceipts(loading);
+      setValid(false);
     }
   }
   const toggleDrawer = (anchor, open) => event => {
@@ -161,30 +165,33 @@ export default function FCMenu() {
         (result) => {
           console.log("Receipts to verify cards fetch= ", result);
           if (result.length > 0) {
-            setReceipt4Update(result[0])
+            setValid(true);
+            setReceipt4Update(result[0]);
             setVerifyReceipts(
               <div>
                 {result.map((item, i) => <FCCard item={item} key={i} parent={"receipts2verify"} />)}
               </div>
-            )
+            );
           } else {
             setVerifyReceipts(
               <div>
                 No Receipts to verify
               </div>
-            )
+            );
           }
         },
         (error) => {
           console.log("err post=", error);
-          alert("sorry, somthing went wrong");
+          setValid(false);
+          setVerifyReceipts(<p style={{ color: "#fcaf17" }}>Sorry, there was a problem <br />Please try again later </p>)
+          //alert("sorry, somthing went wrong");
         });
   }
   const SetReceiptStatus = (status) => {
     if (window.confirm(`Are you sure the receipt is ${status ? 'Correct' : 'Wrong'}?`)) {
       let receipt2Verify = {
         receipt_id: receipt4Update.Receipt_id,
-        User_id:receipt4Update.User_id,
+        User_id: receipt4Update.User_id,
         status: status
       }
       fetch(http + setReceiptStatus/*httpSetReceiptStatus */ /*+ `?receipt_id=${receiptId}&status=${status}`*/, {
@@ -234,7 +241,8 @@ export default function FCMenu() {
         },
         (error) => {
           console.log("err post=", error);
-          alert("sorry, somthing went wrong");
+          setFavorites(<p style={{ color: "#fcaf17" }}>Sorry, there was a problem <br />Please try again later </p>);
+          //alert("sorry, somthing went wrong");
         });
   }
   const handleFavorites = () => {
@@ -266,10 +274,10 @@ export default function FCMenu() {
         </ListItem>
         <Divider />
 
-        <ListItem button disabled>
+        {/* <ListItem button disabled>
           <ListItemIcon onClick={handleChat}><ChatTwoToneIcon htmlColor={green[700]} /></ListItemIcon>
           <ListItemText primary={"Chats"} />
-        </ListItem>
+        </ListItem> */}
         <ListItem button>
           <ListItemIcon onClick={handleFavorites}><LoyaltyTwoToneIcon htmlColor={Red['A700']} /></ListItemIcon>
           <ListItemText onClick={handleFavorites} primary={"Favorites"} />
@@ -313,7 +321,8 @@ export default function FCMenu() {
           aria-label="open drawer"
           onClick={toggleDrawer('left', true)}
         >
-          <MenuIcon />
+          {/* <MenuIcon /> */}
+          <img src={PricesLogo} alt="Prices" style={{height:"40px"}}/>
         </IconButton>
         <SwipeableDrawer
           //anchor={'left'}

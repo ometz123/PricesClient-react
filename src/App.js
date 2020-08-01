@@ -5,6 +5,7 @@ import UserContextProvider from './Contexts/UserContext';
 import SearchContextProvider from './Contexts/SearchContext';
 import ReceiptContextProvider from './Contexts/ReceiptContext';
 import ListsContextProvider from './Contexts/ListsContext';
+import PricesLogo from './Images/PricesLogo.png';
 
 function App() {
   return (
@@ -20,7 +21,12 @@ function App() {
           </SearchContextProvider>
         </UserContextProvider>
       </header>
-      <footer><strong> Prices</strong><code> by</code> Omer Tzafrir</footer>
+      <footer>
+        <img src={PricesLogo} alt="Prices" style={{ height: "20px" }} />
+        <strong>Prices</strong>
+        <code> by Omer Tzafrir
+        </code>
+      </footer>
     </div>
   );
 }

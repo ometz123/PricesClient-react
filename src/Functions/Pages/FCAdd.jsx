@@ -1,7 +1,7 @@
 import React, { useContext } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import FCImage from './Add_Form/FCImage';
-import { Button, /*FormControl*/ } from '@material-ui/core';
+import { Button, CircularProgress, /*FormControl*/ } from '@material-ui/core';
 import FCDatePicker from './Add_Form/FCDatePicker';
 import '../../Styles/mysass.scss';
 // import DateFnsUtils from '@date-io/date-fns';
@@ -43,7 +43,9 @@ function FCAdd(props) {
     const { user } = useContext(UserContext);
     const { search } = useContext(SearchContext);
     const [item2Edit, setItem2Edit] = useState(null);
-    let local = true;
+    const [valid, setValid] = useState(false);
+    const [posting, setPosting] = useState(false);
+    let local = false;
     let http = `http://proj.ruppin.ac.il/bgroup4/prod/server/api/`;
     if (local) {
         http = `https://localhost:44377/api/`;
@@ -53,6 +55,7 @@ function FCAdd(props) {
         console.log("receipt before fetch: ", receipt);
 
         if (window.confirm("ready to share your prices?")) {
+            setPosting(true);
             //console.log("receipt: ", receipt);
             //let api = `https://localhost:44377/api/receipts`
             let api = http + `receipts`;
@@ -106,45 +109,83 @@ function FCAdd(props) {
                 }
 
             }
-            console.log("Receipt to fetch: ",Receipt);
-
-            if (true) {
-                fetch(api, {
-                    method: 'POST',
-                    body: JSON.stringify(Receipt),
-                    headers: new Headers({
-                        'Content-Type': 'application/json; charset=UTF-8',
-                    })
-                }).then(res => {
-                    return res.json();
+            console.log("Receipt to fetch: ", Receipt);
+            fetch(api, {
+                method: 'POST',
+                body: JSON.stringify(Receipt),
+                headers: new Headers({
+                    'Content-Type': 'application/json; charset=UTF-8',
                 })
-                    .then(
-                        (result) => {
-                            console.log("fetch FetchGet= ", result);
-                            alert("Thanks for sharing the prices! \nA senior user will verify the correctness of the data")
-                        },
-                        (error) => {
-                            console.log("err post=", error);
-                            alert("Error sharing the prices. \nPlease try again later")
-                        });
-            };
+            }).then(res => {
+                return res.json();
+            })
+                .then(
+                    (result) => {
+                        console.log("fetch FetchGet= ", result);
+                        alert("Thanks for sharing the prices! \nA senior user will verify the correctness of the data");
+                        clearReceipt();
+                        setPosting(false);
+                    },
+                    (error) => {
+                        console.log("err post=", error);
+                        setPosting(false);
+                        alert("Error sharing the prices. \nPlease try again later")
+                    });
         }
 
     }
+    const clearReceipt = () => {
+        if (window.confirm("Clear all fields?")) {
+            localStorage.removeItem('receipt');
+            console.log("clear");
+            SetReceipt({
+                image: { preview: "", raw: "", base64: "" },
+                date: new Date(),
+                discoundDollar: "",
+                discountPercent: "",
+                store: { name: "", lat: "", lon: "" },
+                items: [],
+                receiptDescription: "",
+            })
+        }
+    }
+    useEffect(() => {
+        let unmounted = false;
+        window.scrollTo(0, 0);
+        if (!unmounted) {
+            let tempReceipt = JSON.parse(localStorage.getItem('receipt'));
+            if (tempReceipt) {
+                SetReceipt(tempReceipt);
+                console.log(receipt);
+            }
+        }
+        return () => {
+            unmounted = true;
+        }
+        //console.log("?????",JSON.parse(localStorage.getItem('receipt')));
+        //let a= JSON.parse(localStorage.getItem('receipt'));
+    }, []);
 
-    useEffect(() => { window.scrollTo(0, 0) }, [])
-
+    useEffect(() => {
+        localStorage.setItem('receipt', JSON.stringify(receipt));
+        if (receipt.image.preview != "" && receipt.date && receipt.store.name != "" && receipt.items.length > 0) {
+            setValid(true);
+        } else {
+            setValid(false);
+        }
+    }, [receipt]);
     return (
         <div>
             <div className={classes.table} >
                 <div >
-                    <div style={{ float: 'left', width: "250px", }}>
-                        <FCImage parent={"Receipt"} key={"item"} />
+                    <div style={{ float: 'center', width: "250px", }}>
+                        <FCImage parent={"Receipt"} key={"item"} image={receipt.image} />
                     </div>
-                    <div style={{ float: 'right', width: "250px", }} >
+                    <div style={{ float: 'center', width: "250px", }} >
                         <FCDatePicker
                             title={"Receipt Date"}
                             onDateChange={(e) => SetReceipt({ ...receipt, date: e })}
+                            date={receipt.date}
                         />
                         {/* <AnnouncementOutlinedIcon htmlColor="red" /> */}
                         <FCDiscount color={"white"} />
@@ -152,7 +193,7 @@ function FCAdd(props) {
                 </div>
                 <br style={{ clear: "both" }} />
                 <div >
-                    <div style={{ /*height: "100px",*/ width: "250px", float: 'left' }}>
+                    <div style={{ /*height: "100px",*/ width: "250px", float: 'center' }}>
                         <FCStoreDetails />
                         {receipt.store.name}
                         <br />
@@ -161,30 +202,45 @@ function FCAdd(props) {
                         </div>
 
                     </div>
-                    <div style={{ float: 'right' }}>
+                    <div style={{ float: 'center' }}>
                         <FCAddItem item2Edit={item2Edit} setItem2Edit={setItem2Edit} />
+                        {receipt.items.length == 0 && <AnnouncementOutlinedIcon color="secondary" />}
                         <FCList setItem2Edit={setItem2Edit} />
                     </div>
                 </div>
                 <br style={{ clear: "both" }} />
                 <div>
-
-                    <div style={{ float: "left" }}>
-                        <AnnouncementOutlinedIcon color="secondary" /> required
-                </div>
-                    {/* <br style={{ clear: "both" }} /> */}
-                    <div style={{/* clear: "both",*/ float: "right" }}>
-                        <Button
-                            //type="submit"
-                            //fullWidth
-                            onClick={handleSubmit}
-                            variant="contained"
-                            color="primary"
-                        //className={classes.submit}
-                        >
-                            <CheckCircleOutlineIcon />
-                        </Button>
-
+                    <div style={{/* clear: "both",*/ float: "center" }}>
+                        {posting ?
+                            <CircularProgress
+                                style={{
+                                    color: '#fcaf17', animationDuration: '550ms', strokeLinecap: 'round',
+                                }} size={45} thickness={4} /> :
+                            <Button
+                                style={!valid ? { backgroundColor: "white" } : null}
+                                disabled={!valid}
+                                onClick={handleSubmit}
+                                variant={"contained"}
+                                color="primary"
+                            >
+                                <CheckCircleOutlineIcon />
+                            </Button>}
+                    </div>
+                    <div style={{ float: "center" }}>
+                        <div style={{ float: "left" }}>
+                            <AnnouncementOutlinedIcon color="secondary" />
+                            required
+                        </div>
+                        <div style={{ float: "right" }}>
+                            <Button
+                                onClick={() => clearReceipt()}
+                                variant="contained"
+                                color={"secondary"}
+                            >
+                                Clear
+                            </Button>
+                        </div>
+                        {/* <br style={{ clear: "both" }} /> */}
                     </div>
 
                 </div>

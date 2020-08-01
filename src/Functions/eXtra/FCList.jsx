@@ -26,6 +26,7 @@ const useStyles = makeStyles((theme) => ({
   root: {
     flexGrow: 1,
     maxWidth: 752,
+    placeContent: "center"
   },
   demo: {
     //backgroundColor: theme.palette.background.paper,
@@ -102,8 +103,8 @@ export default function InteractiveList(props) {
   })
 
   return (
-    <div className={classes.root}>
-      <Grid container spacing={0}>
+    <div className={classes.root} >
+      <Grid container spacing={0} style={{ placeContent: "center" }}>
         <Grid item xl={12} >
           {/* <Typography variant="h6" className={classes.title}>
             Items List

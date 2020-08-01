@@ -6,6 +6,7 @@ import { ThemeProvider } from "@material-ui/styles";
 import { purple } from '@material-ui/core/colors';
 import DateFnsUtils from '@date-io/date-fns';
 import { MuiPickersUtilsProvider } from '@material-ui/pickers';
+import { useEffect } from "react";
 //import { ReceiptContext } from "../../../Contexts/ReceiptContext";
 
 
@@ -36,11 +37,12 @@ const theme = createMuiTheme({
 export default function FCDatePicker(props) {
     //const [selectedDate, handleDateChange] = useState(new Date());
     //const { receipt, SetReceipt } = useContext(ReceiptContext);
-    const [selectedDate, handleDateChange] = useState(null);
+    const [selectedDate, handleDateChange] = useState(new Date());
     const onDateChange = (e) => {
         props.onDateChange(e)
         handleDateChange(e)
     }
+    useEffect(() => { props.date && handleDateChange(props.date) }, [])
     //const [selectedDate, handleDateChange] = useState(null);
     return (
 
@@ -50,7 +52,7 @@ export default function FCDatePicker(props) {
                     autoOk
                     label={props.title ? props.title : "Receipt Date"}
                     //clearable
-                    required={props.req?props.req:false}
+                    required={props.req ? props.req : false}
                     disableFuture
                     inputVariant="outlined"
                     //value={receipt.date}

@@ -1,6 +1,9 @@
 import React, { useState, useContext, useEffect } from 'react';
 import { UserContext } from '../../Contexts/UserContext';
 import FCDatePicker from './Add_Form/FCDatePicker';
+import { CircularProgress, Typography, FormHelperText, TextField, Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions, Button, InputLabel, Input, FormControl } from '@material-ui/core';
+import PricesLogo from '../../Images/PricesLogo.png'
+
 //import { Input, TextField } from '@material-ui/core';
 
 const myStyles = {
@@ -20,18 +23,28 @@ const myStyles = {
 export default function FCLogIn(props) {
     const { user, SetUser } = useContext(UserContext);
     const emailPattern = "[a-z0-9._%+-]+@[a-z0-9.-]+.[a-z]{2,4}$";
-    let local = false;
-    let api = `http://proj.ruppin.ac.il/bgroup4/prod/server/api/Users/Login`;
+    const [connecting, setConnecting] = useState(false);
+    const [signingUp, setSigningUp] = useState(false);
+    const [registeredUsers, setRegisteredUsers] = useState([]);
+    // const [currentTarget, setCurrentTarget] = useState(false);
+    const [forgotDialog, setForgotDialog] = useState(false);
+    const [forgotEmail, setForgotEmail] = useState("");
+
+    const local = true;
+    let api = `http://proj.ruppin.ac.il/bgroup4/prod/server/api`;
+    const httpLogin = `/Users/Login`;
+    const httpGetUsersEmails = `/lists/GetAllUsersEmails`;
+    const httpForgotPassword = `/users/ForgotPassword`;
     //let httpGetFavorites = `http://proj.ruppin.ac.il/bgroup4/prod/server/api/lists/GetUserFavoriteItems`;
     if (local) {
-        api = `https://localhost:44377/api/Users/Login`;
+        api = `https://localhost:44377/api`;
         //httpGetFavorites = `https://localhost:44377/api/lists/GetUserFavoriteItems`;
     }
 
     const [newUser, SetNewUser] = useState({
-        userId: "John@Doe.com",
-        firstName: "John",
-        lastName: "Doe",
+        userId: "",
+        firstName: "",
+        lastName: "",
         rank: 1000,
         loggedIn: false,
         userLocation: null,
@@ -57,6 +70,7 @@ export default function FCLogIn(props) {
         };
         let api = `https://localhost:44377/api/Users/SignUp`
         //let api = `http://proj.ruppin.ac.il/bgroup4/prod/server/api/Users/SignUp`;
+        setSigningUp(true);
         fetch(api, {
             method: 'POST',
             body: JSON.stringify(NewUser),
@@ -68,17 +82,20 @@ export default function FCLogIn(props) {
             .then(
                 (result) => {
                     console.log("Explore fetch= ", result);
+                    setSigningUp(false);
                     logUserIn(result, NewUser);
                 },
                 (error) => {
+                    setSigningUp(false);
                     console.log("err post=", error);
-                    alert("sorry, somthing went wrong")
+                    alert("sorry, somthing went wrong");
                 });
     }
     const logIn = (e) => {
         if (e) {
             e.preventDefault();
         }
+        setConnecting(true);
         //console.log("user: ", user);
         let User = {
             User_id: user.userId,
@@ -86,7 +103,7 @@ export default function FCLogIn(props) {
         }
         //let api = `https://localhost:44377/api/Users/Login`
         //let api = `http://proj.ruppin.ac.il/bgroup4/prod/server/api/Users/Login`;
-        fetch(api, {
+        fetch(api + httpLogin, {
             method: 'POST',
             body: JSON.stringify(User),
             headers: new Headers({
@@ -101,10 +118,12 @@ export default function FCLogIn(props) {
                 (result) => {
                     console.log("logIn fetch= ", result);
                     logUserIn(result, User);
-
+                    setConnecting(false);
                 },
                 (error) => {
                     console.log("err post=", error);
+                    setConnecting(false);
+                    alert("sorry, somthing went wrong");
                 });
     }
     const logUserIn = async (result, User) => {
@@ -133,24 +152,78 @@ export default function FCLogIn(props) {
             alert("שם משתמש או סיסמה שגויה");
         }
     }
-    //need to return!! very important
-
+    const getUsersEmails = () => {
+        fetch(api + httpGetUsersEmails, {
+            method: 'GET',
+            //body: JSON.stringify(User),
+            headers: new Headers({
+                'Content-Type': 'application/json; charset=UTF-8',
+            })
+        }
+        )
+            .then(res => {
+                return res.json();
+            })
+            .then(
+                (result) => {
+                    console.log("logIn fetch= ", result);
+                    setRegisteredUsers(result);
+                },
+                (error) => {
+                    console.log("err post=", error);
+                    console.log(error);
+                    alert("sorry, somthing went wrong");
+                });
+    }
+    //need to return!! very important --moved to FCTopBar
     // useEffect(() => {
     //     if (user.loggedIn === true) {
     //         localStorage.setItem('userContext', JSON.stringify(user));
     //         console.log("localStorage (userContext): ", JSON.parse(localStorage.getItem('userContext')));
     //     }
     // }, [user.loggedIn]);
+    const hanldeForgot = () => {
+        console.log(forgotEmail);
+        fetch(api + httpForgotPassword, {
+            method: 'POST',
+            body: JSON.stringify(forgotEmail),
+            headers: new Headers({
+                'Content-Type': 'application/json; charset=UTF-8',
+            })
+        }
+        )
+            .then(res => {
+                return res.json();
+            })
+            .then(
+                (result) => {
+                    console.log("logIn fetch= ", result);
+                    alert(result?`We sent an email to '${forgotEmail}'`:`We did not find '${forgotEmail}' in our users`)
+                },
+                (error) => {
+                    console.log("err post=", error);
+                    console.log(error);
+                    alert("sorry, somthing went wrong");
+                });
+        setForgotDialog(false);
+
+    }
+    const handleForgotMenuClose = () => {
+        setForgotDialog(false);
+    }
     useEffect(() => {
-        // console.log("in login: " + new Date().getSeconds());
         let userFromStorage = JSON.parse(localStorage.getItem('userContext'));
         if (userFromStorage) {
-            //console.log("local storage login");
             SetUser(userFromStorage);
+        }
+        else {
+            getUsersEmails();
         }
     }, []);
     return (
         <div>
+            <img src={PricesLogo} alt="Prices" style={{ height: "100px" }} />
+            {/* <button onClick={hanldeForgot}>hanlde Forgot</button> */}
             <form onSubmit={(e) => logIn(e)}>
                 <fieldset>
                     <legend>Log In</legend>
@@ -165,9 +238,23 @@ export default function FCLogIn(props) {
                         onChange={(e) => SetUser({ ...user, password: e.target.value })}
                         style={myStyles.logIn} required />
                     <br />
-                    <input type="submit" value="Log In"
-                    //onClick={(e) => logIn(e)}
-                    />
+                    {connecting ?
+                        <CircularProgress
+                            style={{
+                                color: '#fcaf17', animationDuration: '550ms', strokeLinecap: 'round',
+                            }} size={45} thickness={4} /> :
+                        <input type="submit" value="Log In"
+                        //onClick={(e) => logIn(e)}
+                        />}
+                    <br />
+                    <a
+                        href="#"
+                        style={{ color: "#9cb4d8" }}
+                        onClick={() => setForgotDialog(true)} >
+                        <small>
+                            Forgot account?
+                    </small>
+                    </a>
                     <br />
                     {/* <input type="checkbox" name="localStorage" id="" style={{ float: "left" }} /> */}
                 </fieldset>
@@ -189,6 +276,7 @@ export default function FCLogIn(props) {
                         onChange={(e) => SetNewUser({ ...newUser, lastName: e.target.value })}
                     />
                     <br />
+                    {registeredUsers.includes(newUser.userId) && <Typography color={"secondary"} >This Email is already in use</Typography>}
                     <input type="email" placeholder="Email" style={myStyles.logIn}
                         required
                         pattern={emailPattern}
@@ -228,12 +316,56 @@ export default function FCLogIn(props) {
                         <input type="radio" name="gender" value={false} required
                             onChange={(e) => SetNewUser({ ...newUser, gender: e.target.value })} /> Female
                     </fieldset>
-                    <input type="submit"
-                        //onClick={(e) => SignUpNewUser(e)}
-                        value="Sign Up!" />
-
+                    <br />
+                    {signingUp ?
+                        <CircularProgress
+                            style={{
+                                color: '#fcaf17', animationDuration: '550ms', strokeLinecap: 'round',
+                            }} size={45} thickness={4}
+                        /> :
+                        <input type="submit"
+                            disabled={registeredUsers.includes(newUser.userId)}
+                            //onClick={(e) => SignUpNewUser(e)}
+                            value="Sign Up!" />
+                    }
                 </fieldset>
             </form>
+            <div >
+                <Dialog
+                    style={{ textAlign: "-webkit-center" }}
+                    open={forgotDialog}
+                    onClose={handleForgotMenuClose}
+                >
+                    <form onSubmit={hanldeForgot} autoComplete="off">
+                        <DialogTitle>{"Forgot Your Account?"}</DialogTitle>
+                        <DialogContent>
+                            <DialogContentText>
+                                <small>Please enter your email to search for your account.</small>
+                            </DialogContentText>
+                            <TextField
+                                autoFocus
+                                margin="dense"
+                                id="name"
+                                label="Email Address"
+                                type="email"
+                                fullWidth
+                                onChange={(e) => setForgotEmail(e.target.value)}
+                            />
+                        </DialogContent>
+                        <DialogActions>
+                            <Button onClick={handleForgotMenuClose} color="primary">
+                                Cancel
+                        </Button>
+                            <Button
+                                //onSubmit={hanldeForgot}
+                                type="submit"
+                                color="primary">
+                                Send
+                        </Button>
+                        </DialogActions>
+                    </form>
+                </Dialog>
+            </div>
         </div>
     );
 }

@@ -1,9 +1,10 @@
 import React, { createContext, useState } from 'react';
+import { useEffect } from 'react';
 export const ReceiptContext = createContext();
 
 const ReceiptContextProvider = (props) => {
     const [receipt, setReceipt] = useState({
-        image: { preview: "", raw: "",base64:"" },
+        image: { preview: "", raw: "", base64: "" },
         date: new Date(),
         discoundDollar: "",
         discountPercent: "",
@@ -17,16 +18,18 @@ const ReceiptContextProvider = (props) => {
         subCategory: { id: 0, title: "" },
         itemName: "",
         barcode: "",
-        image: { preview: "", raw: "",base64:"" },
+        image: { preview: "", raw: "", base64: "" },
         discoundDollar: 0,
         discountPercent: 0,
         tags: [],
         itemDescription: "",
-        price:"",
-        Id_type:"UserUser"
+        price: "",
+        Id_type: "UserUser"
     })
     const [tag, setTag] = useState({ id: 0, title: "" })
-
+    // useEffect(() => {
+    //     localStorage.setItem('receipt', JSON.stringify(receipt));
+    // }, [receipt]);
     return (
         <ReceiptContext.Provider value={{
             receipt,

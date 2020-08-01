@@ -265,6 +265,7 @@ export default function FCCard(props) {
               {Number((props.item.Distance).toFixed(2))} km
           </Typography> : null
           }
+          {props.item.Barcode !== "" ? <Typography>Barcode: {props.item.Barcode}</Typography> : null}
         </CardContent>
       </Collapse>
     </Card>
