@@ -7,7 +7,7 @@ import GpsFixedIcon from '@material-ui/icons/GpsFixed';
 import storeIcon from '../../../Images/baseline_local_grocery_store_black_48dp.png';
 import { Button } from '@material-ui/core';
 
-const googleApiKey = `AIzaSyC47_J_bDoU4euesrr-ChlFjRpas0HzLQM`;
+const googleApiKey = `...`;
 
 function FCGoogleMap(props) {
     const { search, setSearch } = useContext(SearchContext);
