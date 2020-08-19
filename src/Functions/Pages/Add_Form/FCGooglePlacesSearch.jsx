@@ -37,7 +37,7 @@ export default function FCGooglePlacesSearch(props) {
   //const [latLon, setLatLon] = React.useState(null)
   const [options, setOptions] = useState([]);
   const loaded = useRef(false);
-  const myGoogleKey = `AIzaSyC47_J_bDoU4euesrr-ChlFjRpas0HzLQM`;
+  const myGoogleKey = `...`;
 
   if (typeof window !== 'undefined' && !loaded.current) {
     if (!document.querySelector('#google-maps')) {
