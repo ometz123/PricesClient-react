@@ -305,10 +305,12 @@ function FCTopBar(props) {
             </div>
             <InputBase
               placeholder="Search…"
+              //autoComplete="off"
               classes={{
                 root: classes.inputRoot,
                 input: classes.inputInput,
               }}
+              //value={search.text}
               inputProps={{ 'aria-label': 'search' }}
               //onClick={() => handleSearch()}
               onChange={(e) => handleSearchText(e.target.value)}

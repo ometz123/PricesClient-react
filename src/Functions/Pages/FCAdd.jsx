@@ -45,7 +45,7 @@ function FCAdd(props) {
     const [item2Edit, setItem2Edit] = useState(null);
     const [valid, setValid] = useState(false);
     const [posting, setPosting] = useState(false);
-    let local = false;
+    const local = true;
     let http = `http://proj.ruppin.ac.il/bgroup4/prod/server/api/`;
     if (local) {
         http = `https://localhost:44377/api/`;

@@ -73,7 +73,8 @@ function FCSearch(props) {
     const [searching, setSearching] = useState(false);
 
     const myGoogleKey = `AIzaSyC47_J_bDoU4euesrr-ChlFjRpas0HzLQM`;
-    let local = false;
+    //const myGoogleKey = process.env.REACT_APP_GOOGLE_KEY;
+    const local = false;
     let http = `http://proj.ruppin.ac.il/bgroup4/prod/server/api/`;
     if (local) {
         http = `https://localhost:44377/api/`;
@@ -82,6 +83,7 @@ function FCSearch(props) {
     const executeScroll = () => scrollToRef(myRef)
 
     const handleSubmit = (e) => {
+        setItems([]);
         let api = http + `items/GetItemsForSearch`;
         //console.log("search(FCSearch): ", search);
         setSearching(true);

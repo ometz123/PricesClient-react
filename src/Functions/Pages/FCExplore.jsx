@@ -22,7 +22,7 @@ export default function FCExplore(props) {
     const [exploreItems, setExploreItems] = useState(null);
     //const { search } = useContext(SearchContext);
     const { user, setUserLocation } = useContext(UserContext);
-    let local = false;
+    const local = false;
     let http = `http://proj.ruppin.ac.il/bgroup4/prod/server/api/`;
     if (local) {
         http = `https://localhost:44377/api/`;
@@ -33,7 +33,7 @@ export default function FCExplore(props) {
             Lon: null,
             Lat: null,
         },
-        Distance_radius: 100,
+        Distance_radius: 20,
         Max_price: -1,//set Max_price search to max 
 
     }

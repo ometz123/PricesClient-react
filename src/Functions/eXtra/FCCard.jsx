@@ -78,7 +78,7 @@ export default function FCCard(props) {
   const [favorite, setFavorite] = useState(false);
   const [check, setCheck] = useState(false);
   const [showReceipt, setShowReceipt] = useState(false);
-  let local = false;
+  const local = false;
   let httpUpdate = `http://proj.ruppin.ac.il/bgroup4/prod/server/api/users/UpdateUser`;
   //let httpGetFavorites = `http://proj.ruppin.ac.il/bgroup4/prod/server/api/lists/GetUserFavoriteItems`;
   if (local) {

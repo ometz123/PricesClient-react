@@ -26,6 +26,8 @@ export default function FCStoreDetails() {
     const theme = useTheme();
     //const [latLon, setLatLon] = useState(null);
     const myGoogleKey = `AIzaSyC47_J_bDoU4euesrr-ChlFjRpas0HzLQM`;
+    //const myGoogleKey = process.env.REACT_APP_GOOGLE_KEY;
+    const myGoogleKey2 = process.env;
     const fullScreen = useMediaQuery(theme.breakpoints.down('sm'));
     const { receipt, SetReceipt } = useContext(ReceiptContext);
     const { search, setSearch } = useContext(SearchContext);
@@ -73,8 +75,13 @@ export default function FCStoreDetails() {
 
     }
     const required = () => {
-        console.log(typeof receipt.store.lat);
-        if (typeof receipt.store.lat === "number" && typeof receipt.store.lon === "number" && receipt.store.name != "") {
+        //console.log("lat is: ",typeof search.lat,"lon is: ",typeof search.lng);
+        //console.log("lat is: ",search.lat,"lon is: ",search.lng);
+        /**
+         * Lat: search.lat,
+         * Lon: search.lng
+         */
+        if (typeof search.lat === "number" && typeof search.lng === "number" && receipt.store.name != "") {
             return (null);
         } else {
             return (<AnnouncementOutlinedIcon color="secondary" />);

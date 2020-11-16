@@ -55,11 +55,11 @@ export default function FCMenu() {
     left: false,    //bottom: false,    //right: false,
   });
 
-  let local = false;
+  const local = false;
   let http = `http://proj.ruppin.ac.il/bgroup4/prod/server/api/`;
-  let getFavorites = `lists/GetUserFavoriteItems`;
-  let setReceiptStatus = `users/SetReceiptStatus`;
-  let getreceipts2verify = `users/GetReceipts2verify`;
+  const getFavorites = `lists/GetUserFavoriteItems`;
+  const setReceiptStatus = `users/SetReceiptStatus`;
+  const getreceipts2verify = `users/GetReceipts2verify`;
   if (local) {
     http = `https://localhost:44377/api/`;
   }

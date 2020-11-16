@@ -3,7 +3,7 @@ import React, { createContext, useState } from 'react';
 export const ListsContext = createContext();
 
 const ListsContextProvider = (props) => {
-    let local = false;
+    const local = false;
     let http = `http://proj.ruppin.ac.il/bgroup4/prod/server/api/`;
     if (local) {
         http = `https://localhost:44377/api/`;

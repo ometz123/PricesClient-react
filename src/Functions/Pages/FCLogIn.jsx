@@ -30,7 +30,7 @@ export default function FCLogIn(props) {
     const [forgotDialog, setForgotDialog] = useState(false);
     const [forgotEmail, setForgotEmail] = useState("");
 
-    const local = true;
+    const local = false;
     let api = `http://proj.ruppin.ac.il/bgroup4/prod/server/api`;
     const httpLogin = `/Users/Login`;
     const httpGetUsersEmails = `/lists/GetAllUsersEmails`;
@@ -172,7 +172,7 @@ export default function FCLogIn(props) {
                 (error) => {
                     console.log("err post=", error);
                     console.log(error);
-                    alert("sorry, somthing went wrong");
+                    alert("sorry, somthing went wrong"+JSON.stringify(error));
                 });
     }
     //need to return!! very important --moved to FCTopBar

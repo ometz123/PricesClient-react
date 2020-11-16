@@ -6,11 +6,16 @@ import { ListsContext } from '../../../Contexts/ListsContext';
 import GpsFixedIcon from '@material-ui/icons/GpsFixed';
 import storeIcon from '../../../Images/baseline_local_grocery_store_black_48dp.png';
 import { Button } from '@material-ui/core';
+import { ReceiptContext } from '../../../Contexts/ReceiptContext';
 
 const googleApiKey = `AIzaSyC47_J_bDoU4euesrr-ChlFjRpas0HzLQM`;
+//($env:REACT_APP_GOOGLE_KEY = "AIzaSyC47_J_bDoU4euesrr-ChlFjRpas0HzLQM") -and (npm start)
+//const googleApiKey = process.env.REACT_APP_GOOGLE_KEY;
+//https://create-react-app.dev/docs/adding-custom-environment-variables/
 
 function FCGoogleMap(props) {
     const { search, setSearch } = useContext(SearchContext);
+    const {setReceipt } = useContext(ReceiptContext)
     const { user, setUserLocation } = useContext(UserContext);
     const { stores, FetchStores } = useContext(ListsContext);
     const [positionByUserLocation, setPositionByUserLocation] = useState(true)
@@ -20,7 +25,6 @@ function FCGoogleMap(props) {
         activeMarker: {},
         selectedPlace: {},
         title: "",
-
     });
     //#region position status (getLocation())
     function getLocation() {
