@@ -8,10 +8,7 @@ import storeIcon from '../../../Images/baseline_local_grocery_store_black_48dp.p
 import { Button } from '@material-ui/core';
 import { ReceiptContext } from '../../../Contexts/ReceiptContext';
 
-const googleApiKey = `AIzaSyC47_J_bDoU4euesrr-ChlFjRpas0HzLQM`;
-//($env:REACT_APP_GOOGLE_KEY = "AIzaSyC47_J_bDoU4euesrr-ChlFjRpas0HzLQM") -and (npm start)
-//const googleApiKey = process.env.REACT_APP_GOOGLE_KEY;
-//https://create-react-app.dev/docs/adding-custom-environment-variables/
+const googleApiKey = `...`;
 
 function FCGoogleMap(props) {
     const { search, setSearch } = useContext(SearchContext);
